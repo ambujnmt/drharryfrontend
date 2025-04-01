@@ -86,5 +86,19 @@
     "enterPolicyNumber": "Enter Policy Number",
     "submit": "Submit",
     "successMessageTitle": "Successfully!",
-    "successMessage": "Form Submitted"
+    "successMessage": "Form Submitted",
+    "notifications": "Notifications",
+    "view_more": "View More",
+    "settings": "Settings",
+    "logout": "Logout",
+     "footer_text": "© {year} WELLi Backoffice All rights reserved.",
+     "activity_tracker_social_work": "Activity Tracker - Social Work",
+     "activity": "Activity",
+     "count": "Count",
+     "activity_tracker_patients": "Activity Tracker - Patients",
+     "visits": "Visits",
+     "status": "Status",
+     "activity_tracker_critical_patients": "Activity Tracker - Critical Patients",
+     "icu_days": "ICU Days",
+     "condition": "Condition"
 }

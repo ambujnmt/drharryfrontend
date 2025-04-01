@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaUser, FaChartBar } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { LanguageContext } from "../../context/LanguageContext";
 
 const barData = [
   { name: "Jan", users: 400, employees: 240 },
@@ -39,6 +40,13 @@ const criticalPatientData = [
 
 export default function Dashboard() {
 
+  const { switchLanguage, locale, translateText } = useContext(LanguageContext);
+
+  const [clientLocale, setClientLocale] = useState("");
+
+  useEffect(() => {
+    setClientLocale(locale.toUpperCase());
+  }, [locale]);
 
   useEffect(() => {
     const updateSize = () => {
@@ -56,7 +64,7 @@ export default function Dashboard() {
     };
 
     window.addEventListener("resize", updateSize);
-    updateSize(); 
+    updateSize();
 
     return () => window.removeEventListener("resize", updateSize);
   }, []);
@@ -101,16 +109,16 @@ export default function Dashboard() {
         <div className="bg-white shadow-lg rounded-lg md:p-6 p-3">
           <h3 className="text-lg font-semibold mb-4 text-gray-700">User Distribution</h3>
           <ResponsiveContainer width="100%" height={chartHeight}>
-      <PieChart>
-        <Pie data={pieData} cx="50%" cy="50%" outerRadius={radius} dataKey="value" label>
-          {pieData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
-    </ResponsiveContainer>
+            <PieChart>
+              <Pie data={pieData} cx="50%" cy="50%" outerRadius={radius} dataKey="value" label>
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
@@ -118,12 +126,12 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 gap-6 mt-6">
         {/* Social Work Table - Full Width */}
         <div className="bg-white shadow-lg rounded-lg p-5 overflow-x-auto">
-          <h3 className="text-base md:text-lg font-semibold mb-4 text-gray-800">Activity Tracker - Social Work</h3>
+          <h3 className="text-base md:text-lg font-semibold mb-4 text-gray-800">{translateText("activity_tracker_social_work")}</h3>
           <table className="w-full text-sm md:text-base border-collapse">
             <thead>
               <tr className="bg-blue-500 text-white">
-                <th className="p-3 border border-gray-300">Activity</th>
-                <th className="p-3 border border-gray-300">Count</th>
+                <th className="p-3 border border-gray-300">{translateText("activity")}</th>
+                <th className="p-3 border border-gray-300">{translateText("count")}</th>
               </tr>
             </thead>
             <tbody>
@@ -141,13 +149,13 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Patients Table */}
           <div className="bg-white shadow-lg rounded-lg p-5 overflow-x-auto">
-            <h3 className="text-base md:text-lg font-semibold mb-4 text-gray-800">Activity Tracker - Patients</h3>
+            <h3 className="text-base md:text-lg font-semibold mb-4 text-gray-800">{translateText("activity_tracker_patients")}</h3>
             <table className="w-full text-sm md:text-base border-collapse">
               <thead>
                 <tr className="bg-[#5CB338] text-white">
-                  <th className="p-3 border border-gray-300">Patient</th>
-                  <th className="p-3 border border-gray-300">Visits</th>
-                  <th className="p-3 border border-gray-300">Status</th>
+                  <th className="p-3 border border-gray-300">{translateText("patients")}</th>
+                  <th className="p-3 border border-gray-300">{translateText("visits")}</th>
+                  <th className="p-3 border border-gray-300">{translateText("status")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,13 +172,13 @@ export default function Dashboard() {
 
           {/* Critical Patients Table */}
           <div className="bg-white shadow-lg rounded-lg p-5 overflow-x-auto">
-            <h3 className="text-base md:text-lg font-semibold mb-4 text-gray-800">Activity Tracker - Critical Patients</h3>
+            <h3 className="text-base md:text-lg font-semibold mb-4 text-gray-800">{translateText("activity_tracker_critical_patients")}</h3>
             <table className="w-full text-sm md:text-base border-collapse">
               <thead>
                 <tr className="bg-[#E52020] text-white">
-                  <th className="p-3 border border-gray-300">Patient</th>
-                  <th className="p-3 border border-gray-300">ICU Days</th>
-                  <th className="p-3 border border-gray-300">Condition</th>
+                  <th className="p-3 border border-gray-300">{translateText("patient")}</th>
+                  <th className="p-3 border border-gray-300">{translateText("icu_days")}</th>
+                  <th className="p-3 border border-gray-300">{translateText("condition")}</th>
                 </tr>
               </thead>
               <tbody>

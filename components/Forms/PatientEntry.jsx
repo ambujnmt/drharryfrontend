@@ -12,9 +12,7 @@ export default function PatientEntry() {
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
-  
-    // Re-run validation to update error messages
-    if (Object.keys(errors).length > 0) {
+      if (Object.keys(errors).length > 0) {
       validate();
     }
   }, [locale]);

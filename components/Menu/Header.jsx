@@ -9,22 +9,17 @@ import { LanguageContext } from "../../context/LanguageContext"
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 
 
-
-
 export default function Header({ menuOpen, toggleMenu }) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
 
-    const { switchLanguage, locale } = useContext(LanguageContext);
+    const { switchLanguage, locale, translateText } = useContext(LanguageContext);
 
-    // ✅ State to avoid hydration mismatch
     const [clientLocale, setClientLocale] = useState("");
 
     useEffect(() => {
-        setClientLocale(locale.toUpperCase()); // Set locale after client-side rendering
-    }, [locale]); // Runs when `locale` changes
-
-
+        setClientLocale(locale.toUpperCase()); 
+    }, [locale]); 
 
     const notifications = [
         { id: 1, heading: "New Message", description: "New message from John", isNew: true },
@@ -58,7 +53,7 @@ export default function Header({ menuOpen, toggleMenu }) {
                         {/* Notification Dropdown */}
                         {notificationOpen && (
                             <div className="absolute right-0 mt-2 w-64 bg-white text-black shadow-lg rounded-md border border-gray-200">
-                                <div className="p-2 font-semibold text-[20px] border-b">Notifications</div>
+                                <div className="p-2 font-semibold text-[20px] border-b">{translateText("notifications")}</div>
                                 <div className="h-auto overflow-hidden">
                                     {notifications.slice(0, 4).map((notification) => (
                                         <div
@@ -75,7 +70,7 @@ export default function Header({ menuOpen, toggleMenu }) {
                                 </div>
                                 <div>
                                     <Link href="#" className="text-center p-2 border-t cursor-pointer rounded-b-md flex justify-center bg-[#3a81e6] text-white font-semibold">
-                                        View More
+                                        {translateText("view_more")}
                                     </Link>
                                 </div>
                             </div>
@@ -94,14 +89,14 @@ export default function Header({ menuOpen, toggleMenu }) {
                     {dropdownOpen && (
                         <div className="absolute top-8 right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-md">
                             <ul className="text-sm">
-                                <li className="p-2 hover:bg-gray-200 hover:rounded-t-md cursor-pointer">Profile</li>
-                                <li className="p-2 hover:bg-gray-200 cursor-pointer">Settings</li>
-                                <li className="p-2 hover:bg-gray-200 hover:rounded-b-md cursor-pointer">Logout</li>
+                                <li className="p-2 hover:bg-gray-200 hover:rounded-t-md cursor-pointer">{translateText("profile")}</li>
+                                <li className="p-2 hover:bg-gray-200 cursor-pointer">{translateText("settings")}</li>
+                                <li className="p-2 hover:bg-gray-200 hover:rounded-b-md cursor-pointer">{translateText("logout")}</li>
                             </ul>
                         </div>
                     )}
 
-                        {/* Language Switcher */}
+                    {/* Language Switcher */}
                     <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
                         <Dropdown>
                             <DropdownTrigger>
@@ -109,7 +104,7 @@ export default function Header({ menuOpen, toggleMenu }) {
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Static Actions">
                                 <DropdownItem key="new" className=" px-2 py-1" onClick={() => switchLanguage("en")}>English</DropdownItem>
-                                <DropdownItem key="copy" className=" px-2 py-1" onClick={() => switchLanguage("fr")}>French</DropdownItem>                              
+                                <DropdownItem key="copy" className=" px-2 py-1" onClick={() => switchLanguage("fr")}>French</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </div>

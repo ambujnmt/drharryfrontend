@@ -86,5 +86,19 @@
     "enterPolicyNumber": "Entrez le numéro de police",
     "submit": "Soumettre",
     "successMessageTitle": "Succès!",
-    "successMessage": "Formulaire soumis"
+    "successMessage": "Formulaire soumis",
+    "notifications": "Notifications",
+    "view_more": "Voir plus",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "footer_text": "© {year} WELLi Backoffice Tous droits réservés.",
+    "activity_tracker_social_work": "Suivi d'activité - Travail social",
+    "activity": "Activité",
+    "count": "Nombre",
+    "activity_tracker_patients": "Suivi d'activité - Patients",
+    "visits": "Visites",
+    "status": "Statut",
+    "activity_tracker_critical_patients": "Suivi d'activité - Patients critiques",
+    "icu_days": "Jours en soins intensifs",
+    "condition": "État"
 }
