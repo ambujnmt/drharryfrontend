@@ -1,6 +1,72 @@
-import { useStoreLogin } from "@/store/login";
-const baseUrl = "https://abc.in";
+import { useStoreLogin } from "../store/login";
+// const baseUrl = "https://abc.in";
 // const v3BaseUrl = "";
+
+
+export const registerUser = async (name, email, password, c_password, user_type) => {
+  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/register";
+
+  try {
+    if (password !== c_password) {
+      throw new Error("Password and Confirm Password must match.");
+    }
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password, c_password, user_type }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result?.status) {
+      const error = new Error(result.message || "Registration failed");
+      error.details = result.data; // Pass full data to catch block
+      throw error;
+    }
+    
+
+    return result.data;
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+
+
+export const loginUser = async (email, password) => {
+  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/login";
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.status) {
+      throw new Error(result.message || "Login failed");
+    }
+
+    return result.data; // { token, name }
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+
+
 
 const fetchWithToken = async (url, data = {}, options = {}) => {
   try {
@@ -64,23 +130,19 @@ const fetchWithToken = async (url, data = {}, options = {}) => {
       }
     }
 
-    return await response.json(); // Return the response in JSON format
+    return await response.json(); 
   } catch (error) {
-    console.error("Fetch failed:", error);
     return { error}
-    // return { error: "Fetch failed.", details: error.message };
   }
 };
 
 export const fetchWithOutToken = async (url, data = {}, options = {}) => {
   try {
-    // Set up the headers
     const headers = {
       ...options.headers,
       apihost: baseUrl,
     };
 
-    // Set up the fetch options
     const fetchOptions = {
       ...options,
       headers,
@@ -113,7 +175,6 @@ export const fetchWithOutToken = async (url, data = {}, options = {}) => {
     }
     return await response.json(); // Return the response in JSON format
   } catch (error) {
-    console.error("Fetch failed:",error.message);
     return { error };
     // return { error: "Fetch failed.", details: error.message };
   }
@@ -182,7 +243,6 @@ export const fetchWithToken_old = async (url, data = {}, options = {}) => {
 
     return await response.json(); // Return the response in JSON format
   } catch (error) {
-    console.error("Fetch failed:",error.message );
     return {error}
     // return { error: "Fetch failed.", details: error.message };
   }
@@ -232,11 +292,9 @@ export const fetchWithOutToken_old = async (url, data = {}, options = {}) => {
         details: errorData,
       };
     }
-    return await response.json(); // Return the response in JSON format
+    return await response.json(); 
   } catch (error) {
-    console.error("Fetch failed:", error.message);
     return {error}
-    // return { error: "Fetch failed.", details: error.message };
   }
 };
 

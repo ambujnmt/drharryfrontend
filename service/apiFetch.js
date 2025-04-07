@@ -8,7 +8,7 @@ export const resetPasswordByOtp = async (data) => {
     method: 'POST',
   });
   if (response.error) {
-    console.error('Error in sent otp to reset Password:', response?.details?.message);
+    // console.error('Error in sent otp to reset Password:', response?.details?.message);
     return {response};
   }
   else {
@@ -21,7 +21,7 @@ export const changeLoginPassword = async (data) => {
     method: 'POST',
   });
   if (response.error) {
-    console.error('Error in change Password:', response?.details?.message);
+    // console.error('Error in change Password:', response?.details?.message);
     return {response};
   }
   else {
@@ -35,7 +35,7 @@ export const getOtpRegister = async (data) => {
     method: 'POST',
   });
   if (response.error) {
-    console.error('Error in sent otp:', response?.details?.message);
+    // console.error('Error in sent otp:', response?.details?.message);
     return {response};
   }
   else {
@@ -49,7 +49,7 @@ export const fileUrlUpload = async (data) => {
     method: 'POST',
   });
   if (response.error) {
-    console.error('Error in sent otp:', response?.details?.message);
+    // console.error('Error in sent otp:', response?.details?.message);
     return {response};
   }
   else {
@@ -64,7 +64,7 @@ export const summitRegisterData = async (data) => {
     method: 'POST',
   });
   if (response.error) {
-    console.error('Error in submit Data:', response?.details?.message);
+    // console.error('Error in submit Data:', response?.details?.message);
     return {response};
   }
   else {
@@ -81,7 +81,7 @@ export const getAuthToken = async () => {
     method: "POST",
   });
   if (response.error) {
-    console.error("Error fetching area by ID:", response.error);
+    // console.error("Error fetching area by ID:", response.error);
     return { error: response.error, details: response?.details };
   }
   return response;
@@ -92,7 +92,7 @@ export const getAuthToken = async () => {
 // export const getWebsiteData = async (id, params={}) => {
 //     const response = await fetchWithOutToken(`/api/s/website/${id}/data`, params);
 //     if (response.error) {
-//       console.error('Error fetching website:', response.error);
+      console.error('Error fetching website:', response.error);
 //       return { error: response.error, details: response?.details };
 //     }
 //     return response;
@@ -101,7 +101,7 @@ export const getAuthToken = async () => {
 export const getPageData = async (url,params = {}) => {
     const response = await fetchWithOutToken(`/api/s/frontPage/${url}`, params);
     if (response.error) {
-      console.error('Error fetching frontPage:', response.error);
+      // console.error('Error fetching frontPage:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -111,7 +111,7 @@ export const getPageData = async (url,params = {}) => {
   export const getCourses = async () => { 
     const response = await fetchWithOutToken_old(`/api/public/data/all-courses`);
     if (response.error) {
-      console.error('Error fetching courses:', response.error);
+      // console.error('Error fetching courses:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -120,7 +120,7 @@ export const getPageData = async (url,params = {}) => {
   export const getSession = async () => { 
     const response = await fetchWithOutToken_old(`/api/public/data/sessions`);
     if (response.error) {
-      console.error('Error fetching session:', response.error);
+      // console.error('Error fetching session:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -129,7 +129,7 @@ export const getPageData = async (url,params = {}) => {
   export const  getAllCenters = async () => { 
     const response = await fetchWithOutToken_old(`/api/public/data/centers`);
     if (response.error) {
-      console.error('Error fetching center:', response.error);
+      // console.error('Error fetching center:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -138,7 +138,7 @@ export const getPageData = async (url,params = {}) => {
   export const getStream = async () => { 
     const response = await fetchWithOutToken_old(`/api/public/data/all-stream?status=true`);
     if (response.error) {
-      console.error('Error fetching stream:', response.error);
+      // console.error('Error fetching stream:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -147,7 +147,7 @@ export const getPageData = async (url,params = {}) => {
   export const getCourseProgramByUri = async (url, params={}) => {
     const response = await fetchWithOutToken(`/api/s/courseprogram-by-uri/${url}`, params);
     if (response.error) {
-      console.error('Error fetching courseprogram:', response.error);
+      // console.error('Error fetching courseprogram:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -155,7 +155,7 @@ export const getPageData = async (url,params = {}) => {
   export const getWebberListItem = async (params={}) => {
     const response = await fetchWithOutToken(`/api/s/webberlistitem`, params);
     if (response.error) {
-      console.error('Error fetching webberlistitem:', response.error);
+      // console.error('Error fetching webberlistitem:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -163,7 +163,7 @@ export const getPageData = async (url,params = {}) => {
   export const getTestimonial = async (params={}) => {
     const response = await fetchWithOutToken(`/api/s/testimonial`, params);
     if (response.error) {
-      console.error('Error fetching testimonial:', response.error);
+      // console.error('Error fetching testimonial:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -175,7 +175,7 @@ export const getPageData = async (url,params = {}) => {
       method: 'POST',
     });
     if (response.error) {
-      console.error('Error in Enquiry:', response.error);
+      // console.error('Error in Enquiry:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -186,7 +186,7 @@ export const getPageData = async (url,params = {}) => {
 export const getProductResponse = async (id) => {
   const response = await fetchWithOutToken(`https://v3.edkt.net/api/s/product/${id}`);
   if (response.error) {
-    console.error('Error fetching get Product Response:', response.error);
+    // console.error('Error fetching get Product Response:', response.error);
     return { error: response.error, details: response?.details };
   }
   return response;
@@ -196,7 +196,7 @@ export const getProductResponse = async (id) => {
   export const getCourseById = async (params={}) => {
     const response = await fetchWithOutToken_old(`/api/public/data/courses`, params);
     if (response.error) {
-      console.error('Error fetching course By Id :', response.error);
+      // console.error('Error fetching course By Id :', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -207,7 +207,7 @@ export const getProductResponse = async (id) => {
       method: 'POST',
     });
     if (response.error) {
-      console.error('Error in Place order:', response?.details?.message);
+      // console.error('Error in Place order:', response?.details?.message);
       return {response};
     }
     else {
@@ -218,7 +218,7 @@ export const getProductResponse = async (id) => {
   export const getProductBatch = async (params={}) => {
     const response = await fetchWithOutToken_old(`/api/public/data/product-batches`, params);
     if (response.error) {
-      console.error('Error in fetching Product Batch :', response.error);
+      // console.error('Error in fetching Product Batch :', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -227,7 +227,7 @@ export const getProductResponse = async (id) => {
   export const getPayMentNode = async (params={}) => {
     const response = await fetchWithOutToken_old(`/api/cmn/order/payment-nodes`, params);
     if (response.error) {
-      console.error('Error fetching PayMent Node:', response.error);
+      // console.error('Error fetching PayMent Node:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;
@@ -238,7 +238,7 @@ export const getProductResponse = async (id) => {
       method: 'POST',
     });
     if (response.error) {
-      console.error('Error in Coupon Apply:', response?.details?.message);
+      // console.error('Error in Coupon Apply:', response?.details?.message);
       return {response};
     }
     else {
@@ -249,7 +249,7 @@ export const getProductResponse = async (id) => {
   export const  getCouponCodeDiscount = async (params={}) => {
     const response = await fetchWithOutToken_old(`/api/public/data/get-coupon-discount`,params);
     if (response.error) {
-      console.error('Error in Coupon Apply:', response?.details?.message);
+      // console.error('Error in Coupon Apply:', response?.details?.message);
       return {response};
     }
     else {
@@ -260,7 +260,7 @@ export const getProductResponse = async (id) => {
   export const getEmiPaymentOptions = async (id) => { 
     const response = await fetchWithOutToken_old(`/api/public/data/product/${id}/payment-options`);
     if (response.error) {
-      console.error('Error fetching courses:', response.error);
+      // console.error('Error fetching courses:', response.error);
       return { error: response.error, details: response?.details };
     }
     return response;

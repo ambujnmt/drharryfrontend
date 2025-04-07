@@ -8,31 +8,46 @@ import { MdContactPhone,MdOutlineSick,MdDashboard  } from "react-icons/md";
 import { Link } from "@heroui/link";
 import { LanguageContext } from "../../context/LanguageContext";
 
-export default function SideMenu() {
 
-  const { switchLanguage, locale, translateText } = useContext(LanguageContext);
-  
-    const [clientLocale, setClientLocale] = useState("");
-  
-    useEffect(() => {
-      setClientLocale(locale.toUpperCase());
-    }, [locale]);
+export default function SideMenu({ isOpen, onClose }) {
+  const { locale, translateText } = useContext(LanguageContext);
+  const [clientLocale, setClientLocale] = useState("");
 
+  useEffect(() => {
+    setClientLocale(locale.toUpperCase());
+  }, [locale]);
 
   return (
-    <div className="h-screen w-64 bg-blue-500 text-white sticky top-0 flex flex-col ">
-      {/* Header / Brand */}
+    <div
+      className={`
+        fixed top-0 left-0 z-40 h-screen w-64 bg-blue-500 text-white flex flex-col transition-transform duration-300 
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} 
+        lg:translate-x-0
+      `}
+    >
+      {/* Mobile Close Button */}
+      <div className="lg:hidden p-4 flex justify-end">
+        <button onClick={onClose} className="text-white text-2xl">×</button>
+      </div>
+
+      {/* Header */}
       <div className="p-4 text-xl font-semibold border-b border-[#3a81e6]">
         {translateText("menu")}
       </div>
 
-      {/* Scrollable Menu Items */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar ">
+      {/* Scrollable Menu Content */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
         <ul className="space-y-2 p-4">
-          <li key="1" className="p-2 flex items-center  hover:bg-[#91b4e5] rounded"><Link href="/dashboard" className="text-white gap-1"><MdDashboard />
-            {translateText("dashboard")}</Link></li>
-          <li key="2" className="p-2 flex items-center gap-1 hover:bg-[#91b4e5] rounded"><RiPageSeparator />
-            {translateText("pages")}</li>
+          <li className="p-2 flex items-center hover:bg-[#91b4e5] rounded">
+            <Link href="/dashboard" className="text-white gap-1 flex items-center">
+              <MdDashboard />
+              {translateText("dashboard")}
+            </Link>
+          </li>
+          <li className="p-2 flex items-center gap-1 hover:bg-[#91b4e5] rounded">
+            <RiPageSeparator />
+            {translateText("pages")}
+          </li>
 
           <Accordion variant="light">
             <AccordionItem
@@ -119,14 +134,15 @@ export default function SideMenu() {
             >
               <ul className="space-y-1 text-[#e1e3e6]">
                 <li className="p-2 hover:bg-[#91b4e5] rounded">{translateText("allUsers")}</li>
-                <li className="p-2 hover:bg-[#91b4e5] rounded">{translateText("addUser")}</li>
+                <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/addUser" className="text-[#e1e3e6]">{translateText("addUser")}</Link></li>
                 <li className="p-2 hover:bg-[#91b4e5] rounded">{translateText("login")}</li>
               </ul>
             </AccordionItem>
           </Accordion>
-
-          <li key="7" className="p-2 flex items-center gap-2 hover:bg-[#91b4e5] rounded"><MdContactPhone /> {translateText("contact")}</li>
-
+          <li className="p-2 flex items-center gap-2 hover:bg-[#91b4e5] rounded">
+            <MdContactPhone />
+            {translateText("contact")}
+          </li>
         </ul>
       </div>
     </div>

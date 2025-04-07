@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import SideMenu from "../components/Menu/SideMenu";
 import Header from "../components/Menu/Header";
 import Footer from "../components/Menu/Footer";
-import PatientEntry from "../components/Forms/PatientEntry";
-export default function PatientEntryPage() {
+import AddUser from "../components/Forms/AddUser";
+export default function AddUserPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
-
   return (
     <div className="flex">
       {menuOpen && (
@@ -41,7 +40,7 @@ export default function PatientEntryPage() {
         />
 
         <div className="flex-1 overflow-auto p-5 bg-gray-100">
-          <PatientEntry />
+          <AddUser />
         </div>
 
         <Footer />

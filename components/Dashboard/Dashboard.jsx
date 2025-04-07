@@ -153,7 +153,7 @@ export default function Dashboard() {
             <table className="w-full text-sm md:text-base border-collapse">
               <thead>
                 <tr className="bg-[#5CB338] text-white">
-                  <th className="p-3 border border-gray-300">{translateText("patients")}</th>
+                  <th className="p-3 border border-gray-300">{translateText("patient")}</th>
                   <th className="p-3 border border-gray-300">{translateText("visits")}</th>
                   <th className="p-3 border border-gray-300">{translateText("status")}</th>
                 </tr>

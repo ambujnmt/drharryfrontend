@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
-
+import  {loginUser} from "../../utils/fetchApi"
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -42,14 +42,35 @@ export default function LoginForm() {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (validate()) {
+  //     setFormData({ email: "", password: "" });
+  //     setErrors({});
+  //     router.push("/dashboard");
+  //   }
+  // };
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      setFormData({ email: "", password: "" });
-      setErrors({});
-      router.push("/dashboard");
+      try {
+        const userData = await loginUser(formData.email, formData.password);
+  
+        setFormData({ email: "", password: "" });
+        setErrors({});
+  
+        router.push({
+          pathname: "/dashboard",
+        });
+  
+      } catch (err) {
+        setErrors({ api: err.message });
+      }
     }
   };
+  
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-200 via-blue-100 to-yellow-100 p-4">
@@ -99,6 +120,9 @@ export default function LoginForm() {
               />
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
             </div>
+
+            {errors.api && <p className="text-red-500 text-sm mb-4">{errors.api}</p>}
+
             <button
               type="submit"
               className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition"
