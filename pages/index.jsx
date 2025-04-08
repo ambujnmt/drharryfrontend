@@ -1,10 +1,9 @@
 import React from 'react'
-import SignUp from '../components/Forms/SignUp'
-
+import Main from '@/components/Main/Main'
 export default function index() {
   return (
     <div>
-      <SignUp/>
+      <Main/>
     </div>
   )
 }

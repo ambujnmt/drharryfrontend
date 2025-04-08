@@ -1,16 +1,16 @@
 import React from "react";
-import { Montserrat } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { HeroUIProvider } from "@heroui/react";
 
-const montserrat = Montserrat({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"], 
-  variable: "--font-montserrat", 
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-poppins",
 });
 
 export default function DefaultLayout({ children }) {
   return (
-    <div className={montserrat.className}>
+    <div className={poppins.className}>
       <HeroUIProvider>
         <main>{children}</main>
       </HeroUIProvider>
