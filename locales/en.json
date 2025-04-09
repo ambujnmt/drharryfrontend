@@ -1,7 +1,8 @@
 {
-    "login": "Login",
-    "email": "Email Address",
+    "login": "Log in",
+    "email": "Email",
     "password": "Password",
+    "c_password": "Confirm Password",
     "emailRequired": "Email is required",
     "invalidEmail": "Email not found. Please sign up.",
     "passwordRequired": "Password is required",
@@ -100,5 +101,20 @@
      "status": "Status",
      "activity_tracker_critical_patients": "Activity Tracker - Critical Patients",
      "icu_days": "ICU Days",
-     "condition": "Condition"
+     "condition": "Condition",
+     "all your analyses always with you": "All your analyses always with you",
+     "value trend": "Value Trend",
+     "make an appointment easily": "Make an appointment easily",
+     "let's get started": "Let's get started",
+     "welcome": "Welcome",
+     "your health at your fingertips!": "Your health at your fingertips!",
+     "register_with": "REGISTER WITH:",
+     "facebook": "Facebook",
+     "or": "OR",
+     "register": "Register",
+     "user_type": "User Type",
+     "password_forgot": "Forgotten Password?",
+     "after_you": "After You",
+     "enter_otp" : "Enter OTP",
+     "verify":" Verify"
 }

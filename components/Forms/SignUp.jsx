@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Input, Select, SelectItem } from "@heroui/react";
 import { registerUser } from "../../utils/fetchApi"
 
@@ -70,14 +69,14 @@ export default function SignupForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validate()) return;
-  
+
     try {
       const { name, email, password, c_password, user_type } = formData;
-  
+
       const userData = await registerUser(name, email, password, c_password, user_type);
-  
+
       setFormData({
         name: "",
         email: "",
@@ -86,139 +85,122 @@ export default function SignupForm() {
         user_type: ""
       });
       setErrors({});
-  
+
       router.push({
         pathname: "/login",
-        query: { name: userData?.name || name },
       });
-  
+
     } catch (err) {
-    
+
       if (err?.details) {
         const fieldErrors = {};
         for (const field in err.details) {
-          fieldErrors[field] = err.details[field][0]; 
+          fieldErrors[field] = err.details[field][0];
         }
         setErrors(fieldErrors);
       } else {
-        setErrors({ api: err.message || "Something went wrong. Please try again." });
+        setErrors({ api: err.message});
       }
     }
-    
   };
-  
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-200 via-blue-100 to-yellow-100">
-     <div className="absolute top-5 right-5">
-     <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-        <Dropdown>
-          <DropdownTrigger>
-            <Button variant="bordered" color="primary" className="text-blue-600">
-              {translateText("language")}
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Static Actions">
-            <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-            <DropdownItem key="fr" onClick={() => switchLanguage("fr")}>French</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+    <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
+      <div className="absolute top-5 right-5">
+        <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="bordered" color="primary" className="text-blue-600 bg-white">
+                {translateText("language")}
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Static Actions">
+              <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
+              <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
-        </div>
-      <div className="lg:mt-20 md:mt-20 mt-20 xl:mt-0 flex flex-col md:flex-row bg-white rounded-lg shadow-lg w-full max-w-4xl overflow-hidden">
-        <div className="hidden md:block md:w-1/2">
-          <img
-            src="https://img.freepik.com/free-vector/privacy-policy-concept-illustration_114360-7853.jpg"
-            alt="Signup Illustration"
-            className="object-cover w-full h-full"
-          />
-        </div>
-        <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
-          <h2 className="text-2xl font-semibold mb-4 text-center">{translateText("signup")}</h2>
-          {errors.api && <p className="text-red-500 text-sm mb-4">{errors.api}</p>}
-          {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-          <form onSubmit={handleSubmit} className="space-y-4">
+      </div>
+      <div className="lg:mt-20 md:mt-20 mt-20 xl:mt-0 flex justify-center md:flex-row  rounded-lg  w-full  overflow-hidden">
 
-              <div className="pb-2">
+        <div className="w-full md:w-1/2  flex flex-col justify-center">
+          <p className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center text-white">{translateText("register")}</p>
+          {errors.api && <p className="text-gray-300 mt-1 text-sm mb-4">{errors.api}</p>}
+          {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <div className=" w-full  gap-2">
+              <Input
+                label={translateText("name")}
+                type="name"
+                name="name"
+                variant="underlined"
+                classNames={{
+                  label: "text-white",
+                  input: "text-white"
+                }}
+                value={formData.name}
+                onChange={handleChange}
+              />
+              {errors.name && <p className="text-gray-300 mt-1 text-sm">{errors.name}</p>}
+            </div>
+            <div className=" w-full  gap-2">
+              <Input
+                label={translateText("email")}
+                type="email"
+                name="email"
+                variant="underlined"
+                classNames={{
+                  label: "text-white",
+                  input: "text-white"
+                }}
+                value={formData.email}
+                onChange={handleChange}
+              />
+              {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div >
                 <Input
-                  label={translateText("name")}
-                  type="name"
-                  name="name"
-                  variant="bordered"
-                  labelPlacement="outside"
-                  placeholder="Enter name"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-              </div>
-              <div className="">
-                <Input
-                  label={translateText("email")}
-                  type="email"
-                  name="email"
-                  variant="bordered"
-                  labelPlacement="outside"
-                  placeholder="Enter email"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-              </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 pb-3 md:gap-4 gap-1">
-
-              <div className="relative">
-                <Input
-                  label="Password"
-                  labelPlacement="outside"
-                  placeholder="Enter password"
-                  variant="bordered"
-                  type={show ? 'text' : 'password'}
+                  label={translateText("password")}
+                  variant="underlined"
+                  type="password"
                   name="password"
                   onChange={handleChange}
                   value={formData.password}
+                  classNames={{
+                    label: "text-white",
+                    input: "text-white"
+                  }}
                 />
-
-                <button
-                  type="button"
-                  className="absolute top-8 right-3 text-gray-500"
-                  onClick={() => setShow(!show)}
-                >
-                  {show ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
-                </button>
-                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                {errors.password && <p className="text-gray-300 text-sm mt-1">{errors.password}</p>}
               </div>
-
-              <div className=" relative">
+              <div>
                 <Input
-                  label="Confirm Password"
-                  labelPlacement="outside"
-                  placeholder="Confirm password"
-                  variant="bordered"
-                  type={show ? 'text' : 'password'}
+                  label={translateText("c_password")}
+                  classNames={{
+                    label: "text-white",
+                    input: "text-white"
+                  }}
+                  variant="underlined"
+                  type="password"
                   name="c_password"
                   onChange={handleChange}
                   value={formData.c_password}
                 />
-
-                <button
-                  type="button"
-                  className="absolute top-8 right-3 text-gray-500"
-                  onClick={() => setShow(!show)}
-                >
-                  {show ? <FaEyeSlash className="w-5 h-5" /> : <FaEye className="w-5 h-5" />}
-                </button>
-                {errors.c_password && <p className="text-red-500 text-sm mt-1">{errors.c_password}</p>}
+                {errors.c_password && <p className="text-gray-300 text-sm mt-1">{errors.c_password}</p>}
               </div>
             </div>
-
-            <div className="pb-4">
+            <div>
               <Select
-                className="max-w-full"
-                label="User Type"
-                placeholder="Select User Type"
+                className="max-w-full mb-2 selectmargin"
+                classNames={{
+                  label: "text-[#fff]",
+                  trigger: "text-white",
+                  base: "margin-top-[0px]"
+                }}
+                label={translateText("user_type")}
                 labelPlacement="outside"
-                variant="bordered"
+                variant="underlined"
                 name="user_type"
                 selectedKeys={formData.user_type ? new Set([formData.user_type]) : new Set()}
                 onSelectionChange={(keys) => {
@@ -233,16 +215,16 @@ export default function SignupForm() {
                   </SelectItem>
                 ))}
               </Select>
-              {errors.user_type && <p className="text-red-500 text-sm">{errors.user_type}</p>}
+              {errors.user_type && <p className="text-gray-300 my-1 text-sm">{errors.user_type}</p>}
             </div>
-            
-            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-              {translateText("signup")}
+
+            <button type="submit" className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
+            {translateText("register")}
+            </button>
+            <button className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 text-center rounded-[600px] border-1 border-white py-2">
+              <Link className="text-white" href="/login">{translateText("login")}</Link>
             </button>
           </form>
-          <p className="text-center text-sm text-gray-600 mt-4">
-            {translateText("alreadyHaveAccount")} <Link href="/login" className="text-blue-600">{translateText("login")}</Link>
-          </p>
         </div>
       </div>
     </div>

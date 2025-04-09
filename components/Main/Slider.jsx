@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LanguageContext } from "../../context/LanguageContext";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { Link } from '@heroui/react'; // Use this for React Router
+
+
 import Slider1 from './Slider1';
 import Slider2 from './Slider2';
 import Slider3 from './Slider3';
@@ -11,14 +14,16 @@ export default function Slider() {
   const [clientLocale, setClientLocale] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const slides = [<Slider1 />, <Slider2 />, <Slider3 />,<Slider4 />];
+  const slides = [<Slider1 />, <Slider2 />, <Slider3 />, <Slider4 />];
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
   }, [locale]);
 
   const goToNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    if (currentSlide < slides.length - 1) {
+      setCurrentSlide(currentSlide + 1);
+    }
   };
 
   const goToPrev = () => {
@@ -47,7 +52,7 @@ export default function Slider() {
         ))}
       </div>
 
-      {/* Arrows (Your Styled Buttons) */}
+      {/* Arrows */}
       <div className="absolute bottom-5 right-5 md:bottom-10 md:right-60 flex justify-end space-x-2 mt-10 md:mt-0 ml-4 z-20">
         <button
           onClick={goToPrev}
@@ -55,12 +60,21 @@ export default function Slider() {
         >
           <FaChevronLeft size={16} />
         </button>
-        <button
-          onClick={goToNext}
-          className="w-8 h-8 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center"
-        >
-          <FaChevronRight size={16} />
-        </button>
+
+        {currentSlide === slides.length - 1 ? (
+          <Link href="/signupWith">
+            <button className="w-8 h-8 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center">
+              <FaChevronRight size={16} />
+            </button>
+          </Link>
+        ) : (
+          <button
+            onClick={goToNext}
+            className="w-8 h-8 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center"
+          >
+            <FaChevronRight size={16} />
+          </button>
+        )}
       </div>
     </section>
   );

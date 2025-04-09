@@ -255,4 +255,6 @@ body .table-wrapper::-webkit-scrollbar {
   background: #0b0c0e; 
 }
 
-
+.data-\[has-label\=true\]\:mt-\[calc\(theme\(fontSize\.small\)_\+_10px\)\][data-has-label="true"]{
+  margin-top: 30px !important;
+}

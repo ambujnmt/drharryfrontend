@@ -32,7 +32,7 @@ export default function Main() {
         fadeOut ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      <img src="/assets/images/logo.png" className="w-[40%]" alt="Logo" />
+      <img src="https://nmtdevserver.com/welli/logo.png" className="w-[40%]" alt="Logo" />
     </section>
   );
 }

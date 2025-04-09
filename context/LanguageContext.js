@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import en from "../locales/en.json";
-import fr from "../locales/fr.json";
+import ita from "../locales/ita.json";
 
 // Create Context
 export const LanguageContext = createContext();
@@ -19,8 +19,8 @@ export const LanguageProvider = ({ children }) => {
   // Function to load translations dynamically
   const loadTranslations = (lang) => {
     switch (lang) {
-      case "fr":
-        setTranslations(fr);
+      case "ita":
+        setTranslations(ita);
         break;
       default:
         setTranslations(en);

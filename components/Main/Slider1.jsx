@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LanguageContext } from "../../context/LanguageContext";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 import Slider2 from './Slider2';
 
 export default function Slider() {
@@ -12,32 +12,44 @@ export default function Slider() {
     setClientLocale(locale.toUpperCase());
   }, [locale]);
 
-  // If showSlider2 is true, show only Slider2 component
   if (showSlider2) {
     return <Slider2 />;
   }
 
-  // Otherwise, show the main slider content
   return (
-    
     <section className="sliderSection relative">
+       <div className="absolute top-5 right-5">
+            <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button variant="bordered" color="primary" className="text-blue-600 bg-white">
+                    {translateText("language")}
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Static Actions">
+                  <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
+                  <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          </div>
       {/* Desktop Image */}
       <img
-        src="assets/images/slider1.png"
+        src="https://nmtdevserver.com/welli/slider1.png"
         className="w-full xl:h-screen h-auto hidden md:block"
         alt="Slider Image Desktop"
       />
 
       {/* Mobile Image */}
       <img
-        src="assets/images/slider1mobile.png"
+        src="https://nmtdevserver.com/welli/slider1mobile.png"
         className="w-full h-full md:h-screen block md:hidden"
         alt="Slider Image Mobile"
       />
 
       <div className="mt-3 absolute xl:top-2/3 lg:top-3/4 top-[22.5rem] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#313131] w-[100%] md:w-auto px-4 md:px-0">
         <h1 className='font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl'>
-          All your analyses always <br className='hidden md:block' /> with you
+          {translateText("all your analyses always with you")}
         </h1>
         <p className='font-light text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px] my-4'>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
