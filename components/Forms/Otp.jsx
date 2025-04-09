@@ -8,15 +8,10 @@ export default function Otp() {
 
   const [clientLocale, setClientLocale] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
-  const [loggedInEmail, setLoggedInEmail] = useState(""); // This simulates stored login email
   const hiddenLinkRef = useRef(null);
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
-
-    // Simulate user email from login
-    const emailFromLogin = localStorage.getItem("userEmail") || "test@gmail.com";
-    setLoggedInEmail(emailFromLogin);
   }, [locale]);
 
   const handleSubmit = (e) => {
@@ -27,12 +22,10 @@ export default function Otp() {
       return;
     }
 
-    if (enteredEmail !== loggedInEmail) {
-      alert("Entered email does not match the registered email.");
-      return;
-    }
+    // Optional: Store email for later use
+    localStorage.setItem("userEmail", enteredEmail);
 
-    // Simulate Link click without page reload
+    // Proceed to verification page
     hiddenLinkRef.current?.click();
   };
 
@@ -79,7 +72,7 @@ export default function Otp() {
             <span className="text-white">{translateText("after_you")}</span>
           </button>
 
-          {/* Hidden Link - triggers only if email matches */}
+          {/* Hidden Link - triggers only if email is entered */}
           <Link ref={hiddenLinkRef} href="/otpVerification" className="hidden" />
         </div>
       </div>

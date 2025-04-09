@@ -60,6 +60,7 @@ export default function SignupForm() {
     { key: "4", label: 'User' },
   ];
 
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -85,10 +86,14 @@ export default function SignupForm() {
         user_type: ""
       });
       setErrors({});
+      setSuccessMessage("Registered successfully! Redirecting...");
 
-      router.push({
-        pathname: "/login",
-      });
+      // Delay redirection for 2 seconds
+      setTimeout(() => {
+        router.push({
+          pathname: "/otp",
+        });
+      }, 2000);
 
     } catch (err) {
 
@@ -99,7 +104,7 @@ export default function SignupForm() {
         }
         setErrors(fieldErrors);
       } else {
-        setErrors({ api: err.message});
+        setErrors({ api: err.message });
       }
     }
   };
@@ -127,6 +132,11 @@ export default function SignupForm() {
           <p className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center text-white">{translateText("register")}</p>
           {errors.api && <p className="text-gray-300 mt-1 text-sm mb-4">{errors.api}</p>}
           {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
+          {successMessage && (
+            <p className="text-yellow-500 font-semibold text-lg text-center my-4">
+              {successMessage}
+            </p>
+          )}
           <form onSubmit={handleSubmit} className="flex flex-col">
             <div className=" w-full  gap-2">
               <Input
@@ -219,7 +229,7 @@ export default function SignupForm() {
             </div>
 
             <button type="submit" className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
-            {translateText("register")}
+              {translateText("register")}
             </button>
             <button className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 text-center rounded-[600px] border-1 border-white py-2">
               <Link className="text-white" href="/login">{translateText("login")}</Link>

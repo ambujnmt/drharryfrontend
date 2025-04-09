@@ -68,7 +68,7 @@ export default function Otp() {
                     </button>
 
                     {/* Hidden Link to /dashboard */}
-                    <Link ref={otpLinkRef} href="/dashboard" className="hidden" />
+                    <Link ref={otpLinkRef} href="/login" className="hidden" />
                 </div>
             </div>
         </div>

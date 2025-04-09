@@ -53,6 +53,8 @@ export default function LoginForm() {
   //   }
   // };
 
+  const [successMessage, setSuccessMessage] = useState("");
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,9 +65,14 @@ export default function LoginForm() {
         setFormData({ email: "", password: "" });
         setErrors({});
 
-        router.push({
-          pathname: "/otp",
-        });
+        setSuccessMessage("Login successfully! Redirecting...");
+
+        // Delay redirection for 2 seconds
+        setTimeout(() => {
+          router.push({
+            pathname: "/dashboard",
+          });
+        }, 2000);
 
       } catch (err) {
         setErrors({ api: err.message });
@@ -93,6 +100,11 @@ export default function LoginForm() {
 
         <div className="w-full md:w-1/2  flex flex-col justify-center">
           <h2 className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center mb-20 text-white">{translateText("login")}</h2>
+          {successMessage && (
+            <p className="text-yellow-500 font-semibold text-lg text-center my-4">
+              {successMessage}
+            </p>
+          )}
           <form onSubmit={handleSubmit}>
             <div className=" w-full  gap-2">
               <Input
@@ -137,7 +149,8 @@ export default function LoginForm() {
             <div
 
               className="font-bold w-full text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center  rounded-[600px] border-1 border-white py-2"
-            ><Link className="text-white" href="/signupWith">{translateText("register")}
+            >
+              <Link className="text-white" href="/signupWith">{translateText("register")}
               </Link>
             </div>
           </form>
