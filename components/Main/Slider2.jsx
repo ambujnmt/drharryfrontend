@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { LanguageContext } from "../../context/LanguageContext";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
+import { IoLanguage } from "react-icons/io5";
+
 
 import Slider1 from './Slider1';
 
@@ -21,32 +23,32 @@ export default function Slider() {
     return (
         <div>
             <section className="sliderSection relative">
-                <div className="absolute top-5 right-5">
-                    <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button variant="bordered" color="primary" className="text-blue-600 bg-white">
-                                    {translateText("language")}
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu aria-label="Static Actions">
-                                <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-                                <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
-                </div>
+                       <div className="absolute top-2 right-2">
+                            <div className="relative flex items-center space-x-4 text-2xl cursor-pointer ">
+                              <Dropdown>
+                                <DropdownTrigger>
+                                  <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
+                                    <IoLanguage/>
+                                  </button>
+                                </DropdownTrigger>
+                                <DropdownMenu aria-label="Static Actions">
+                                  <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
+                                  <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
+                                </DropdownMenu>
+                              </Dropdown>
+                            </div>
+                          </div>
                 {/* Desktop Image */}
                 <img
                     src="https://nmtdevserver.com/welli/slider2.png"
-                    className="w-full xl:h-screen h-auto  hidden md:block"
+                    className="w-full xl:h-screen h-auto  hidden md:block "
                     alt="Slider Image Desktop"
                 />
                 {/* Mobile Image */}
 
-                <div className="mt-3 absolute xl:top-24 lg:top-3/4 md:top-[6rem] top-[11.5rem] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#313131] w-[100%] md:w-auto px-4 md:px-0">
-                    <h1 className='font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl'>{translateText("value trend")}</h1>
-                    <p className='font-light text-[11px] md:text-[14px] lg:text-[16px] xl:text-[17px] my-3'>
+                <div className=" absolute xl:top-24 lg:top-3/4 md:top-[4rem] top-[11.5rem] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#313131] w-[100%] md:w-auto px-4 md:px-0">
+                    <h1 className='font-bold text-md md:text-xl lg:text-3xl xl:text-4xl'>{translateText("value trend")}</h1>
+                    <p className='font-light text-[11px] md:text-[12px] lg:text-[16px] xl:text-[17px] my-1'>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
                         veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
@@ -56,7 +58,7 @@ export default function Slider() {
 
                     <img
                         src="https://nmtdevserver.com/welli/slider2mobile.png"
-                        className="w-full h-full md:h-screen block md:hidden"
+                        className="w-full h-full md:h-screen block md:hidden "
                         alt="Slider Image Mobile"
                     />
                 </div>

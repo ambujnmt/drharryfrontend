@@ -3,6 +3,8 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Slider2 from './Slider2';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
+import { IoLanguage } from "react-icons/io5";
+
 
 
 export default function Slider() {
@@ -23,21 +25,21 @@ export default function Slider() {
     return (
 
         <section className="sliderSection relative">
-            <div className="absolute top-5 right-5">
-                <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Button variant="bordered" color="primary" className="text-blue-600 bg-white">
-                                {translateText("language")}
-                            </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label="Static Actions">
-                            <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-                            <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </div>
-            </div>
+                <div className="absolute top-2 right-2">
+                     <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
+                       <Dropdown>
+                         <DropdownTrigger>
+                           <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
+                             <IoLanguage/>
+                           </button>
+                         </DropdownTrigger>
+                         <DropdownMenu aria-label="Static Actions">
+                           <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
+                           <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
+                         </DropdownMenu>
+                       </Dropdown>
+                     </div>
+                   </div>
             {/* Desktop Image */}
             <img
                 src="https://nmtdevserver.com/welli/slider3.png"
@@ -52,7 +54,7 @@ export default function Slider() {
                 alt="Slider Image Mobile"
             />
 
-            <div className="mt-3 absolute xl:top-2/3 lg:top-3/4 top-[22.5rem] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#313131] w-[100%] md:w-auto px-4 md:px-0">
+            <div className="mt-3 absolute xl:top-2/3 lg:top-3/4 top-[22rem] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#313131] w-[100%] md:w-auto px-4 md:px-0">
                 <h1 className='font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl'>
                     {translateText("make an appointment easily")}
                 </h1>

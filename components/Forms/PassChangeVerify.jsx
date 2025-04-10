@@ -50,11 +50,8 @@ export default function Otp() {
       </div>
       <div className="lg:mt-4 md:mt-6 mt-10 xl:-mt-32 flex justify-center md:flex-row rounded-lg w-full overflow-hidden">
         <div className="w-full md:w-1/2 flex flex-col justify-start">
-          <div className="flex justify-center items-center xl:gap-4 gap-2 mb-6">
-            <h2 className="font-normal uppercase text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] text-center text-white">{translateText("register")}</h2>
-            <span className="rounded-[25px] bg-[#FFBA1B] py-1 xl:w-28  w-16 font-normal text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px] uppercase text-center text-white">{translateText("login")}</span>
-          </div>
-          <p className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center text-white my-10 xl:my-20">{translateText("enter_email")}</p>
+        
+          <p className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center text-white my-10 xl:my-20">{translateText("recover_password")}</p>
           <div>
             <Input
               classNames={{ input: "text-black text-center", }}
@@ -75,7 +72,7 @@ export default function Otp() {
           </button>
 
           {/* Hidden Link - triggers only if email is entered */}
-          <Link ref={hiddenLinkRef} href="/otpVerification" className="hidden" />
+          <Link ref={hiddenLinkRef} href="/resendOtp" className="hidden" />
         </div>
       </div>
     </div>

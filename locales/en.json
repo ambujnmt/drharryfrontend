@@ -116,5 +116,16 @@
      "password_forgot": "Forgotten Password?",
      "after_you": "After You",
      "enter_otp" : "Enter OTP",
-     "verify":" Verify"
+     "verify":"Verify",
+     "doctor": "Doctor",
+     "social_worker": "Social Worker",
+     "wrong_pass": "Wrong Password!",
+     "recover": "Recover",
+     "try_again": "Try Again",
+     "new password set successfully!": "New password set successfully!",
+     "back_to_login": "BACK TO LOGIN",
+     "recover_password": "Recover Password",
+     "new_pass": "New Password",
+     "enter" : "Enter"
+     
 }

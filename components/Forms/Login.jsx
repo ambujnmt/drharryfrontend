@@ -4,7 +4,9 @@ import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
 import { loginUser } from "../../utils/fetchApi"
-import { Input} from "@heroui/react";
+import { Input } from "@heroui/react";
+import { IoLanguage } from "react-icons/io5";
+  
 
 
 export default function LoginForm() {
@@ -83,23 +85,25 @@ export default function LoginForm() {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
-      <div className="absolute top-5 right-5">
+      <div className="absolute top-2 right-2">
         <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
           <Dropdown>
             <DropdownTrigger>
-              <Button variant="bordered" color="primary" className="text-blue-600 bg-white">{translateText("language")}</Button>
+              <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
+                <IoLanguage />
+              </button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
-              <DropdownItem key="en" className=" px-2 py-1" onClick={() => switchLanguage("en")}>English</DropdownItem>
-              <DropdownItem key="ita" className=" px-2 py-1" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
+              <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
+              <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
             </DropdownMenu>
           </Dropdown>
         </div>
       </div>
-      <div className="lg:mt-20 md:mt-20 mt-20 xl:mt-0 flex justify-center md:flex-row  rounded-lg  w-full  overflow-hidden">
+      <div className="lg:mt-4 md:mt-6 mt-10 xl:mt-0 flex justify-center md:flex-row  rounded-lg  w-full  overflow-hidden">
 
         <div className="w-full md:w-1/2  flex flex-col justify-center">
-          <h2 className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center mb-20 text-white">{translateText("login")}</h2>
+          <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">{translateText("login")}</h2>
           {successMessage && (
             <p className="text-yellow-500 font-semibold text-lg text-center my-4">
               {successMessage}
@@ -136,19 +140,21 @@ export default function LoginForm() {
               />
               {errors.password && <p className="text-gray-300 text-sm mt-1">{errors.password}</p>}
             </div>
-            <p className="text-start text-sm text-white mt-2 mb-16">
+            <p className="text-start text-sm  mt-2 mb-16">
+              <Link className="text-white" href="/forgottenPassword">
               {translateText("password_forgot")}
+              </Link>
             </p>
             {errors.api && <p className="text-red-500 text-sm mb-4">{errors.api}</p>}
             <button
               type="submit"
-              className="font-bold w-full text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
+              className="font-bold w-full text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
             >
               {translateText("login")}
             </button>
             <div
 
-              className="font-bold w-full text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center  rounded-[600px] border-1 border-white py-2"
+              className="font-bold w-full text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center  uppercase rounded-[600px] border-1 border-white py-2"
             >
               <Link className="text-white" href="/signupWith">{translateText("register")}
               </Link>

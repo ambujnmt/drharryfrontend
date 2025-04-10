@@ -5,7 +5,7 @@ import { Link, Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
 
 
-export default function Otp() {
+export default function ResendOtp() {
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
     const [enteredOtp, setEnteredOtp] = useState("");
@@ -43,10 +43,7 @@ export default function Otp() {
                   </div>
             <div className="lg:mt-4 md:mt-6 mt-10 xl:-mt-32 flex justify-center md:flex-row  rounded-lg  w-full  overflow-hidden">
                 <div className="w-full md:w-1/2  flex flex-col justify-start">
-                    <div className="flex justify-center items-center xl:gap-4 gap-2 mb-6">
-                        <h2 className="font-normal uppercase text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px]  text-center text-white">{translateText("register")}</h2>
-                        <span className="rounded-[25px] bg-[#FFBA1B] py-1 xl:w-28 lg:w-24  w-16  font-normal uppercase text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px]  text-center text-white">{translateText("login")}</span>
-                    </div>
+                  
                     <p className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center text-white my-20">{translateText("enter_otp")}</p>
                     <div>
                         <Input
@@ -70,7 +67,7 @@ export default function Otp() {
                     </button>
 
                     {/* Hidden Link to /dashboard */}
-                    <Link ref={otpLinkRef} href="/login" className="hidden" />
+                    <Link ref={otpLinkRef} href="/newPassword" className="hidden" />
                 </div>
             </div>
         </div>

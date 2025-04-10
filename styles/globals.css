@@ -258,3 +258,11 @@ body .table-wrapper::-webkit-scrollbar {
 .data-\[has-label\=true\]\:mt-\[calc\(theme\(fontSize\.small\)_\+_10px\)\][data-has-label="true"]{
   margin-top: 30px !important;
 }
+
+.group[data-has-value="true"] .group-data-\[has-value\=true\]\:text-foreground {
+  color: #ffffff !important;
+}
+
+.group[data-filled-within="true"] .group-data-\[filled-within\=true\]\:text-default-600 {
+  color: #ffffff !important;
+}

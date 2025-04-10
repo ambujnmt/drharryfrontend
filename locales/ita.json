@@ -116,5 +116,15 @@
     "password_forgot": "Password dimenticata?",
     "after_you":"AVANTI",
     "enter_otp": "Inserisci OTP",
-    "verify":" VERIFICA"
+    "verify":" VERIFICA",
+    "doctor": "Medico",
+    "social_worker": "Assistente sociale",
+    "wrong_pass": "Password errata!",
+    "recover": "RECUPERA!",
+    "try_again": "PROVA DI NUOVO",
+    "new password set successfully!": "Nuova password impostata  con successo!",
+    "back_to_login": "TORNA AL LOGIN",
+    "recover_password": "Recupero password",
+    "new_pass": "Nuova password",
+    "enter": "Entra"
 }

@@ -35,25 +35,23 @@ export default function Slider() {
   };
 
   return (
-    <section className="sliderSection relative">
+    <section className="sliderSection relative min-h-screen flex flex-col justify-between">
       {/* Render current slide */}
       {slides[currentSlide]}
 
       {/* Dots */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+      <div className="w-full flex justify-center mt-4 absolute bottom-8 md:bottom-10 lg:-bottom-[28]  xl:bottom-16 md:left-1/2 md:transform md:-translate-x-1/2 space-x-2 z-20">
         {slides.map((_, index) => (
           <span
             key={index}
-            className={`md:w-3 md:h-3 h-2 w-2 rounded-full border border-gray-200 inline-block cursor-pointer ${
-              currentSlide === index ? "bg-yellow-400" : "bg-gray-300"
-            }`}
+            className={`md:w-3 md:h-3 h-2 w-2 rounded-full border border-gray-200 inline-block cursor-pointer ${currentSlide === index ? "bg-yellow-400" : "bg-gray-300"}`}
             onClick={() => goToSlide(index)}
           />
         ))}
       </div>
 
       {/* Arrows */}
-      <div className="absolute bottom-5 right-5 md:bottom-10 md:right-60 flex justify-end space-x-2 mt-10 md:mt-0 ml-4 z-20">
+      <div className="w-full flex  mt-4 space-x-2 z-20 absolute bottom-2 md:bottom-10 lg:-bottom-[28] xl:bottom-10 xl:right-[20%] right-[5%] md:right-[14%] justify-end">
         <button
           onClick={goToPrev}
           className="w-8 h-8 bg-[#5274F6] text-white rounded-full flex items-center justify-center"
@@ -77,5 +75,6 @@ export default function Slider() {
         )}
       </div>
     </section>
+
   );
 }
