@@ -6,6 +6,8 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { Input, Select, SelectItem } from "@heroui/react";
 import { registerUser } from "../../utils/fetchApi"
 import { IoLanguage } from "react-icons/io5";
+import { useUser } from "../../context/UserContext"; // adjust the path
+
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -17,7 +19,6 @@ export default function SignupForm() {
   });
 
   const [errors, setErrors] = useState({});
-  const [show, setShow] = useState(false);
   const router = useRouter();
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
 
@@ -61,11 +62,13 @@ export default function SignupForm() {
   ];
 
   const [successMessage, setSuccessMessage] = useState("");
+  const { setUserEmail } = useUser(); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    setSuccessMessage("");
   };
 
   const handleSubmit = async (e) => {
@@ -76,7 +79,20 @@ export default function SignupForm() {
     try {
       const { name, email, password, c_password, user_type } = formData;
 
-      const userData = await registerUser(name, email, password, c_password, user_type);
+      const response = await registerUser(name, email, password, c_password, user_type);
+
+      const successMsg =
+        locale === "ita"
+          ? response?.message_italian
+          : response?.message;
+      setSuccessMessage(successMsg);
+
+      const registeredEmail = email;
+      setUserEmail(registeredEmail);
+
+      setTimeout(() => {
+        router.push("/otpVerification");
+      }, 3000);
 
       setFormData({
         name: "",
@@ -86,27 +102,24 @@ export default function SignupForm() {
         user_type: ""
       });
       setErrors({});
-      setSuccessMessage("Registered successfully! Redirecting...");
-
-      setTimeout(() => {
-        router.push({
-          pathname: "/otp",
-        });
-      }, 2000);
 
     } catch (err) {
-
       if (err?.details) {
         const fieldErrors = {};
         for (const field in err.details) {
-          fieldErrors[field] = err.details[field][0];
+          fieldErrors[field] = err.details[field][0]; // show only the first message
         }
         setErrors(fieldErrors);
       } else {
         setErrors({ api: err.message });
       }
+
+      setSuccessMessage(""); // Clear success message on error
     }
+
   };
+
+
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
@@ -129,13 +142,14 @@ export default function SignupForm() {
 
         <div className="w-full md:w-1/2  flex flex-col justify-center">
           <p className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center text-white">{translateText("register")}</p>
-          {errors.api && <p className="text-gray-300 mt-1 text-sm mb-4">{errors.api}</p>}
-          {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
+          {errors.email && <p className="text-white my-3 text-lg">{errors.email}</p>}
           {successMessage && (
-            <p className="text-yellow-500 font-semibold text-lg text-center my-4">
-              {successMessage}
-            </p>
+            <p className="text-white my-3 text-lg">{successMessage}</p>
           )}
+          {errors.api && errors.api !== "Validation Error." && (
+            <p className="text-white my-3 text-lg">{errors.api}</p>
+          )}
+
           <form onSubmit={handleSubmit} className="flex flex-col">
             <div className=" w-full  gap-2">
               <Input
@@ -163,7 +177,11 @@ export default function SignupForm() {
                 }}
                 value={formData.email}
                 onChange={handleChange}
+                isInvalid={!!errors.email}
+                errorMessage={errors.email}
               />
+
+
               {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -226,7 +244,7 @@ export default function SignupForm() {
               {errors.user_type && <p className="text-gray-300 my-1 text-sm">{errors.user_type}</p>}
             </div>
 
-            <button type="submit" className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
+            <button type="submit" onClick={handleSubmit} className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
               {translateText("register")}
             </button>
             <button className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center rounded-[600px] border-1 border-white py-2">

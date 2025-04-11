@@ -75,7 +75,7 @@ export default function Otp() {
           </button>
 
           {/* Hidden Link - triggers only if email is entered */}
-          <Link ref={hiddenLinkRef} href="/otpVerification" className="hidden" />
+          <Link ref={hiddenLinkRef} href="#" className="hidden" />
         </div>
       </div>
     </div>

@@ -2,42 +2,61 @@ import { useStoreLogin } from "../store/login";
 // const baseUrl = "https://abc.in";
 // const v3BaseUrl = "";
 
+export const verifyOtp = async ({ email, otp }) => {
+  const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/verify-otp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, otp })
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw data;
+  return data;
+};
 
 export const registerUser = async (name, email, password, c_password, user_type) => {
   const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/register";
 
   try {
+    // Basic validations
+    if (!name || !email || !password || !c_password || !user_type) {
+      throw new Error("All fields are required.");
+    }
+
     if (password !== c_password) {
       throw new Error("Password and Confirm Password must match.");
     }
+
+    const payload = { name, email, password, c_password, user_type };
 
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name, email, password, c_password, user_type }),
+      body: JSON.stringify(payload),
     });
 
     const result = await response.json();
 
+    // Handle non-successful responses
     if (!response.ok || !result?.status) {
-      const error = new Error(result.message || "Registration failed");
-      error.details = result.data; // Pass full data to catch block
+      const error = new Error(result.message);
+      error.details = result.data || null;
       throw error;
     }
-    
 
-    return result.data;
+    // Return the successful response data
+    return result;
 
   } catch (error) {
+    // Optional: Log the error for debugging
+    console.error("Registration Error:", error.message, error.details);
     throw error;
   }
 };
-
-
-
-
 
 export const loginUser = async (email, password) => {
   const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/login";

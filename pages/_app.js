@@ -3,6 +3,7 @@ import DefaultLayout from "@/layouts/default";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { LanguageProvider } from "../context/LanguageContext";
+import { UserProvider } from "../context/UserContext";
 // import { getWebsiteData } from "../service/apiFetch";
 import '../styles/globals.css';
  const Snackbar = dynamic(() => import('@/components/utils/Snackbar'), { ssr: false });
@@ -14,13 +15,15 @@ function App({ Component, pageProps, websiteData }) {
 
   return (
     <LanguageProvider>
-    <HeroUIProvider navigate={router.push}>
-      <DefaultLayout websiteData={websiteData}>
-        <Component {...pageProps} />
-      </DefaultLayout>
-      <Snackbar/>
-    </HeroUIProvider>
-    </LanguageProvider>
+    <UserProvider> {/* ✅ Wrap everything inside UserProvider */}
+      <HeroUIProvider navigate={router.push}>
+        <DefaultLayout websiteData={websiteData}>
+          <Component {...pageProps} />
+        </DefaultLayout>
+        <Snackbar />
+      </HeroUIProvider>
+    </UserProvider>
+  </LanguageProvider>
   );
 }
 
