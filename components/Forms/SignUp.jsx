@@ -6,8 +6,7 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { Input, Select, SelectItem } from "@heroui/react";
 import { registerUser } from "../../utils/fetchApi"
 import { IoLanguage } from "react-icons/io5";
-import { useUser } from "../../context/UserContext"; // adjust the path
-
+import { useUser } from "../../context/UserContext";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -62,7 +61,7 @@ export default function SignupForm() {
   ];
 
   const [successMessage, setSuccessMessage] = useState("");
-  const { setUserEmail } = useUser(); 
+  const { setUserEmail } = useUser();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -107,19 +106,16 @@ export default function SignupForm() {
       if (err?.details) {
         const fieldErrors = {};
         for (const field in err.details) {
-          fieldErrors[field] = err.details[field][0]; // show only the first message
+          fieldErrors[field] = err.details[field][0];
         }
         setErrors(fieldErrors);
       } else {
         setErrors({ api: err.message });
       }
 
-      setSuccessMessage(""); // Clear success message on error
+      setSuccessMessage("");
     }
-
   };
-
-
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
