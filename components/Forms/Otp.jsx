@@ -20,12 +20,8 @@ export default function Otp() {
     e.preventDefault();
 
     if (!enteredEmail) {
-      alert("Please enter your email.");
       return;
     }
-
-    // Optional: Store email for later use
-    localStorage.setItem("userEmail", enteredEmail);
 
     // Proceed to verification page
     hiddenLinkRef.current?.click();

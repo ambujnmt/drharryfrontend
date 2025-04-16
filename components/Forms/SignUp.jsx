@@ -14,7 +14,6 @@ export default function SignupForm() {
     email: "",
     password: "",
     c_password: "",
-    user_type: ""
   });
 
   const [errors, setErrors] = useState({});
@@ -46,19 +45,10 @@ export default function SignupForm() {
     if (formData.password && formData.c_password && formData.password !== formData.c_password) {
       newErrors.c_password = "Passwords do not match";
     }
-    if (!formData.user_type) {
-      newErrors.user_type = "User type is required";
-    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-  const user_type = [
-    { key: "1", label: translateText("doctor") },
-    { key: "2", label: translateText("social_worker") },
-    { key: "3", label: translateText("patient") },
-    { key: "4", label: translateText("user") },
-  ];
 
   const [successMessage, setSuccessMessage] = useState("");
   const { setUserEmail } = useUser();
@@ -76,10 +66,10 @@ export default function SignupForm() {
     if (!validate()) return;
 
     try {
-      const { name, email, password, c_password, user_type } = formData;
+      const { name, email, password, c_password } = formData;
 
-      const response = await registerUser(name, email, password, c_password, user_type);
-
+      const response = await registerUser(name, email, password, c_password, );
+     console.log(response);
       const successMsg =
         locale === "ita"
           ? response?.message_italian
@@ -98,7 +88,6 @@ export default function SignupForm() {
         email: "",
         password: "",
         c_password: "",
-        user_type: ""
       });
       setErrors({});
 
@@ -145,6 +134,8 @@ export default function SignupForm() {
           {errors.api && errors.api !== "Validation Error." && (
             <p className="text-white my-3 text-lg">{errors.api}</p>
           )}
+
+
 
           <form onSubmit={handleSubmit} className="flex flex-col">
             <div className=" w-full  gap-2">
@@ -212,34 +203,6 @@ export default function SignupForm() {
                 {errors.c_password && <p className="text-gray-300 text-sm mt-1">{errors.c_password}</p>}
               </div>
             </div>
-            <div>
-              <Select
-                className="max-w-full mb-2 selectmargin"
-                classNames={{
-                  label: "text-[#fff]",
-                  trigger: "text-white",
-                  base: "margin-top-[0px]"
-                }}
-                label={translateText("user_type")}
-                labelPlacement="outside"
-                variant="underlined"
-                name="user_type"
-                selectedKeys={formData.user_type ? new Set([formData.user_type]) : new Set()}
-                onSelectionChange={(keys) => {
-                  const selectedKey = Array.from(keys)[0];
-                  setFormData((prev) => ({ ...prev, user_type: selectedKey }));
-                  setErrors((prevErrors) => ({ ...prevErrors, user_type: "" }));
-                }}
-              >
-                {user_type.map((g) => (
-                  <SelectItem key={g.key} value={g.key}>
-                    {g.label}
-                  </SelectItem>
-                ))}
-              </Select>
-              {errors.user_type && <p className="text-gray-300 my-1 text-sm">{errors.user_type}</p>}
-            </div>
-
             <button type="submit" onClick={handleSubmit} className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
               {translateText("register")}
             </button>

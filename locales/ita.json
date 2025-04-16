@@ -126,5 +126,6 @@
     "back_to_login": "TORNA AL LOGIN",
     "recover_password": "Recupero password",
     "new_pass": "Nuova password",
-    "enter": "Entra"
+    "enter": "Entra",
+     "googleLogin": "Accedi con Google"
 }

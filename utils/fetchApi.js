@@ -2,6 +2,117 @@ import { useStoreLogin } from "../store/login";
 // const baseUrl = "https://abc.in";
 // const v3BaseUrl = "";
 
+export const createNewPasswordApi = async (email, password) => {
+  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/create-new-password";
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.status) {
+      throw {
+        status: false,
+        message: data.message,
+        errors: data.data || null,
+      };
+    }
+
+    return {
+      status: true,
+      message: data.message,
+      message_italian: data.message_italian || data.message,
+    };
+
+  } catch (error) {
+    console.error("Error creating new password:", error);
+    throw error;
+  }
+};
+
+
+export const verifyResendOtpApi = async (email, otp) => {
+  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/verify-otp";
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, otp })
+    });
+
+    const data = await response.json();
+
+    // If response is not OK or status is false
+    if (!response.ok || !data.status) {
+      throw {
+        status: false,
+        message: data.message,
+        errors: data.data || null
+      };
+    }
+
+    // Return success response with token and user name
+    return {
+      status: true,
+      message: data.message,
+      token: data.data.token,
+      name: data.data.name
+    };
+
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    throw error; 
+  }
+};
+
+
+export const resendOtpApi = async (email) => {
+  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/resend-otp";  
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await response.json();
+
+    // If the response is not OK, throw the error response
+    if (!response.ok) {
+      throw { 
+        status: false, 
+        message: data.message 
+      };
+    }
+
+    // Return success response with message
+    return {
+      status: true,
+      message: data.message 
+    };
+
+  } catch (error) {
+    console.error("Error resending OTP:", error);
+    throw error; // Rethrow the error object with status and message
+  }
+};
+
+
+
+
+
 export const verifyOtp = async ({ email, otp }) => {
   const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/verify-otp`, {
     method: "POST",
@@ -16,12 +127,12 @@ export const verifyOtp = async ({ email, otp }) => {
   return data;
 };
 
-export const registerUser = async (name, email, password, c_password, user_type) => {
+export const registerUser = async (name, email, password, c_password) => {
   const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/register";
 
   try {
     // Basic validations
-    if (!name || !email || !password || !c_password || !user_type) {
+    if (!name || !email || !password || !c_password ) {
       throw new Error("All fields are required.");
     }
 
@@ -29,7 +140,7 @@ export const registerUser = async (name, email, password, c_password, user_type)
       throw new Error("Password and Confirm Password must match.");
     }
 
-    const payload = { name, email, password, c_password, user_type };
+    const payload = { name, email, password, c_password };
 
     const response = await fetch(url, {
       method: "POST",
@@ -83,7 +194,30 @@ export const loginUser = async (email, password) => {
 };
 
 
+// src/utils/fetchApi.js
 
+const fetchGoogleToken = async (token) => {
+  try {
+    const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`;
+    console.log('Fetching token info from:', url);
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Google Token Fetch Failed:', errorText);
+      throw new Error('Invalid token');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching Google token info:', error.message);
+    return null;
+  }
+};
+
+export { fetchGoogleToken };
 
 
 

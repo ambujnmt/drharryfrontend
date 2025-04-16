@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
 import { Link } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
@@ -41,10 +41,11 @@ export default function SignupSelection() {
           <img src="https://nmtdevserver.com/welli/logo.png" className="w-[35%] mb-10 items-center mx-auto" alt="" />
           <p className="font-normal text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px] my-4 text-center text-white">{translateText("your health at your fingertips!")}</p>
           <p className="font-normal uppercase text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px] my-3 text-center text-white">{translateText("register_with")}</p>
-          <div className="font-bold text-[10px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center rounded-[600px] bg-[#FFBA1B] py-1"><Link href="/emailSignUp" className="text-white uppercase">{translateText("email")}</Link></div>
-          <div className="font-bold text-[12px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[rgb(0,79,229)] py-2 uppercase">{translateText("facebook")}</div>
-          <div className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 uppercase  text-center text-white ">{translateText("or")}</div>
-          <div className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[#FFBA1B] py-1"><Link href="/login" className="text-white uppercase">{translateText("login")}</Link></div>
+          <div className="font-bold text-[10px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 text-center rounded-[600px] bg-[#FFBA1B] py-1"><Link href="/emailSignUp" className="text-white uppercase">{translateText("email")}</Link></div>
+          <div className="font-bold text-[12px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 text-center text-white rounded-[600px] bg-[rgb(0,79,229)] py-2 uppercase">{translateText("facebook")}</div>
+          <div className="font-bold text-[12px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 text-center text-white rounded-[600px] bg-[rgb(0,79,229)] py-2 uppercase"><Link href="/loginGoogle" className="text-white uppercase">{translateText("googleLogin")}</Link></div>
+          <div className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 uppercase  text-center text-white ">{translateText("or")}</div>
+          <div className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 text-center text-white rounded-[600px] bg-[#FFBA1B] py-1"><Link href="/login" className="text-white uppercase">{translateText("login")}</Link></div>
         </div>
       </div>
     </div>

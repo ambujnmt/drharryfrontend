@@ -3,20 +3,25 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@
 import { LanguageContext } from "../../context/LanguageContext";
 import { Link, Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
-
+import { resendOtpApi } from "../../utils/fetchApi";
+import { useRegisteredUser } from "../../context/RegisteredUserContext"; // Import the context
 
 export default function Otp() {
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
-
+  const { setRegisteredUser } = useRegisteredUser(); // Access the setRegisteredUser function
   const [clientLocale, setClientLocale] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");  
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [isError, setIsError] = useState(false); 
   const hiddenLinkRef = useRef(null);
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
   }, [locale]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!enteredEmail) {
@@ -24,11 +29,37 @@ export default function Otp() {
       return;
     }
 
-    // Optional: Store email for later use
-    localStorage.setItem("userEmail", enteredEmail);
+    setIsLoading(true);
 
-    // Proceed to verification page
-    hiddenLinkRef.current?.click();
+    try {
+      const response = await resendOtpApi(enteredEmail);
+
+      setIsLoading(false);
+
+      if (response.status) {
+        const successMsg = locale === 'ita' ? response.message_italian : response.message;
+        setSuccessMessage(successMsg);
+        setIsError(false);
+        setErrorMessage("");
+
+        // Set the registered user email in the context
+        setRegisteredUser(enteredEmail);  // Update context with entered email
+
+        setTimeout(() => {
+          hiddenLinkRef.current?.click();
+        }, 1000);
+      } else {
+        setSuccessMessage("");
+        setIsError(true);
+        const errorMsg = locale === 'ita' ? response.message_italian : response.message;
+        setErrorMessage(errorMsg);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setSuccessMessage("");
+      setIsError(true);
+      setErrorMessage(error.message);
+    }
   };
 
   return (
@@ -50,8 +81,14 @@ export default function Otp() {
       </div>
       <div className="lg:mt-4 md:mt-6 mt-10 xl:-mt-32 flex justify-center md:flex-row rounded-lg w-full overflow-hidden">
         <div className="w-full md:w-1/2 flex flex-col justify-start">
-        
           <p className="font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl text-center text-white my-10 xl:my-20">{translateText("recover_password")}</p>
+          {successMessage && !isError && (
+            <p className="text-center my-4 text-white">{successMessage}</p>
+          )}
+
+          {isError && errorMessage && (
+            <p className="text-center my-4 text-white">{errorMessage}</p>
+          )}
           <div>
             <Input
               classNames={{ input: "text-black text-center", }}

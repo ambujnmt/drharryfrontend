@@ -4,26 +4,30 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { LanguageProvider } from "../context/LanguageContext";
 import { UserProvider } from "../context/UserContext";
-// import { getWebsiteData } from "../service/apiFetch";
+import { GoogleOAuthProvider } from '@react-oauth/google'; // ✅ Import GoogleOAuthProvider
+import { RegisteredUserProvider } from "../context/RegisteredUserContext"; // ✅ Import RegisteredUserProvider
 import '../styles/globals.css';
- const Snackbar = dynamic(() => import('@/components/utils/Snackbar'), { ssr: false });
 
-
+const Snackbar = dynamic(() => import('@/components/utils/Snackbar'), { ssr: false });
 
 function App({ Component, pageProps, websiteData }) {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
-    <LanguageProvider>
-    <UserProvider> {/* ✅ Wrap everything inside UserProvider */}
-      <HeroUIProvider navigate={router.push}>
-        <DefaultLayout websiteData={websiteData}>
-          <Component {...pageProps} />
-        </DefaultLayout>
-        <Snackbar />
-      </HeroUIProvider>
-    </UserProvider>
-  </LanguageProvider>
+    <GoogleOAuthProvider clientId="437775872420-c5kcesl6ufgtc673n5mqc8f2k6nkuf3o.apps.googleusercontent.com">
+      <LanguageProvider>
+        <UserProvider>
+          <RegisteredUserProvider> {/* Wrap your app with RegisteredUserProvider */}
+            <HeroUIProvider navigate={router.push}>
+              <DefaultLayout websiteData={websiteData}>
+                <Component {...pageProps} />
+              </DefaultLayout>
+              <Snackbar />
+            </HeroUIProvider>
+          </RegisteredUserProvider>
+        </UserProvider>
+      </LanguageProvider>
+    </GoogleOAuthProvider>
   );
 }
 

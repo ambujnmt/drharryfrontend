@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState,useRef  } from "react";
-import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
 import { LanguageContext } from "../../context/LanguageContext";
+import { useRegisteredUser } from "../../context/RegisteredUserContext";
+import { createNewPasswordApi } from "../../utils/fetchApi";
 
 export default function NewPass() {
     const [formData, setFormData] = useState({
@@ -16,7 +17,6 @@ export default function NewPass() {
 
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
-    const router = useRouter();
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
 
@@ -44,22 +44,46 @@ export default function NewPass() {
         setFormData({ ...formData, [name]: value });
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
+
+    const { registeredUserEmail } = useRegisteredUser();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validate()) {
-            try {
-                // Simulate API call here
-                // await updatePassword(formData.password);
+        
+        if (!validate()) return;
+        console.log("registeredUserEmail:", registeredUserEmail);
+
+        if (!registeredUserEmail) {
+            setErrors({ api: "Email is required to set a new password." });
+            return;
+        }
+        
+        try {
+            const result = await createNewPasswordApi(registeredUserEmail, formData.password);
     
-                setFormData({ password: "", c_password: "" });
+            setSuccessMessage(locale === "ita" ? result.message_italian : result.message);
     
-                // Trigger redirect using hidden Link
+            setFormData({ password: "", c_password: "" });
+    
+            setTimeout(() => {
                 linkRef.current?.click();
-            } catch (err) {
-                setErrors({ api: "Something went wrong. Please try again." });
+            }, 1000);
+            
+        } catch (err) {
+            const formattedErrors = {};
+            
+            if (err.errors?.password) {
+                formattedErrors.password = err.errors.password[0];
             }
+    
+            if (err.errors?.email) {
+                formattedErrors.api = err.errors.email[0];
+            }
+    
+            setErrors(formattedErrors);
         }
     };
+    
     
 
     return (
@@ -85,6 +109,8 @@ export default function NewPass() {
                     <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">
                         {translateText("new_pass")}
                     </h2>
+                    {errors.api && <p className="text-white text-sm mb-4">{errors.api}</p>}
+                    {successMessage && <p className="text-white text-sm mb-4">{successMessage}</p>}
 
                     <Link href="/successfullPassSet" className="hidden" ref={linkRef} />
 

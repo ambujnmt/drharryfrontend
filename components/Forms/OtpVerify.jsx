@@ -8,8 +8,6 @@ import { useRouter } from "next/router";
 import { useUser } from "../../context/UserContext";
 
 
-
-
 export default function Otp() {
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
@@ -25,7 +23,7 @@ export default function Otp() {
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [apiResult, setApiResult] = useState(null);
-    const { userEmail } = useUser();
+    const { userEmail, setAuthToken } = useUser();
 
     useEffect(() => {
         if (userEmail) {
@@ -37,7 +35,7 @@ export default function Otp() {
 
 
     const handleOtpVerify = async () => {
-      
+
         setIsLoading(true);
 
         try {
@@ -48,6 +46,10 @@ export default function Otp() {
             setApiResult(result);
 
             if (result.status) {
+                const token = result.data.token;
+                setAuthToken(token); // Store in context
+                localStorage.setItem("authToken", token);
+
                 const successMsg = locale === "ita" ? result.message_italian : result.message;
                 setMessage(successMsg);
 
@@ -81,8 +83,6 @@ export default function Otp() {
         }
     };
 
-
-
     return (
         <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
             <div className="absolute top-2 right-2">
@@ -110,6 +110,11 @@ export default function Otp() {
                     {message && (
                         <p className="text-center text-white text-sm md:text-lg mb-4">{message}</p>
                     )}
+                    {/* {apiResult && (
+                        <div className="mt-4 bg-white text-black p-4 rounded-lg max-w-full overflow-auto">
+                            <pre className="text-sm">{JSON.stringify(apiResult, null, 2)}</pre>
+                        </div>
+                    )} */}
 
                     <div>
                         <Input
