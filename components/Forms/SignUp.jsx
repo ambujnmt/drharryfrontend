@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
 import { Input, Select, SelectItem } from "@heroui/react";
-import { registerUser } from "../../utils/fetchApi"
+import { registerUser } from "../../utils/fetchApi";
 import { IoLanguage } from "react-icons/io5";
 import { useUser } from "../../context/UserContext";
 
@@ -51,7 +51,7 @@ export default function SignupForm() {
   };
 
   const [successMessage, setSuccessMessage] = useState("");
-  const { setUserEmail } = useUser();
+  const { setUserEmail  } = useUser();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,7 +77,7 @@ export default function SignupForm() {
       setSuccessMessage(successMsg);
 
       const registeredEmail = email;
-      setUserEmail(registeredEmail);
+      setUserEmail (registeredEmail);
 
       setTimeout(() => {
         router.push("/otpVerification");

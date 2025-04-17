@@ -3,9 +3,12 @@ import SideMenu from "../components/Menu/SideMenu";
 import Header from "../components/Menu/Header";
 import Footer from "../components/Menu/Footer";
 import AddUser from "../components/Forms/AddUser";
+import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
+
 export default function AddUserPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
   return (
+    <PrivateRoute>
     <div className="flex">
       {menuOpen && (
         <div
@@ -46,5 +49,6 @@ export default function AddUserPage() {
         <Footer />
       </div>
     </div>
+    </PrivateRoute>
   );
 }

@@ -12,6 +12,8 @@ const Snackbar = dynamic(() => import('@/components/utils/Snackbar'), { ssr: fal
 
 function App({ Component, pageProps, websiteData }) {
   const router = useRouter();
+  const getLayout = Component.getLayout || ((page) => page);
+
 
   return (
     <GoogleOAuthProvider clientId="437775872420-c5kcesl6ufgtc673n5mqc8f2k6nkuf3o.apps.googleusercontent.com">
@@ -20,7 +22,7 @@ function App({ Component, pageProps, websiteData }) {
           <RegisteredUserProvider> {/* Wrap your app with RegisteredUserProvider */}
             <HeroUIProvider navigate={router.push}>
               <DefaultLayout websiteData={websiteData}>
-                <Component {...pageProps} />
+              {getLayout(<Component {...pageProps} />)}
               </DefaultLayout>
               <Snackbar />
             </HeroUIProvider>

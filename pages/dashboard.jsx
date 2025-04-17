@@ -3,11 +3,14 @@ import SideMenu from "../components/Menu/SideMenu";
 import Header from "../components/Menu/Header";
 import Footer from "../components/Menu/Footer";
 import Dashboard from "../components/Dashboard/Dashboard";
+import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
 
 export default function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
 
   return (
+    <PrivateRoute>
+
     <div className="flex">
       {menuOpen && (
         <div
@@ -48,5 +51,6 @@ export default function DashboardPage() {
         <Footer />
       </div>
     </div>
+    </PrivateRoute>
   );
 }

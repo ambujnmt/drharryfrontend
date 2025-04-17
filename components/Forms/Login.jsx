@@ -1,12 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
 import { loginUser } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
-  
+import { useUser } from "../../context/UserContext";
+
+
 
 
 export default function LoginForm() {
@@ -15,6 +17,8 @@ export default function LoginForm() {
   const router = useRouter();
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
@@ -22,8 +26,6 @@ export default function LoginForm() {
 
   const validate = () => {
     let newErrors = {};
-    const savedEmail = localStorage.getItem("userEmail");
-    const savedPassword = localStorage.getItem("userPassword");
 
     if (!formData.email) {
       newErrors.email = translateText("emailRequired");
@@ -45,39 +47,46 @@ export default function LoginForm() {
     setFormData({ ...formData, [name]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (validate()) {
-  //     setFormData({ email: "", password: "" });
-  //     setErrors({});
-  //     router.push("/dashboard");
-  //   }
-  // };
-
   const [successMessage, setSuccessMessage] = useState("");
+
+  const { user, setUser, setUserEmail } = useUser();
+  useEffect(() => {
+    if (user) {
+    }
+  }, [user]);
+
+  if (user) {
+    router.push("/dashboard");
+    return;
+  }
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
+      setLoading(true); // Show loader
+
       try {
-        const userData = await loginUser(formData.email, formData.password);
+        const response = await loginUser(formData.email, formData.password);
+
+        setUser(response);
+        setUserEmail(formData.email);
 
         setFormData({ email: "", password: "" });
         setErrors({});
 
-        setSuccessMessage("Login successfully! Redirecting...");
+        const translatedMessage = locale === "ita" ? response.message_italian : response.message;
+        setSuccessMessage(translatedMessage);
 
-        // Delay redirection for 2 seconds
         setTimeout(() => {
-          router.push({
-            pathname: "/dashboard",
-          });
+          router.push("/dashboard");
         }, 2000);
 
       } catch (err) {
-        setErrors({ api: err.message });
+        const errorMessage = locale === "ita" ? err.message_italian : err.message;
+        setErrors({ api: errorMessage });
+      } finally {
+        setLoading(false); // Hide loader
       }
     }
   };
@@ -108,6 +117,26 @@ export default function LoginForm() {
             <p className="text-yellow-500 font-semibold text-lg text-center my-4">
               {successMessage}
             </p>
+          )}
+          {errors.api && <p className="text-white text-sm mb-4">{errors.api}</p>}
+          {/* {user && (
+            <div className="text-green-700 bg-green-50 border border-green-200 rounded-md p-4 my-4 text-sm">
+              <p><strong>Name:</strong> {user.name}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Mobile:</strong> {user.mobile}</p>
+              <p><strong>User Type:</strong> {user.user_type_value}</p>
+              <p><strong>Gender:</strong> {user.gender}</p>
+              <p><strong>Address:</strong> {user.address}</p>
+              <p><strong>Token:</strong> {user.token}</p>
+              <p><strong>Status:</strong> {user.status}</p>
+              <p><strong>Created At:</strong> {new Date(user.created_at).toLocaleString()}</p>
+              <p><strong>Updated At:</strong> {new Date(user.updated_at).toLocaleString()}</p>
+            </div>
+          )} */}
+          {loading && (
+            <div className="flex justify-center items-center my-4">
+              <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+            </div>
           )}
           <form onSubmit={handleSubmit}>
             <div className=" w-full  gap-2">
@@ -142,7 +171,7 @@ export default function LoginForm() {
             </div>
             <p className="text-start text-sm  mt-2 mb-16">
               <Link className="text-white" href="/forgottenPassword">
-              {translateText("password_forgot")}
+                {translateText("password_forgot")}
               </Link>
             </p>
             {errors.api && <p className="text-red-500 text-sm mb-4">{errors.api}</p>}

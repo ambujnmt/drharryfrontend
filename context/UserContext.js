@@ -1,20 +1,28 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [userEmail, setUserEmail] = useState("");
-  const [authToken, setAuthToken] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("authToken");
-    if (savedToken) {
-      setAuthToken(savedToken);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
+
   return (
-    <UserContext.Provider value={{userEmail, setUserEmail , authToken, setAuthToken }}>
+    <UserContext.Provider value={{ userEmail, setUserEmail, user, setUser }}>
       {children}
     </UserContext.Provider>
   );

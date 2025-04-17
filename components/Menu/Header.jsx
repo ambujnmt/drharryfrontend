@@ -4,8 +4,13 @@ import { RxCross2 } from "react-icons/rx";
 import { IoMdNotifications } from "react-icons/io";
 import { HiUserCircle } from "react-icons/hi2";
 import { LanguageContext } from "../../context/LanguageContext";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, useDisclosure } from "@heroui/react";
 import { Link } from "@heroui/link";
+import { IoLanguage } from "react-icons/io5";
+import Tmodal from "../Tmodal/Tmodal"
+import { useUser } from "../../context/UserContext";
+import { useRouter } from "next/router";
+
 
 export default function Header({ menuOpen, toggleMenu }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -13,6 +18,11 @@ export default function Header({ menuOpen, toggleMenu }) {
 
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
+  const router = useRouter();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { setUser, setUserEmail } = useUser();
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
@@ -67,22 +77,51 @@ export default function Header({ menuOpen, toggleMenu }) {
         </button>
 
         {dropdownOpen && (
-          <div className="absolute right-0 top-12 w-40 bg-white text-black shadow-lg rounded-md z-50">
+          <div className="absolute right-0 top-12 w-40 bg-white text-black shadow-lg rounded-md  z-50">
             <ul className="text-sm">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">{translateText("profile")}</li>
+              <li className="p-2 hover:bg-gray-200 hover:rounded-t-md cursor-pointer">{translateText("profile")}</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer">{translateText("settings")}</li>
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">{translateText("logout")}</li>
+              <li className=" hover:bg-gray-200 hover:rounded-b-md cursor-pointer"><Button className="w-full bg-white flex justify-start hover:bg-gray-200" onPress={onOpen}>{translateText("logout")}</Button></li>
             </ul>
           </div>
         )}
 
+        <Tmodal
+          isOpen={isOpen}
+          onClose={onClose}
+          title="Are you sure you want to logout?"
+          footer={
+            <>
+              <Button color="danger" variant="light" onPress={onClose}>
+                Cancel
+              </Button>
+              <Button
+  color="primary"
+  onPress={() => {
+    setUser(null);
+    setUserEmail("");
+    localStorage.removeItem("user");
+    onClose();
+    router.push("/login");
+  }}
+>
+  Confirm
+</Button>
+
+            </>
+          }
+        />
+
+
         <Dropdown>
           <DropdownTrigger>
-            <Button variant="bordered" className="text-white text-sm">Language</Button>
+            <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
+              <IoLanguage />
+            </button>
           </DropdownTrigger>
           <DropdownMenu>
             <DropdownItem onClick={() => switchLanguage("en")}>English</DropdownItem>
-            <DropdownItem onClick={() => switchLanguage("fr")}>French</DropdownItem>
+            <DropdownItem onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>

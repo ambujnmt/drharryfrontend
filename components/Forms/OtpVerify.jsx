@@ -23,32 +23,31 @@ export default function Otp() {
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [apiResult, setApiResult] = useState(null);
-    const { userEmail, setAuthToken } = useUser();
+    const { userEmail } = useUser(); // Get the dynamic email from context
 
-    useEffect(() => {
-        if (userEmail) {
-            setEmail(userEmail);
-        } else if (router.isReady && router.query.email) {
-            setEmail(router.query.email);
-        }
-    }, [router.isReady, userEmail, router.query.email]);
-
-
+    // useEffect(() => {
+    //     if (user?.email) {
+    //         setEmail(user.email);
+    //     }
+    // }, [user]);
+    
     const handleOtpVerify = async () => {
+        console.log("Sending OTP verify data:", { userEmail, otp: enteredOtp });
 
         setIsLoading(true);
 
         try {
             const result = await verifyOtp({
-                email,
+                email: userEmail,  // Use 'email' instead of 'userEmail' if that's expected
                 otp: enteredOtp
             });
+            
             setApiResult(result);
 
             if (result.status) {
-                const token = result.data.token;
-                setAuthToken(token); // Store in context
-                localStorage.setItem("authToken", token);
+                // const token = result.data.token;
+                // setAuthToken(token); // Store in context
+                // localStorage.setItem("authToken", token);
 
                 const successMsg = locale === "ita" ? result.message_italian : result.message;
                 setMessage(successMsg);
@@ -129,15 +128,6 @@ export default function Otp() {
                             className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center bg-white text-white rounded-[600px] border-1 border-white "
                         />
                     </div>
-
-                    {/* <button
-                        onClick={handleOtpVerify}
-                        className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
-                    >
-                        {translateText("verify")}
-                    </button> */}
-
-
                     <button
                         onClick={handleOtpVerify}
                         disabled={isLoading}

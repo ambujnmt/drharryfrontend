@@ -183,15 +183,18 @@ export const loginUser = async (email, password) => {
 
     const result = await response.json();
 
+    console.log("API Response:", result); // Add this to debug
+
     if (!response.ok || !result.status) {
-      throw new Error(result.message || "Login failed");
+      throw new Error(result.message);
     }
 
-    return result.data; // { token, name }
+    return result.data; // This is where user data should come from
   } catch (error) {
     throw error;
   }
 };
+
 
 
 // src/utils/fetchApi.js

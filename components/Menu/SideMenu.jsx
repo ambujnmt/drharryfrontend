@@ -20,7 +20,7 @@ export default function SideMenu({ isOpen, onClose }) {
   return (
     <div
       className={`
-        fixed top-0 left-0 z-40 h-screen w-64 bg-blue-500 text-white flex flex-col transition-transform duration-300 
+        fixed top-0 left-0 z-40 h-screen w-64 bg-[#5274F6] text-white flex flex-col transition-transform duration-300 
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
         lg:translate-x-0
       `}
