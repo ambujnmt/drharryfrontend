@@ -14,7 +14,6 @@ export default function NewPass() {
 
     const linkRef = useRef(null);
 
-
     const [errors, setErrors] = useState({});
     const [successMessage, setSuccessMessage] = useState("");
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
