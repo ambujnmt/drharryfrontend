@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Slider from './Slider';
+import Home from './Home';
 
 export default function Main() {
   const [showSlider, setShowSlider] = useState(false);
@@ -23,7 +23,7 @@ export default function Main() {
   }, []);
 
   if (showSlider) {
-    return <Slider />;
+    return <Home />;
   }
 
   return (

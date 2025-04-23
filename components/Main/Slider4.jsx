@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LanguageContext } from "../../context/LanguageContext";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import Slider2 from './Slider2';
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
-import { IoLanguage } from "react-icons/io5";
+import { Link } from "@heroui/react";
 
 
 
@@ -25,33 +23,19 @@ export default function Slider() {
   return (
 
     <section className="sliderSection relative">
-      <div className="absolute top-2 right-2">
-        <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-          <Dropdown>
-            <DropdownTrigger>
-              <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
-                <IoLanguage />
-              </button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Static Actions">
-              <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-              <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      </div>
+  
 
       {/* Desktop Image */}
       <img
         src="https://nmtdevserver.com/welli/slider4.png"
-        className="w-full h-screen hidden md:block"
+        className="w-full h-auto hidden md:block opacity-[0.2]"
         alt="Slider Image Desktop"
       />
 
       {/* Mobile Image */}
       <img
         src="https://nmtdevserver.com/welli/slider4mobile.png"
-        className="w-full h-full md:h-screen block md:hidden"
+        className="w-full h-full md:h-screen block md:hidden opacity-[0.2]"
         alt="Slider Image Mobile"
       />
 
@@ -65,7 +49,10 @@ export default function Slider() {
           veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
           commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
         </p>
-
+        <div className='flex justify-center gap-3'>
+        <div className="font-bold text-[10px] md:text-[14px] lg:text-[16px] xl:text-[16px] xl:px-10 lg:px-4 px-2 my-1 text-center rounded-[600px] bg-[#FFBA1B] py-1"><Link href="/signupWith" className="text-white uppercase">{translateText("register")}</Link></div>
+        <div className="font-bold text-[10px] md:text-[14px] lg:text-[16px] xl:text-[16px] xl:px-10 lg:px-4 px-3 my-1 text-center text-white rounded-[600px] bg-[rgb(0,79,229)] py-1 uppercase"><Link href="/login" className="text-white uppercase">{translateText("login")}</Link></div>
+        </div>
       </div>
     </section>
   );

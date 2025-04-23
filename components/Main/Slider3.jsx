@@ -16,41 +16,27 @@ export default function Slider() {
         setClientLocale(locale.toUpperCase());
     }, [locale]);
 
-    // If showSlider2 is true, show only Slider2 component
     if (showSlider2) {
         return <Slider2 />;
     }
 
-    // Otherwise, show the main slider content
     return (
 
         <section className="sliderSection relative">
-                <div className="absolute top-2 right-2">
-                     <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-                       <Dropdown>
-                         <DropdownTrigger>
-                           <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
-                             <IoLanguage/>
-                           </button>
-                         </DropdownTrigger>
-                         <DropdownMenu aria-label="Static Actions">
-                           <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-                           <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
-                         </DropdownMenu>
-                       </Dropdown>
-                     </div>
-                   </div>
+                
             {/* Desktop Image */}
             <img
                 src="https://nmtdevserver.com/welli/slider3.png"
-                className="w-full xl:h-screen h-auto hidden md:block"
+                className="w-full  h-auto hidden md:block opacity-[0.2]"
                 alt="Slider Image Desktop"
             />
+                  <img src="https://nmtdevserver.com/welli/slider3middle.png" className='absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[40%] xl:w-[30%] lg:w-[30%]' alt="" />
+
 
             {/* Mobile Image */}
             <img
                 src="https://nmtdevserver.com/welli/slider3mobile.png"
-                className="w-full h-full md:h-screen block md:hidden"
+                className="w-full h-full md:h-screen block md:hidden opacity-[0.2]"
                 alt="Slider Image Mobile"
             />
 

@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { LanguageContext } from "../../context/LanguageContext";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { Link } from '@heroui/react'; // Use this for React Router
-
-
 import Slider1 from './Slider1';
 import Slider2 from './Slider2';
 import Slider3 from './Slider3';
@@ -21,9 +18,7 @@ export default function Slider() {
   }, [locale]);
 
   const goToNext = () => {
-    if (currentSlide < slides.length - 1) {
-      setCurrentSlide(currentSlide + 1);
-    }
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
   const goToPrev = () => {
@@ -36,7 +31,6 @@ export default function Slider() {
 
   return (
     <section className="sliderSection relative min-h-screen flex flex-col justify-between">
-      {/* Render current slide */}
       {slides[currentSlide]}
 
       {/* Dots */}
@@ -59,20 +53,12 @@ export default function Slider() {
           <FaChevronLeft size={16} />
         </button>
 
-        {currentSlide === slides.length - 1 ? (
-          <Link href="/signupWith">
-            <button className="w-8 h-8 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center">
-              <FaChevronRight size={16} />
-            </button>
-          </Link>
-        ) : (
-          <button
-            onClick={goToNext}
-            className="w-8 h-8 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center"
-          >
-            <FaChevronRight size={16} />
-          </button>
-        )}
+        <button
+          onClick={goToNext}
+          className="w-8 h-8 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center"
+        >
+          <FaChevronRight size={16} />
+        </button>
       </div>
     </section>
 

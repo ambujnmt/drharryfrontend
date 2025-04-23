@@ -44,10 +44,10 @@ export default function SideMenu({ isOpen, onClose }) {
               {translateText("dashboard")}
             </Link>
           </li>
-          <li className="p-2 flex items-center gap-1 hover:bg-[#91b4e5] rounded">
+          {/* <li className="p-2 flex items-center gap-1 hover:bg-[#91b4e5] rounded">
             <RiPageSeparator />
             {translateText("pages")}
-          </li>
+          </li> */}
 
           <Accordion variant="light">
             <AccordionItem
@@ -139,10 +139,10 @@ export default function SideMenu({ isOpen, onClose }) {
               </ul>
             </AccordionItem>
           </Accordion>
-          <li className="p-2 flex items-center gap-2 hover:bg-[#91b4e5] rounded">
+          {/* <li className="p-2 flex items-center gap-2 hover:bg-[#91b4e5] rounded">
             <MdContactPhone />
             {translateText("contact")}
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>
