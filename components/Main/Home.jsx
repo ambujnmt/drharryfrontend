@@ -10,8 +10,8 @@ export default function Home() {
     <section className='homePage'>
         <HomeHeader/>
         <Slider/>
-        <Body/>
-        <HomeFooter/>
+       <Body/>
+         <HomeFooter/>
        
     </section>
   )

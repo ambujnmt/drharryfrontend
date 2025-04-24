@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useUser } from "../../context/UserContext";
 
 
-export default function Otp() {
+export default function PhoneVerify() {
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
     const [enteredOtp, setEnteredOtp] = useState("");

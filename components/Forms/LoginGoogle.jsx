@@ -65,8 +65,10 @@ export default function LoginGoogle() {
   }, [googleData]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#5274F6]">
-      <div className="absolute top-2 right-2">
+    <div
+    className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+    style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+  >      <div className="absolute top-2 right-2">
         <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
           <Dropdown>
             <DropdownTrigger>
@@ -81,6 +83,8 @@ export default function LoginGoogle() {
           </Dropdown>
         </div>
       </div>
+      <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20 p-6 md:p-12 flex items-center justify-center h-[100vh]">
+
       <div className="flex flex-col items-center justify-center p-10 bg-white rounded-lg shadow-md ">
         <h2 className="text-xl font-bold mb-4">{translateText("googleLogin")}</h2>
         <GoogleLogin
@@ -108,6 +112,7 @@ export default function LoginGoogle() {
           </div>
         )} */}
       </div>
+    </div>
     </div>
   );
 }

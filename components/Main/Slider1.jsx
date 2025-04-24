@@ -22,7 +22,7 @@ export default function Slider() {
       {/* Desktop Image */}
       <img
         src="https://nmtdevserver.com/welli/slider1.png"
-        className="w-full  h-auto hidden md:block opacity-[0.2]"
+        className="w-full  h-screen hidden md:block opacity-[0.2]"
         alt="Slider Image Desktop"
       />
       <img src="https://nmtdevserver.com/welli/slider1middle.png" className='absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden md:block md:w-[40%] xl:w-[30%] lg:w-[30%]' alt="" />
@@ -35,10 +35,10 @@ export default function Slider() {
       />
 
       <div className="mt-3 absolute xl:top-2/3 lg:top-3/4 top-[22rem] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center text-[#313131] w-[100%] md:w-auto px-4 md:px-0">
-        <h1 className='font-bold text-md md:text-2xl lg:text-3xl xl:text-4xl'>
+        <h1 className='font-bold text-md md:text-xl lg:text-2xl xl:text-3xl'>
           {translateText("all your analyses always with you")}
         </h1>
-        <p className='font-light text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px] my-4'>
+        <p className='font-light text-[11px] md:text-[12px] lg:text-[14px] xl:text-[15px] my-4'>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
           tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
           veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea

@@ -34,7 +34,7 @@ export default function Slider() {
       {slides[currentSlide]}
 
       {/* Dots */}
-      <div className="w-full flex justify-center mt-4 absolute bottom-8 md:bottom-10 lg:-bottom-[28]  xl:bottom-16 md:left-1/2 md:transform md:-translate-x-1/2 space-x-2 z-20">
+      <div className="w-full flex justify-center mt-4 absolute bottom-14 md:bottom-20 lg:-bottom-[14]  xl:bottom-24 md:left-1/2 md:transform md:-translate-x-1/2 space-x-2 z-20">
         {slides.map((_, index) => (
           <span
             key={index}
@@ -45,17 +45,17 @@ export default function Slider() {
       </div>
 
       {/* Arrows */}
-      <div className="w-full flex  mt-4 space-x-2 z-20 absolute bottom-2 md:bottom-10 lg:-bottom-[28] xl:bottom-10 xl:right-[20%] right-[5%] md:right-[14%] justify-end">
+      <div className="w-full flex  mt-4 space-x-2 z-20 absolute bottom-14 md:bottom-20 lg:-bottom-[28] xl:bottom-24 xl:right-[20%] right-[5%] md:right-[14%] justify-end">
         <button
           onClick={goToPrev}
-          className="w-8 h-8 bg-[#5274F6] text-white rounded-full flex items-center justify-center"
+          className="md:w-8 md:h-8 w-6 h-6 bg-[#5274F6] text-white rounded-full flex items-center justify-center"
         >
           <FaChevronLeft size={16} />
         </button>
 
         <button
           onClick={goToNext}
-          className="w-8 h-8 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center"
+          className="md:w-8 md:h-8 w-6 h-6 bg-[#FFBA1B] text-white rounded-full flex items-center justify-center"
         >
           <FaChevronRight size={16} />
         </button>

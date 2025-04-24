@@ -86,8 +86,10 @@ export default function NewPass() {
     
 
     return (
-        <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
-            <div className="absolute top-2 right-2">
+<div
+      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+    >            <div className="absolute top-2 right-2">
                 <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
                     <Dropdown>
                         <DropdownTrigger>
@@ -103,8 +105,8 @@ export default function NewPass() {
                 </div>
             </div>
 
-            <div className="lg:mt-4 md:mt-6 mt-10 xl:mt-0 flex justify-center md:flex-row rounded-lg w-full overflow-hidden">
-                <div className="w-full md:w-1/2 flex flex-col justify-center">
+            <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
+            <div className="w-full md:w-1/2 flex flex-col justify-center">
                     <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">
                         {translateText("new_pass")}
                     </h2>

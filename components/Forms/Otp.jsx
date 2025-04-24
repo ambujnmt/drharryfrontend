@@ -28,8 +28,10 @@ export default function Otp() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
-      <div className="absolute top-2 right-2">
+<div
+      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+    >      <div className="absolute top-2 right-2">
         <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
           <Dropdown>
             <DropdownTrigger>
@@ -44,7 +46,7 @@ export default function Otp() {
           </Dropdown>
         </div>
       </div>
-      <div className="lg:mt-4 md:mt-6 mt-10 xl:-mt-32 flex justify-center md:flex-row rounded-lg w-full overflow-hidden">
+      <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
         <div className="w-full md:w-1/2 flex flex-col justify-start">
           <div className="flex justify-center items-center xl:gap-4 gap-2 mb-6">
             <h2 className="font-normal uppercase text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] text-center text-white">{translateText("register")}</h2>

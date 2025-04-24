@@ -10,31 +10,30 @@ export default function WellBeing() {
         setClientLocale(locale.toUpperCase());
     }, [locale]);
 
-    // Replace these with your actual image URLs
     const images = [
-        "https://nmtdevserver.com/welli/heartWellbeing.png", 
-        "https://nmtdevserver.com/welli/handWellbeing.png", 
-        "https://nmtdevserver.com/welli/flowerWellbeing.png", 
-        "https://nmtdevserver.com/welli/heartWellbeing.png", 
-        "https://nmtdevserver.com/welli/handWellbeing.png", 
+        "https://nmtdevserver.com/welli/heartWellbeing.png",
+        "https://nmtdevserver.com/welli/handWellbeing.png",
+        "https://nmtdevserver.com/welli/flowerWellbeing.png",
+        "https://nmtdevserver.com/welli/heartWellbeing.png",
+        "https://nmtdevserver.com/welli/handWellbeing.png",
         "https://nmtdevserver.com/welli/flowerWellbeing.png"
     ];
 
     const text = [
-        translateText("Individual Therapy"), 
-        translateText("Family Counselling"), 
-        translateText("Couples Therapy"), 
-        translateText("Children Therapy"), 
-        translateText("Group Counselling"), 
+        translateText("Individual Therapy"),
+        translateText("Family Counselling"),
+        translateText("Couples Therapy"),
+        translateText("Children Therapy"),
+        translateText("Group Counselling"),
         translateText("Career Counselling")
     ];
 
     const colors = [
-        "bg-[#FFBA1B]", 
-        "bg-[rgb(0,79,229)]", 
-        "bg-[#FFBA1B]", 
-        "bg-[rgb(0,79,229)]", 
-        "bg-[#FFBA1B]", 
+        "bg-[#FFBA1B]",
+        "bg-[rgb(0,79,229)]",
+        "bg-[#FFBA1B]",
+        "bg-[rgb(0,79,229)]",
+        "bg-[#FFBA1B]",
         "bg-[rgb(0,79,229)]"
     ];
 
@@ -42,20 +41,20 @@ export default function WellBeing() {
         <div className="container mx-auto px-6 pb-8 md:px-12 md:pb-14 lg:px-16 lg:pb-20">
             <div className="relative w-full pb-16 px-4">
                 <div className="bg-gray-100 rounded-2xl p-8 py-20 relative max-w-7xl mx-auto">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-10">
+                    <h1 className="text-2xl  md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center mb-10">
                         {translateText("your well-being is essential")}
                     </h1>
                 </div>
 
-                <div className="grid grid-cols-3 gap-16 -mt-10 mx-20">
+                <div className="grid md:grid-cols-3 grid-cols-1 xl:gap-16 lg:gap-12 md:gap-10 gap-5 -mt-10 xl:mx-20 lg:mx-14 md:mx-8 mx-8">
                     {images.map((imageSrc, index) => (
                         <div
                             key={index}
                             className={`py-10 px-5 flex flex-col items-start justify-start rounded-xl shadow-lg ${colors[index]} relative z-10`}
                         >
                             <img src={imageSrc} alt={text[index]} className="w-8 h-8 mb-2" />
-                            <p className="text-center text-lg font-medium text-white my-3">{text[index]}</p>
-                            <span className="text-xs font-normal text-white">Read More</span>
+                            <p className="text-start text-lg font-medium text-white my-3">{text[index]}</p>
+                            <span className="text-xs font-normal text-white">{translateText("Read More")}</span>
                         </div>
                     ))}
                 </div>

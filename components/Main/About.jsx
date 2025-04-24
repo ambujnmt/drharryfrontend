@@ -26,7 +26,7 @@ export default function About() {
                 </div>
 
                 {/* Yellow Box slightly overlapping the image */}
-                <div className="bg-[#FFBA1B] p-4 md:p-10 lg:p-14 rounded-3xl shadow-lg lg:-ml-[10%]">
+                <div className="bg-[#FFBA1B] p-4 md:p-6 lg:p-8 xl:p-14 rounded-3xl shadow-lg lg:-ml-[10%]">
                     <h2 className="text-2xl font-semibold text-white mb-4">LOREM IPSUM</h2>
                     <p className="text-white text-sm">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam placerat felis libero, sit amet
@@ -49,7 +49,7 @@ export default function About() {
             {/* box2 */}
             <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-5 md:gap-10 lg:gap-0 items-center py-8 md:py-14 lg:py-20">
                 {/* Yellow Box slightly overlapping the image */}
-                <div className="bg-[rgb(0,79,229)] p-4 md:p-10 lg:p-14 rounded-3xl shadow-lg lg:-mr-[10%] z-10">
+                <div className="bg-[rgb(0,79,229)] p-4 md:p-6 lg:p-8 xl:p-14 rounded-3xl shadow-lg lg:-mr-[10%] z-10">
                     <h2 className="text-2xl font-semibold text-white mb-4">LOREM IPSUM</h2>
                     <p className="text-white text-sm">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam placerat felis libero, sit amet
@@ -90,7 +90,7 @@ export default function About() {
                 </div>
 
                 {/* Yellow Box slightly overlapping the image */}
-                <div className="bg-[#FFBA1B] p-4 md:p-10 lg:p-14 rounded-3xl shadow-lg lg:-ml-[10%]">
+                <div className="bg-[#FFBA1B] p-4 md:p-6 lg:p-8 xl:p-14 rounded-3xl shadow-lg lg:-ml-[10%]">
                     <h2 className="text-2xl font-semibold text-white mb-4">LOREM IPSUM</h2>
                     <p className="text-white text-sm">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam placerat felis libero, sit amet

@@ -14,31 +14,31 @@ export default function Reviews() {
 
             bgColor: "bg-[#FFBA1B]",
             name: "Lucky Ferdiand",
-            designation: "Psychologist",
+            designation: translateText("Psychologist"),
         },
         {
 
             bgColor: "bg-[rgb(0,79,229)]",
             name: "Luis Ferdiand",
-            designation: "Family Counsellor",
+            designation: translateText("Family Counsellor"),
         },
         {
 
             bgColor: "bg-[#28C76F]",
             name: "Yustiana",
-            designation: "Child Therapist",
+            designation: translateText("Child Therapist"),
         }
     ];
 
     return (
         <div className="container mx-auto px-6 pb-8 md:px-12 md:pb-14 lg:px-16 lg:pb-20">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-10">
+            <h1 className="text-2xl  md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center mb-10">
                 {translateText("They say about us")}
             </h1>
 
-            <div className="grid grid-cols-3  gap-8">
+            <div className="grid md:grid-cols-3 grid-cols-1 gap-4  lg:gap-6 md:gap-4">
                 {cards.map((card, index) => (
-                    <div key={index} className="bg-gray-100 rounded-xl px-6 py-10 w-full  text-center">
+                    <div key={index} className="bg-gray-100 rounded-xl md:px-6 md:py-10 px-4 py-6 w-full  text-center">
                         <div className={`w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 ${card.bgColor}`}>
                         </div>
                         <h3 className="text-lg font-semibold mb-1">{card.name}</h3>
@@ -48,8 +48,8 @@ export default function Reviews() {
                 ))}
             </div>
 
-            <div className="bg-[#28C76F] rounded-xl my-20 px-12 py-16 text-white text-center">
-                <h2 className="text-3xl md:text-4xl font-bold">{translateText("Value your health with smart solutions that are always at your fingertips.")}</h2>
+            <div className="bg-[#6cce7e] rounded-xl lg:my-20 md:my-10 my-6 md:px-12 md:py-16 px-6 py-8 text-white text-center">
+                <h2 className="text-2xl  md:text-3xl lg:text-3xl xl:text-4xl font-bold">{translateText("Value your health with smart solutions that are always at your fingertips.")}</h2>
                 <p className="text-base md:text-sm my-8  mx-auto">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit asperiores nostrum nisi quo libero quasi, neque maiores deserunt facere? Quidem accusamus sint dolorum minima delectus facilis, voluptatibus cumque provident impedit.
                 </p>
@@ -63,7 +63,7 @@ export default function Reviews() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
                     {/* Left Text Section */}
                     <div>
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+                        <h2 className="text-2xl  md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4">
                             {translateText("Everything you need to feel good")}
                         </h2>
                         <p className="text-gray-500">
@@ -79,7 +79,7 @@ export default function Reviews() {
                                 <img src="https://nmtdevserver.com/welli/review1.png" alt="Make an Appointment Icon" className="w-8 h-8  mb-2" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold">Make an Appointment</h3>
+                                <h3 className="text-sm font-semibold">{translateText("Make an Appointment")}</h3>
                                 <p className="text-xs text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</p>
                             </div>
                         </div>
@@ -90,7 +90,7 @@ export default function Reviews() {
                                 <img src="https://nmtdevserver.com/welli/review2.png" alt="Consultation Icon" className="w-8 h-8 mb-2" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold">Consultation</h3>
+                                <h3 className="text-sm font-semibold">{translateText("Consultation")}</h3>
                                 <p className="text-xs text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</p>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ export default function Reviews() {
                                 <img src="https://nmtdevserver.com/welli/review3.png" alt="Therapy or Counseling Icon" className="w-8 h-8 mb-2" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold">Therapy / Counseling</h3>
+                                <h3 className="text-sm font-semibold">{translateText("Therapy / Counseling")}</h3>
                                 <p className="text-xs text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</p>
                             </div>
                         </div>
@@ -112,7 +112,7 @@ export default function Reviews() {
                                 <img src="https://nmtdevserver.com/welli/review4.png" alt="Final Result Icon" className="w-8 h-8 mb-2" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold">Final Result</h3>
+                                <h3 className="text-sm font-semibold">{translateText("Final Result")}</h3>
                                 <p className="text-xs text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do</p>
                             </div>
                         </div>

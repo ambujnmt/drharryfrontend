@@ -107,7 +107,10 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 bg-[#5274F6]">
+    <div
+    className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+    style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+  >
       <div className="absolute top-2 right-2">
         <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
           <Dropdown>
@@ -123,7 +126,7 @@ export default function SignupForm() {
           </Dropdown>
         </div>
       </div>
-      <div className="lg:mt-4 md:mt-6 mt-10 xl:mt-0 flex justify-center md:flex-row  rounded-lg  w-full  overflow-hidden">
+      <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
 
         <div className="w-full md:w-1/2  flex flex-col justify-center">
           <p className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center text-white">{translateText("register")}</p>
@@ -203,7 +206,7 @@ export default function SignupForm() {
                 {errors.c_password && <p className="text-gray-300 text-sm mt-1">{errors.c_password}</p>}
               </div>
             </div>
-            <button type="submit" onClick={handleSubmit} className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
+            <button type="submit" onClick={handleSubmit} className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
               {translateText("register")}
             </button>
             <button className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center rounded-[600px] border-1 border-white py-2">

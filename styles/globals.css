@@ -266,3 +266,7 @@ body .table-wrapper::-webkit-scrollbar {
 .group[data-filled-within="true"] .group-data-\[filled-within\=true\]\:text-default-600 {
   color: #ffffff !important;
 }
+
+.react-tel-input .country-list{
+  max-height: 150px !important;
+}

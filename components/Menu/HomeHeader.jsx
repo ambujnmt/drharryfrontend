@@ -18,7 +18,7 @@ export default function HomeHeader() {
             <div className="container mx-auto px-4 py-2 flex items-center justify-between">
                 {/* Logo */}
 
-                <img src="https://nmtdevserver.com/welli/logoBlue.png" className="xl:w-[10%] w-[25%] md:w-[15%]" alt="Logo" />
+                <img src="https://nmtdevserver.com/welli/logoBlue.png" className="xl:w-[10%] w-[25%] md:w-[15%] lg:w-[10%]" alt="Logo" />
 
 
                 {/* Desktop Navigation */}
@@ -35,7 +35,7 @@ export default function HomeHeader() {
                     <div className="font-bold text-[12px] md:text-[14px] lg:text-[16px] xl:text-[16px] xl:px-10 lg:px-4  my-1 text-center text-white rounded-[600px] bg-[rgb(0,79,229)] py-1 uppercase"><Link href="/login" className="text-white uppercase">{translateText("login")}</Link></div>
                 </div>
 
-                <div className="absolute md:top-5 md:right-12 right-12 top-3 xl:right-3 xl:top-7 lg:top-9 lg:right-3">
+                <div className="absolute md:top-5 md:right-12 right-12 top-3 xl:right-3 xl:top-7 lg:top-6 lg:right-3">
                     <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
                         <Dropdown>
                             <DropdownTrigger>

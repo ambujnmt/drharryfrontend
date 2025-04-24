@@ -28,7 +28,6 @@
     "user": "Utente",
     "allUsers": "Tutti gli utenti",
     "addUser": "Aggiungi utenti",
-    "contact": "Contatto",
     "full_name": "Nome completo",
     "date_of_birth": "Data di nascita",
     "gender": "Genere",
@@ -146,6 +145,22 @@
       "Emotional Resilience":"Resilienza emotiva",
       "They say about us":"Dicono di noi",
       "Value your health with smart solutions that are always at your fingertips.":"Dai valore alla tua salute con soluzioni intelligenti e sempre a portata di mano.",
-      "Everything you need to feel good":"Tutto cio che ti serve per stare bene"
+      "Everything you need to feel good":"Tutto cio che ti serve per stare bene",
+      "Years Experience":"Anni di esperienza",
+      "Problem Solved":"Problema risolto",
+      "Expert Psychologist":"Psicologo esperto",
+      "Good Reviews":"Buone recensioni",
+      "Read More":"Per saperne di più",
+      "Psychologist":"Psicologo",
+      "Family Counsellor":"Consulente familiare",
+      "Child Therapist":"Terapeuta infantile",
+      "Make an Appointment":"Fissa un appuntamento",
+      "Consultation":"Consultazione",
+      "Therapy / Counseling":"Terapia / Consulenza",
+       "Final Result":"Risultato finale",
+       "Your health Our priority.":"La tua salute è la nostra priorità.",
+       "2025 Ibey Design. Allright reserved":"2025 Ibey Design. Tutti i diritti riservati.",
+       "Enter your phone number":"Inserisci il tuo numero di telefono"
+
 
 }

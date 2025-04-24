@@ -11,15 +11,15 @@ export default function Discovery() {
     }, [locale]);
 
     const items = [
-        { number: "15", text: "Years\nExperience" },
-        { number: "145", text: "Problem\nSolved" },
-        { number: "95", text: "Expert\nPsychologist" },
-        { number: "1000+", text: "Good\nReviews" },
+        { number: "15", text: translateText("Years Experience") },
+        { number: "145", text: translateText("Problem Solved") },
+        { number: "95", text: translateText("Expert Psychologist") },
+        { number: "1000+", text: translateText("Good Reviews") },
     ];
     return (
         <div className="container mx-auto px-6 pb-8 text-center md:px-12 md:pb-14 lg:px-16 lg:pb-20">
             {/* Heading */}
-            <h1 className="text-3xl  md:text-4xl lg:text-5xl font-bold text-center ">{translateText("our discovery of hope inspires change")}</h1>
+            <h1 className="text-2xl  md:text-3xl lg:text-4xl xl:text-5xl font-bold text-center ">{translateText("our discovery of hope inspires change")}</h1>
 
             <p className='text-sm my-10 lg:my-10'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
                 ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
