@@ -109,10 +109,6 @@ export const resendOtpApi = async (email) => {
   }
 };
 
-
-
-
-
 export const verifyOtp = async ({ email, otp }) => {
   const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/verify-otp`, {
     method: "POST",
@@ -192,6 +188,60 @@ export const loginUser = async (email, password) => {
     return result.data; // This is where user data should come from
   } catch (error) {
     throw error;
+  }
+};
+
+
+export const adminLogin = async (email, password) => {
+  const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/admin-login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await response.json();
+
+  if (!data.status) {
+    const error = new Error(data.message || "Login failed");
+    error.message_italian = data.message_italian || "Login mislukt";
+    throw error;
+  }
+
+  return data;
+};
+
+export const changeAdminPassword = async ({ admin_id, old_password, new_password }) => {
+  try {
+    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/admin/create-new-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        admin_id,
+        old_password,
+        new_password,
+      }),
+    });
+
+    // Check if response is ok before trying to parse JSON
+    if (!response.ok) {
+      const errorText = await response.text(); // fallback for non-JSON errors
+      return {
+        status: false,
+        message: "Server error: " + errorText,
+      };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      status: false,
+      message: "Network or parsing error: " + error.message,
+    };
   }
 };
 

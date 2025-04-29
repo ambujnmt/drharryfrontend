@@ -270,3 +270,7 @@ body .table-wrapper::-webkit-scrollbar {
 .react-tel-input .country-list{
   max-height: 150px !important;
 }
+
+#recaptcha {
+  display: none;
+}

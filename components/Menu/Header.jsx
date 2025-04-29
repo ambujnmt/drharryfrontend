@@ -9,6 +9,7 @@ import { Link } from "@heroui/link";
 import { IoLanguage } from "react-icons/io5";
 import Tmodal from "../Tmodal/Tmodal"
 import { useUser } from "../../context/UserContext";
+import { useAdmin } from "../../context/AdminContext";
 import { useRouter } from "next/router";
 
 
@@ -21,8 +22,8 @@ export default function Header({ menuOpen, toggleMenu }) {
   const router = useRouter();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { setUser, setUserEmail } = useUser();
+  const { admin, logoutAdmin } = useAdmin(); // Access admin data and logout function from AdminContext
+  const { user, setUser, setUserEmail } = useUser();
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
@@ -37,6 +38,8 @@ export default function Header({ menuOpen, toggleMenu }) {
 
   const newNotificationCount = notifications.filter(n => n.isNew).length;
 
+  const isAdminLoggedIn = !!admin;
+
   return (
     <div className="bg-[#3a81e6] text-white flex justify-between lg:justify-end items-center p-3 sticky top-0 z-50">
       <button onClick={toggleMenu} className="text-white text-xl p-2 lg:hidden block ">
@@ -44,6 +47,16 @@ export default function Header({ menuOpen, toggleMenu }) {
       </button>
 
       <div className="flex  items-center space-x-4 text-2xl relative">
+      {admin && (
+  <Link
+    href="/admin/passChange"
+    className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
+  >
+    Change Password
+  </Link>
+)}
+
+
         <HiUserCircle className="cursor-pointer" />
 
         <div className="relative" onClick={() => setNotificationOpen(!notificationOpen)}>
@@ -86,6 +99,9 @@ export default function Header({ menuOpen, toggleMenu }) {
           </div>
         )}
 
+
+
+
         <Tmodal
           isOpen={isOpen}
           onClose={onClose}
@@ -96,18 +112,41 @@ export default function Header({ menuOpen, toggleMenu }) {
                 Cancel
               </Button>
               <Button
-  color="primary"
-  onPress={() => {
-    setUser(null);
-    setUserEmail("");
-    localStorage.removeItem("user");
-    onClose();
-    router.push("/login");
-  }}
->
-  Confirm
-</Button>
+                color="primary"
+                onPress={() => {
+                  // Check if admin is logged in
+                  if (admin) {
+                    console.log("Admin is logged in. Proceeding to logout.");
+                    logoutAdmin();
+                    localStorage.removeItem("admin"); // Remove admin from localStorage
+                    const adminToken = localStorage.getItem("admin");
+                    console.log("Admin Token After Removal: ", adminToken);
 
+                    onClose();
+                    setTimeout(() => {
+                      router.push("/admin/login");
+                    }, 200);
+                  }
+                  // Check if user is logged in
+                  else if (user) {
+                    // Clear user data and remove from localStorage
+                    setUser(null); // Clears the user state
+                    setUserEmail(""); // Clear the user email
+                    localStorage.removeItem("user"); // Remove user from localStorage
+
+                    // Log to check if the user token is removed
+                    const userToken = localStorage.getItem("user");
+                    console.log("User Token After Removal: ", userToken); // Should print null
+
+                    onClose();
+                    setTimeout(() => {
+                      router.push("/login"); // Redirect to user login
+                    }, 200);
+                  }
+                }}
+              >
+                Confirm
+              </Button>
             </>
           }
         />

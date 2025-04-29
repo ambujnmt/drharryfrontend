@@ -1,20 +1,22 @@
-// components/PrivateRoute.js
 import { useUser } from "../../context/UserContext";
+import { useAdmin } from "../../context/AdminContext";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const PrivateRoute = ({ children }) => {
   const { user } = useUser();
+  const { admin } = useAdmin();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login"); // redirect to login if user not found
+    // Redirect to login if neither user nor admin is present
+    if (!user && !admin) {
+      router.push("/login");
     }
-  }, [user]);
+  }, [user, admin]);
 
-  if (!user) {
-    return null; // or a loading spinner while redirecting
+  if (!user && !admin) {
+    return null; // Show loading spinner or nothing while redirecting
   }
 
   return children;

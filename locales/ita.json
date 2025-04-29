@@ -160,7 +160,10 @@
        "Final Result":"Risultato finale",
        "Your health Our priority.":"La tua salute è la nostra priorità.",
        "2025 Ibey Design. Allright reserved":"2025 Ibey Design. Tutti i diritti riservati.",
-       "Enter your phone number":"Inserisci il tuo numero di telefono"
+       "Enter your phone number":"Inserisci il tuo numero di telefono",
+        "change_password":"Cambiare la password",
+     "old_password":"old_password",
+     "new_password":"Nuova parola d'ordine"
 
 
 }
