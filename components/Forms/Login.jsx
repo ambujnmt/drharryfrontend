@@ -136,11 +136,11 @@ export default function LoginForm() {
               <p><strong>Updated At:</strong> {new Date(user.updated_at).toLocaleString()}</p>
             </div>
           )} */}
-          {loading && (
+          {/* {loading && (
             <div className="flex justify-center items-center my-4">
               <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
             </div>
-          )}
+          )} */}
           <form onSubmit={handleSubmit}>
             <div className=" w-full  gap-2">
               <Input
@@ -180,9 +180,14 @@ export default function LoginForm() {
             {errors.api && <p className="text-red-500 text-sm mb-4">{errors.api}</p>}
             <button
               type="submit"
-              className="font-bold w-full text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
+              disabled={loading}
+              className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B] "
             >
-              {translateText("login")}
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                 translateText("login") 
+              )}
             </button>
             <div
 

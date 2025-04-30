@@ -21,27 +21,28 @@ export default function Otp() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [loading, setloading] = useState(false);
     const [apiResult, setApiResult] = useState(null);
     const { userEmail } = useUser(); // Get the dynamic email from context
+    console.log("User email on OTP page:", userEmail);  // Ensure it prints the correct email
 
     // useEffect(() => {
     //     if (user?.email) {
     //         setEmail(user.email);
     //     }
     // }, [user]);
-    
+
     const handleOtpVerify = async () => {
         console.log("Sending OTP verify data:", { userEmail, otp: enteredOtp });
 
-        setIsLoading(true);
+        setloading(true);
 
         try {
             const result = await verifyOtp({
                 email: userEmail,  // Use 'email' instead of 'userEmail' if that's expected
                 otp: enteredOtp
             });
-            
+
             setApiResult(result);
 
             if (result.status) {
@@ -78,15 +79,15 @@ export default function Otp() {
 
             setMessage(errorMsg);
         } finally {
-            setIsLoading(false);
+            setloading(false);
         }
     };
 
     return (
-<div
-      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
-    >            <div className="absolute top-2 right-2">
+        <div
+            className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+            style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+        >            <div className="absolute top-2 right-2">
                 <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
                     <Dropdown>
                         <DropdownTrigger>
@@ -102,7 +103,7 @@ export default function Otp() {
                 </div>
             </div>
             <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
-            <div className="w-full md:w-1/2  flex flex-col justify-start">
+                <div className="w-full md:w-1/2  flex flex-col justify-start">
                     <div className="flex justify-center items-center xl:gap-4 gap-2 mb-6">
                         <h2 className="font-normal uppercase text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px]  text-center text-white">{translateText("register")}</h2>
                         <span className="rounded-[25px] bg-[#FFBA1B] py-1 xl:w-28 lg:w-24  w-16  font-normal uppercase text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px]  text-center text-white">{translateText("login")}</span>
@@ -132,11 +133,14 @@ export default function Otp() {
                     </div>
                     <button
                         onClick={handleOtpVerify}
-                        disabled={isLoading}
-                        className={`font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 ${isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-[#FFBA1B]"
-                            }`}
+                        disabled={loading}
+                        className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B] "
                     >
-                        {isLoading ? "Verifying..." : translateText("verify")}
+                        {loading ? (
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                            translateText("verify")
+                        )}
                     </button>
 
                     <Link ref={otpLinkRef} href="/login" className="hidden" />

@@ -18,6 +18,8 @@ export default function NewPass() {
     const [successMessage, setSuccessMessage] = useState("");
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
+      const [loading, setloading] = useState(false); 
+    
 
     useEffect(() => {
         setClientLocale(locale.toUpperCase());
@@ -56,10 +58,13 @@ export default function NewPass() {
             setErrors({ api: "Email is required to set a new password." });
             return;
         }
+        setloading(true);
         
         try {
             const result = await createNewPasswordApi(registeredUserEmail, formData.password);
-    
+            
+            setloading(false);
+
             setSuccessMessage(locale === "ita" ? result.message_italian : result.message);
     
             setFormData({ password: "", c_password: "" });
@@ -69,6 +74,7 @@ export default function NewPass() {
             }, 1000);
             
         } catch (err) {
+            setloading(false);
             const formattedErrors = {};
             
             if (err.errors?.password) {
@@ -156,9 +162,14 @@ export default function NewPass() {
                         </div>
                         <button
                             type="submit"
-                            className="font-bold w-full text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] border-1 border-white  py-2"
+                            disabled={loading}
+                            className="font-bold w-full text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] border-1 border-white  py-2 flex items-center justify-center"
                         >
-                            {translateText("enter")}
+                              {loading ? (
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                            translateText("enter")
+                        )}
                         </button>
                     </form>
                 </div>

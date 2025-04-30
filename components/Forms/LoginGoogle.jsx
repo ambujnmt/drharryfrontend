@@ -3,22 +3,32 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { LanguageContext } from "../../context/LanguageContext";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Input } from "@heroui/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
-
-
+import { useUser } from "../../context/UserContext";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function LoginGoogle() {
   const [googleData, setGoogleData] = useState(null);
   const [responseData, setResponseData] = useState(null);
   const [errorMessages, setErrorMessages] = useState([]); // Store dynamic errors as an array
+  const { setUser } = useUser(); // ✅ Get setUser
+  const { executeRecaptcha } = useGoogleReCaptcha(); // Access the reCAPTCHA function
 
   const handleLoginSuccess = (credentialResponse) => {
     try {
+      // Log the full credential response to understand the structure
+      // console.log("Google Login Response:", credentialResponse);
+
+      // Decode the JWT token from the credential
       const decoded = jwtDecode(credentialResponse.credential);
       setGoogleData(decoded);
+
+      // Log the decoded data
+      // console.log("Decoded Google Login Data:", decoded); 
     } catch (error) {
       setErrorMessages(["Google login failed. Please try again."]);
+      // console.error("Error during Google login:", error);
     }
   };
 
@@ -33,42 +43,56 @@ export default function LoginGoogle() {
     const sendToBackend = async () => {
       if (googleData) {
         try {
+          if (!executeRecaptcha) {
+            setErrorMessages(["reCAPTCHA not yet available. Please try again."]);
+            return;
+          }
+    
+          const token = await executeRecaptcha("social_login");
+          console.log("reCAPTCHA token:", token); // Log reCAPTCHA token
+    
           const data = {
             name: googleData.name,
             email: googleData.email,
             social_id: googleData.sub,
             provider: "Google",
+            recaptcha_token: token, // Include reCAPTCHA token
           };
-
+    
           const res = await axios.post(
             "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/social-login",
             data
           );
-
+    
+          // console.log("Backend Response:", res.data);
+    
           if (res.data.status === false) {
-            // Dynamically display backend validation error messages
-            const backendErrors = res.data.data
-              ? Object.values(res.data.data).flat()
-              : [];
+            const backendErrors = res.data.data ? Object.values(res.data.data).flat() : [];
             setErrorMessages(backendErrors);
           } else {
+            setUser(res.data.data.user);
             setResponseData(res.data);
+            
+            // console.log("User Data:", res.data.data.user);
+            
             window.location.href = "/dashboard";
           }
+    
         } catch (error) {
           setErrorMessages(["Error while communicating with the server."]);
         }
       }
     };
-
+    
     sendToBackend();
   }, [googleData]);
 
   return (
     <div
-    className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-    style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
-  >      <div className="absolute top-2 right-2">
+      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+    >      
+      <div className="absolute top-2 right-2">
         <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
           <Dropdown>
             <DropdownTrigger>
@@ -83,36 +107,38 @@ export default function LoginGoogle() {
           </Dropdown>
         </div>
       </div>
-      <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20 p-6 md:p-12 flex items-center justify-center h-[100vh]">
+      
+      <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl md:mx-10 lg:mx-20 p-6 md:p-12 flex items-center justify-center h-[100vh]">
+        <div className="flex flex-col items-center justify-center p-10 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-4">{translateText("googleLogin")}</h2>
+          
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={(error) => {
+              const errorMessage = error.error_description;
+              setErrorMessages([errorMessage]);
+            }}
+            useRecaptcha
+          />
 
-      <div className="flex flex-col items-center justify-center p-10 bg-white rounded-lg shadow-md ">
-        <h2 className="text-xl font-bold mb-4">{translateText("googleLogin")}</h2>
-        <GoogleLogin
-          onSuccess={handleLoginSuccess}
-          onError={(error) => {
-            const errorMessage = error.error_description;
-            setErrorMessages([errorMessage]);
-          }}
-        />
+          {errorMessages.length > 0 && (
+            <div className="mt-4 p-2 border rounded text-lg text-white">
+              <ul>
+                {errorMessages.map((msg, index) => (
+                  <li key={index}>{msg}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-        {errorMessages.length > 0 && (
-          <div className="mt-4 p-2 border rounded text-lg text-white">
-            <ul>
-              {errorMessages.map((msg, index) => (
-                <li key={index}>{msg}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* {responseData && (
-          <div className="mt-4 p-2 border rounded text-sm text-green-700">
-            <h3 className="font-semibold">Backend Response:</h3>
-            <pre>{JSON.stringify(responseData, null, 2)}</pre>
-          </div>
-        )} */}
+          {/* {responseData && (
+            <div className="mt-4 p-2 border rounded text-sm text-green-700">
+              <h3 className="font-semibold">Backend Response:</h3>
+              <pre>{JSON.stringify(responseData, null, 2)}</pre>
+            </div>
+          )} */}
+        </div>
       </div>
-    </div>
     </div>
   );
 }

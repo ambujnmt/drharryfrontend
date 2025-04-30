@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 export default function Header({ menuOpen, toggleMenu }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
   const router = useRouter();
@@ -47,14 +47,14 @@ export default function Header({ menuOpen, toggleMenu }) {
       </button>
 
       <div className="flex  items-center space-x-4 text-2xl relative">
-      {admin && (
-  <Link
-    href="/admin/passChange"
-    className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
-  >
-    Change Password
-  </Link>
-)}
+        {admin && (
+          <Link
+            href="/admin/passChange"
+            className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Change Password
+          </Link>
+        )}
 
 
         <HiUserCircle className="cursor-pointer" />
@@ -102,7 +102,7 @@ export default function Header({ menuOpen, toggleMenu }) {
 
 
 
-        <Tmodal
+        {/* <Tmodal
           isOpen={isOpen}
           onClose={onClose}
           title="Are you sure you want to logout?"
@@ -114,6 +114,7 @@ export default function Header({ menuOpen, toggleMenu }) {
               <Button
                 color="primary"
                 onPress={() => {
+                  setLoading(true); // Start loading
                   // Check if admin is logged in
                   if (admin) {
                     console.log("Admin is logged in. Proceeding to logout.");
@@ -145,7 +146,72 @@ export default function Header({ menuOpen, toggleMenu }) {
                   }
                 }}
               >
-                Confirm
+               {loading ? (
+    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> // Loader
+  ) : (
+    "Confirm"
+  )}
+              </Button>
+            </>
+          }
+        /> */}
+
+
+        <Tmodal
+          isOpen={isOpen}
+          onClose={onClose}
+          title="Are you sure you want to logout?"
+          footer={
+            <>
+              <Button color="danger" variant="light" onPress={onClose}>
+                Cancel
+              </Button>
+              <Button
+                color="primary"
+                onPress={() => {
+                  setLoading(true); // Start loading before any actions
+
+                  // Add a timeout to ensure the loading state is visible before processing logout
+                  setTimeout(() => {
+                    // Check if admin is logged in
+                    if (admin) {
+                      console.log("Admin is logged in. Proceeding to logout.");
+                      logoutAdmin();
+                      localStorage.removeItem("admin"); // Remove admin from localStorage
+                      const adminToken = localStorage.getItem("admin");
+                      console.log("Admin Token After Removal: ", adminToken);
+
+                      onClose();
+                      setTimeout(() => {
+                        router.push("/admin/login");
+                        setLoading(false); // Stop loading after redirection
+                      }, 200);
+                    }
+                    // Check if user is logged in
+                    else if (user) {
+                      // Clear user data and remove from localStorage
+                      setUser(null); // Clears the user state
+                      setUserEmail(""); // Clear the user email
+                      localStorage.removeItem("user"); // Remove user from localStorage
+
+                      // Log to check if the user token is removed
+                      const userToken = localStorage.getItem("user");
+                      console.log("User Token After Removal: ", userToken); // Should print null
+
+                      onClose();
+                      setTimeout(() => {
+                        router.push("/login"); // Redirect to user login
+                        setLoading(false); // Stop loading after redirection
+                      }, 200);
+                    }
+                  }, 100); // Delay logout actions for spinner to show
+                }}
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> // Loader
+                ) : (
+                  "Confirm"
+                )}
               </Button>
             </>
           }

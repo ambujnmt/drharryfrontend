@@ -7,6 +7,7 @@ import { UserProvider } from "../context/UserContext";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { RegisteredUserProvider } from "../context/RegisteredUserContext";
 import { AdminProvider } from "../context/AdminContext"; // ✅ Import AdminProvider
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import '../styles/globals.css';
 
 const Snackbar = dynamic(() => import('@/components/utils/Snackbar'), { ssr: false });
@@ -17,20 +18,35 @@ function App({ Component, pageProps, websiteData }) {
 
   return (
     <GoogleOAuthProvider clientId="437775872420-c5kcesl6ufgtc673n5mqc8f2k6nkuf3o.apps.googleusercontent.com">
-      <LanguageProvider>
-        <UserProvider>
-          <RegisteredUserProvider>
-            <AdminProvider> {/* ✅ Wrap your app with AdminProvider */}
-              <HeroUIProvider navigate={router.push}>
-                <DefaultLayout websiteData={websiteData}>
-                  {getLayout(<Component {...pageProps} />)}
-                </DefaultLayout>
-                <Snackbar />
-              </HeroUIProvider>
-            </AdminProvider>
-          </RegisteredUserProvider>
-        </UserProvider>
-      </LanguageProvider>
+      <GoogleReCaptchaProvider 
+      reCaptchaKey="6Lf5HicrAAAAAHORx0Kq1vVaVv5YICQUQxkz07J9"
+      scriptProps={{
+        async: true,
+        defer: true,
+        appendTo: 'head',
+        nonce: undefined,
+      }}
+      container={{ 
+        element: "recaptcha-container", 
+        parameters: { badge: 'inline' } 
+      }}
+      >
+        <div id="recaptcha-container" style={{ display: 'none' }}></div>
+        <LanguageProvider>
+          <UserProvider>
+            <RegisteredUserProvider>
+              <AdminProvider> {/* ✅ Wrap your app with AdminProvider */}
+                <HeroUIProvider navigate={router.push}>
+                  <DefaultLayout websiteData={websiteData}>
+                    {getLayout(<Component {...pageProps} />)}
+                  </DefaultLayout>
+                  <Snackbar />
+                </HeroUIProvider>
+              </AdminProvider>
+            </RegisteredUserProvider>
+          </UserProvider>
+        </LanguageProvider>
+        </GoogleReCaptchaProvider >
     </GoogleOAuthProvider>
   );
 }

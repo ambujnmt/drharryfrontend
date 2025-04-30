@@ -1,9 +1,9 @@
 import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
-import { Input, Select, SelectItem } from "@heroui/react";
+import { Input } from "@heroui/react";
 import { registerUser } from "../../utils/fetchApi";
 import { IoLanguage } from "react-icons/io5";
 import { useUser } from "../../context/UserContext";
@@ -19,6 +19,7 @@ export default function SignupForm() {
   const [errors, setErrors] = useState({});
   const router = useRouter();
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
+  const [loading, setloading] = useState(false);
 
   const [clientLocale, setClientLocale] = useState("");
 
@@ -51,7 +52,7 @@ export default function SignupForm() {
   };
 
   const [successMessage, setSuccessMessage] = useState("");
-  const { setUserEmail  } = useUser();
+  const { setUserEmail } = useUser();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,32 +66,23 @@ export default function SignupForm() {
 
     if (!validate()) return;
 
+    setloading(true); // Start loader
+
     try {
       const { name, email, password, c_password } = formData;
+      const response = await registerUser(name, email, password, c_password);
 
-      const response = await registerUser(name, email, password, c_password, );
-     console.log(response);
-      const successMsg =
-        locale === "ita"
-          ? response?.message_italian
-          : response?.message;
+      const successMsg = locale === "ita" ? response?.message_italian : response?.message;
       setSuccessMessage(successMsg);
 
-      const registeredEmail = email;
-      setUserEmail (registeredEmail);
+      setUserEmail(email);
 
       setTimeout(() => {
         router.push("/otpVerification");
       }, 3000);
 
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        c_password: "",
-      });
+      setFormData({ name: "", email: "", password: "", c_password: "" });
       setErrors({});
-
     } catch (err) {
       if (err?.details) {
         const fieldErrors = {};
@@ -101,16 +93,18 @@ export default function SignupForm() {
       } else {
         setErrors({ api: err.message });
       }
-
       setSuccessMessage("");
+    } finally {
+      setloading(false); // Stop loader
     }
   };
 
+
   return (
     <div
-    className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-    style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
-  >
+      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+    >
       <div className="absolute top-2 right-2">
         <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
           <Dropdown>
@@ -206,9 +200,18 @@ export default function SignupForm() {
                 {errors.c_password && <p className="text-gray-300 text-sm mt-1">{errors.c_password}</p>}
               </div>
             </div>
-            <button type="submit" onClick={handleSubmit} className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2">
-              {translateText("register")}
+            <button
+              type="submit"
+              disabled={loading}
+              className="relative flex items-center justify-center font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                translateText("register")
+              )}
             </button>
+
             <button className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center rounded-[600px] border-1 border-white py-2">
               <Link className="text-white" href="/login">{translateText("login")}</Link>
             </button>

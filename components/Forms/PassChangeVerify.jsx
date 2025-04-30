@@ -13,7 +13,7 @@ export default function Otp() {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");  
   const [errorMessage, setErrorMessage] = useState(""); 
-  const [isLoading, setIsLoading] = useState(false); 
+  const [loading, setloading] = useState(false); 
   const [isError, setIsError] = useState(false); 
   const hiddenLinkRef = useRef(null);
 
@@ -29,12 +29,12 @@ export default function Otp() {
       return;
     }
 
-    setIsLoading(true);
+    setloading(true);
 
     try {
       const response = await resendOtpApi(enteredEmail);
 
-      setIsLoading(false);
+      setloading(false);
 
       if (response.status) {
         const successMsg = locale === 'ita' ? response.message_italian : response.message;
@@ -55,7 +55,7 @@ export default function Otp() {
         setErrorMessage(errorMsg);
       }
     } catch (error) {
-      setIsLoading(false);
+      setloading(false);
       setSuccessMessage("");
       setIsError(true);
       setErrorMessage(error.message);
@@ -105,9 +105,14 @@ export default function Otp() {
           {/* Submit Button */}
           <button
             onClick={handleSubmit}
-            className="font-bold uppercase text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center rounded-[600px] bg-[#FFBA1B] py-2"
+            disabled={loading}
+            className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B]"
           >
-            <span className="text-white">{translateText("after_you")}</span>
+               {loading ? (
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+            translateText("after_you")
+          )}
           </button>
 
           {/* Hidden Link - triggers only if email is entered */}

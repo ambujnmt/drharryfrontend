@@ -12,7 +12,7 @@ export default function ResendOtp() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const otpLinkRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const { registeredUserEmail } = useRegisteredUser();
 
@@ -29,12 +29,12 @@ export default function ResendOtp() {
       return;
     }
 
-    setIsLoading(true);
+    setloading(true);
 
     try {
-      const response = await verifyResendOtpApi(registeredUserEmail, enteredOtp); 
+      const response = await verifyResendOtpApi(registeredUserEmail, enteredOtp);
 
-      setIsLoading(false);
+      setloading(false);
 
       if (response.status) {
         setSuccessMessage(response.message);
@@ -42,21 +42,21 @@ export default function ResendOtp() {
 
 
         setTimeout(() => {
-          otpLinkRef.current?.click(); 
+          otpLinkRef.current?.click();
         }, 2000);
       } else {
         setSuccessMessage("");
         setErrorMessage(response.message);
       }
     } catch (error) {
-      setIsLoading(false);
+      setloading(false);
       setErrorMessage(error.message);
       setSuccessMessage("");
     }
   };
 
   return (
-<div
+    <div
       className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
     >      <div className="absolute top-2 right-2">
@@ -87,7 +87,7 @@ export default function ResendOtp() {
 
           {errorMessage && <p className="text-white font-lg text-center mt-2">{errorMessage}</p>}
           {successMessage && <p className="text-white font-lg text-center mt-2">{successMessage}</p>}
-          
+
           <Input
             classNames={{ input: "text-black text-center" }}
             placeholder="OTP"
@@ -99,10 +99,15 @@ export default function ResendOtp() {
           />
 
           <button
+            disabled={loading}
             onClick={handleOtpVerify}
-            className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
+            className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B]"
           >
-            {translateText("verify")}
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              translateText("verify")
+            )}
           </button>
 
           {/* Hidden navigation link */}

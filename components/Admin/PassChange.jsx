@@ -15,6 +15,8 @@ export default function AdminPasswordChange() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState(false);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     if (!admin) {
@@ -25,46 +27,47 @@ export default function AdminPasswordChange() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-  
+
     if (!oldPassword || !newPassword || !confirmPassword) {
       setError(true);
       setMessage("All fields are required.");
       return;
     }
-  
+
     if (newPassword.length < 6) {
       setError(true);
       setMessage("New password must be at least 6 characters long.");
       return;
     }
-  
+
     if (newPassword !== confirmPassword) {
       setError(true);
       setMessage("New password and confirm password do not match.");
       return;
     }
-  
+
     // Ensure you're properly accessing admin_id inside admin.data
     const adminIdToUse = adminId || admin?.data?.admin_id;
-  
+
     if (!adminIdToUse) {
       setError(true);
       setMessage("Admin ID is missing. Please login again.");
       return;
     }
-  
+    setLoading(true);
+
     try {
       const response = await changeAdminPassword({
         admin_id: adminIdToUse, // Correctly accessing admin_id
         old_password: oldPassword,
         new_password: newPassword,
       });
-  
+
       console.log("API response:", response);
-  
+
       setError(!response.status);
       setMessage(locale === "ita" ? response.message_italian : response.message);
-  
+
       if (response.status) {
         setTimeout(() => {
           logoutAdmin(); // ✅ properly logout
@@ -74,9 +77,11 @@ export default function AdminPasswordChange() {
     } catch (err) {
       setError(true);
       setMessage("An error occurred. Please try again.");
+      setLoading(false);
+
     }
   };
-   
+
 
   return (
     <div
@@ -135,9 +140,14 @@ export default function AdminPasswordChange() {
 
           <button
             onClick={handleSubmit}
-            className="font-bold uppercase text-lg mt-6 rounded-full bg-[#FFBA1B] py-2 text-white"
+            disabled={loading}
+            className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B]"
           >
-            {translateText("after_you")}
+            {loading ? (
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            ) : (
+            translateText("after_you")
+                            )}
           </button>
         </div>
       </div>
