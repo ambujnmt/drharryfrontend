@@ -245,9 +245,36 @@ export const changeAdminPassword = async ({ admin_id, old_password, new_password
   }
 };
 
+// user-list
+export async function fetchUsers() {
+  try {
+    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/users");
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return null;
+  }
+}
+// update-user
+export async function updateUser(id, data) {
+  try {
+    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/update-user/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
 
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    console.error("Error in updateUser API:", err);
+    return { status: false, message: "API call failed" };
+  }
+}
 
-// src/utils/fetchApi.js
 
 const fetchGoogleToken = async (token) => {
   try {

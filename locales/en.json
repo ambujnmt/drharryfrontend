@@ -164,6 +164,8 @@
      "Enter your phone number":"Enter your phone number",
      "change_password":"Change Password",
      "old_password":"Vecchia parola d'ordine",
-     "new_password":"New Password"
+     "new_password":"New Password",
+     "User Managaement":"User Managaement",
+     "Patient Assignment":"Patient Assignment"
   
 }

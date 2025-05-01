@@ -4,18 +4,24 @@ import { RiPageSeparator } from "react-icons/ri";
 import { ImProfile } from "react-icons/im";
 import { BsBag } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
-import { MdContactPhone,MdOutlineSick,MdDashboard  } from "react-icons/md";
+import { MdOutlineSick, MdDashboard, MdOutlineAssignment } from "react-icons/md";
 import { Link } from "@heroui/link";
 import { LanguageContext } from "../../context/LanguageContext";
+import { useAdmin } from "../../context/AdminContext";
+
 
 
 export default function SideMenu({ isOpen, onClose }) {
   const { locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
+  const { admin, logoutAdmin } = useAdmin(); // Access admin data and logout function from AdminContext
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
   }, [locale]);
+
+
+  const isAdminLoggedIn = !!admin;
 
   return (
     <div
@@ -44,11 +50,41 @@ export default function SideMenu({ isOpen, onClose }) {
               {translateText("dashboard")}
             </Link>
           </li>
-          {/* <li className="p-2 flex items-center gap-1 hover:bg-[#91b4e5] rounded">
-            <RiPageSeparator />
-            {translateText("pages")}
-          </li> */}
 
+          {admin && (
+            <li className="p-2 flex items-center gap-1 hover:bg-[#91b4e5] rounded">
+              <Link href="/user/userList" className="text-white gap-1 flex items-center">
+                <FaUser />
+                {translateText("User Managaement")}
+              </Link>
+            </li>
+          )}
+
+          {admin && (
+            <Accordion variant="light">
+              <AccordionItem
+                key="3"
+                classNames={{
+                  item: "p-2 hover:bg-[#91b4e5] rounded",
+                  title: "text-white",
+                  trigger: "py-[0.5rem]",
+                  indicator: "text-white",
+                }}
+                aria-label="Patient Management"
+                title={
+                  <span className="flex items-center gap-2">
+                    <ImProfile className="mb-6" /> Patient Management
+                  </span>
+                }
+              >
+                <ul className="space-y-1 text-[#e1e3e6]">
+                  <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/patient/patientAssignment" className="text-[#e1e3e6]">Patient Assignment</Link></li>
+                  <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/patient/assignedPatients" className="text-[#e1e3e6]">Assigned Patient</Link></li>
+                </ul>
+              </AccordionItem>
+            </Accordion>
+
+          )}
           <Accordion variant="light">
             <AccordionItem
               key="3"
@@ -82,7 +118,7 @@ export default function SideMenu({ isOpen, onClose }) {
               aria-label="Patient"
               title={
                 <span className="flex items-center gap-2">
-                  <MdOutlineSick  /> {translateText("patient")}
+                  <MdOutlineSick /> {translateText("patient")}
                 </span>
               }
             >

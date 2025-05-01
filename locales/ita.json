@@ -163,7 +163,9 @@
        "Enter your phone number":"Inserisci il tuo numero di telefono",
         "change_password":"Cambiare la password",
      "old_password":"old_password",
-     "new_password":"Nuova parola d'ordine"
+     "new_password":"Nuova parola d'ordine",
+     "User Managaement":"Gestione utenti",
+     "Patient Assignment":"Assegnazione del paziente"
 
 
 }

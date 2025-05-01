@@ -68,8 +68,8 @@ export default function Header({ menuOpen, toggleMenu }) {
           )}
 
           {notificationOpen && (
-            <div className="absolute -right-32 top-8 mt-2 w-64 bg-white text-black shadow-lg rounded-md border">
-              <div className="p-2 font-semibold border-b">{translateText("notifications")}</div>
+            <div className="absolute -right-20 top-9 mt-2 w-64 bg-white text-black shadow-lg rounded-md border">
+              <div className="p-2 font-semibold border-b ">{translateText("notifications")}</div>
               <div className="max-h-60 overflow-y-auto">
                 {notifications.map((n) => (
                   <div key={n.id} className={`p-3 text-sm ${n.isNew ? "bg-gray-100" : ""} hover:bg-gray-200`}>
