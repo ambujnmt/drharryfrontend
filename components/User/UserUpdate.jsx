@@ -153,13 +153,13 @@ export default function UserUpdate() {
 
 
                 {/* Submit Button */}
-            </form>
                 <button
                     type="submit"
                     className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 w-full mt-4 block mx-auto"
                 >
                     Update User
                 </button>
+            </form>
         </div>
     );
 }
