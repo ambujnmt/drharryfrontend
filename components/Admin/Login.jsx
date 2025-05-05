@@ -6,7 +6,7 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { adminLogin } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
-import { useAdmin } from "../../context/AdminContext"; // ✅ your new admin context
+import { useAdmin } from "../../context/AdminContext"; 
 
 
 export default function AdminLogin() {
@@ -83,9 +83,6 @@ export default function AdminLogin() {
         }
     };
 
-
-
-
     return (
         <div
             className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
@@ -116,12 +113,7 @@ export default function AdminLogin() {
                         </p>
                     )}
                     {errors.api && <p className="text-white text-sm mb-4">{errors.api}</p>}
-{/* 
-                    {loading && (
-                        <div className="flex justify-center items-center my-4">
-                            <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
-                        </div>
-                    )} */}
+
                     <form onSubmit={handleSubmit}>
                         <div className=" w-full  gap-2">
                             <Input

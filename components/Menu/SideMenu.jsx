@@ -80,6 +80,7 @@ export default function SideMenu({ isOpen, onClose }) {
                 <ul className="space-y-1 text-[#e1e3e6]">
                   <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/patient/patientAssignment" className="text-[#e1e3e6]">Patient Assignment</Link></li>
                   <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/patient/assignedPatients" className="text-[#e1e3e6]">Assigned Patient</Link></li>
+                  <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/patient/patientScheduling" className="text-[#e1e3e6]">Patient Scheduling</Link></li>
                 </ul>
               </AccordionItem>
             </Accordion>
