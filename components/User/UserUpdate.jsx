@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { fetchUsers, updateUser } from '../../utils/fetchApi';
+import { fetchUsers, updateUser ,changeUserStatus} from '../../utils/fetchApi';
 
 export default function UserUpdate() {
     const router = useRouter();
@@ -52,28 +52,48 @@ export default function UserUpdate() {
 
     const handleSubmit = async e => {
         e.preventDefault();
-
+    
         console.log("Form data before validation:", formData);
-
+    
+        // Validate the form data first
         if (!validate()) return;
-
-        const res = await updateUser(id, formData);
-
-        if (res?.status === true) {
-            console.log("✅ API Success Message:", res.message); // ✅ Print success message
-
-            setStatusMessage(res.message);
-            setStatusType("success");
-
-            setTimeout(() => {
-                router.replace('/user/userList'); // cleaner than reload
-            }, 1500);
-        } else {
-            console.error("❌ API Error Message:", res?.message); // helpful in debugging
-            setStatusMessage(res?.message);
+    
+        try {
+            // Step 1: Update user details (using your existing updateUser function)
+            const res = await updateUser(id, formData);
+    
+            if (res?.status === true) {
+                console.log("✅ User update successful:", res.message);
+    
+                // Step 2: Call changeUserStatus API (this can be used after the user details update)
+                const statusUpdate = await changeUserStatus(id, formData.status); // Pass the user id and status (active, suspended, etc.)
+    
+                if (statusUpdate.status === true) {
+                    console.log("✅ Status update successful:", statusUpdate.message);
+                    setStatusMessage("User updated and status changed successfully!");
+                    setStatusType("success");
+    
+                    // After 1.5 seconds, navigate to the user list page
+                    setTimeout(() => {
+                        router.replace('/user/userList'); // cleaner than reload
+                    }, 1500);
+                } else {
+                    console.error("❌ Status update failed:", statusUpdate.message);
+                    setStatusMessage(statusUpdate.message);
+                    setStatusType("error");
+                }
+            } else {
+                console.error("❌ User update failed:", res?.message);
+                setStatusMessage(res?.message);
+                setStatusType("error");
+            }
+        } catch (error) {
+            console.error("❌ An error occurred:", error);
+            setStatusMessage("An unexpected error occurred while updating.");
             setStatusType("error");
         }
     };
+    
 
 
     if (loading) return <div className="flex justify-center items-center h-screen">

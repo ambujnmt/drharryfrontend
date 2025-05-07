@@ -275,6 +275,89 @@ export async function updateUser(id, data) {
   }
 }
 
+// utils/fetchApi.js
+export const changeUserStatus = async (userId, status) => {
+  try {
+    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/change-user-status`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        status: status, // Must be string/number like '1', '2', etc.
+      }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error changing status:', error);
+    return { status: false, message: 'Failed to update status' };
+  }
+};
+
+// utils/fetchApi.js
+
+export const postPatientAssignment = async (payload) => {
+  const url = 'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/save-patient-assignment';
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || result.status === false) {
+      throw new Error(result.message || 'Failed to assign patients');
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error posting patient assignment:', error);
+    return { status: false, message: error.message};
+  }
+};
+
+
+export const fetchAssignedPatients = async (userId) => {
+  try {
+    const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/patient-assignment-list', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ user_id: userId }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || result?.status === false) {
+      console.error('API Error:', result?.message);
+      return [];
+    }
+
+    const patientsArray = result?.data?.patients;
+
+    if (Array.isArray(patientsArray)) {
+      return patientsArray.map(patient => patient.patient_id);
+    } else {
+      console.warn('No patients found in response data.');
+      return [];
+    }
+
+  } catch (error) {
+    console.error('Error fetching assigned patients:', error);
+    return [];
+  }
+};
+
+
 
 const fetchGoogleToken = async (token) => {
   try {

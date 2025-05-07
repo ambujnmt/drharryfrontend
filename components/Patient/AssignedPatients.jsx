@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchAssignedPatients } from '../../utils/fetchApi'; // Adjust path as needed
 
 export default function AssignedPatients() {
-  const [assignedPatients, setAssignedPatients] = useState({});
+  const [socialWorkerName, setSocialWorkerName] = useState('');
+  const [patients, setPatients] = useState([]);
 
   useEffect(() => {
-    const storedAssignedPatients = localStorage.getItem('assignedPatients');
-    if (storedAssignedPatients) {
-      setAssignedPatients(JSON.parse(storedAssignedPatients));
-    }
+    const loadPatients = async () => {
+      const response = await fetchAssignedPatients(1); // Replace 1 with appropriate user_id
+      console.log("Raw API response:", response);
+
+      if (response.status && response.data) {
+        setSocialWorkerName(response.data.user_details.name);
+        setPatients(response.data.patients || []);
+      }
+    };
+
+    loadPatients();
   }, []);
 
   return (
     <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
       <h2 className="text-xl font-bold mb-6">Assigned Patients</h2>
-
-      {/* Table to display assigned patients */}
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr>
@@ -23,21 +30,16 @@ export default function AssignedPatients() {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(assignedPatients).map(([socialWorkerId, patients]) => {
-            const socialWorkerName = patients.length > 0 ? patients[0].socialWorkerName : 'Not Available';
-            return (
-              <tr key={socialWorkerId}>
-                <td className="border px-4 py-2">{socialWorkerName}</td>
-                <td className="border px-4 py-2">
-                  <ul>
-                    {patients.map(patient => (
-                      <li key={patient.id}>{patient.name}</li>
-                    ))}
-                  </ul>
-                </td>
-              </tr>
-            );
-          })}
+          <tr>
+            <td className="border px-4 py-2">{socialWorkerName}</td>
+            <td className="border px-4 py-2">
+              <ul>
+                {patients.map((patient) => (
+                  <li key={patient.patient_id}>{patient.name}</li>
+                ))}
+              </ul>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

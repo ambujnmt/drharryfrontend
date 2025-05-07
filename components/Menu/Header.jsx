@@ -18,6 +18,7 @@ export default function Header({ menuOpen, toggleMenu }) {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
+  const [logoutMessage, setLogoutMessage] = useState("");
   const [clientLocale, setClientLocale] = useState("");
   const router = useRouter();
 
@@ -170,6 +171,7 @@ export default function Header({ menuOpen, toggleMenu }) {
                 color="primary"
                 onPress={() => {
                   setLoading(true); // Start loading before any actions
+                  setLogoutMessage(""); // Clear any old message
 
                   // Add a timeout to ensure the loading state is visible before processing logout
                   setTimeout(() => {
@@ -178,6 +180,7 @@ export default function Header({ menuOpen, toggleMenu }) {
                       console.log("Admin is logged in. Proceeding to logout.");
                       logoutAdmin();
                       localStorage.removeItem("admin"); // Remove admin from localStorage
+                      setLogoutMessage("You have been successfully logged out!");
                       const adminToken = localStorage.getItem("admin");
                       console.log("Admin Token After Removal: ", adminToken);
 
@@ -207,12 +210,18 @@ export default function Header({ menuOpen, toggleMenu }) {
                   }, 100); // Delay logout actions for spinner to show
                 }}
               >
+                {logoutMessage && (
+                  <p className="text-green-500 text-center font-semibold my-2">
+                    {logoutMessage}
+                  </p>
+                )}
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> // Loader
                 ) : (
                   "Confirm"
                 )}
               </Button>
+
             </>
           }
         />

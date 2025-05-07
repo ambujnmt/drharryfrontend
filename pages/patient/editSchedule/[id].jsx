@@ -3,7 +3,7 @@ import SideMenu from "../../../components/Menu/SideMenu";
 import Header from "../../../components/Menu/Header";
 import Footer from "../../../components/Menu/Footer";
 import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
-import Schedule from "../../../components/Patient/Schedule";
+import EditSchedule from "../../../components/Patient/EditSchedule";
 
 export default function AddUserPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
@@ -43,7 +43,7 @@ export default function AddUserPage() {
         />
 
         <div className="flex-1 overflow-auto p-5 bg-gray-100">
-          <Schedule />
+          <EditSchedule />
         </div>
 
         <Footer />

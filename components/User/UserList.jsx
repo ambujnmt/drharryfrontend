@@ -95,7 +95,6 @@ export default function AddUser() {
                                                 <td className=" px-4 py-4 text-blue-500  flex justify-center items-center gap-2">
                                                     <Link href={`/user/userDetail/${user.id}`}><FaEye className="text-xl" /></Link>
                                                     <Link href={`/user/userUpdate/${user.id}`}><FaPen className="text-lg" /></Link>
-                                                    <Link href="#" ><MdDelete className="text-xl" /></Link>
                                                 </td>
                                             </tr>
                                         ))}
