@@ -20,28 +20,30 @@ export default function PatientAssignment() {
   useEffect(() => {
     const loadData = async () => {
       const usersData = await fetchUsers();
-
+  
       if (usersData?.data) {
         const socialWorkers = usersData.data.filter(user => user.user_type === 2);
         const patients = usersData.data.filter(user => user.user_type === 3);
-
+  
         setUsersByType({ socialWorkers, patients });
-
-        // Fetch all assigned patient IDs
+  
+        // Fetch all assigned patients in parallel
+        const assignedResults = await Promise.all(
+          socialWorkers.map(sw => fetchAssignedPatients(sw.id))
+        );
+  
         const allAssignedIdsSet = new Set();
-
-        for (const sw of socialWorkers) {
-          const assignedIds = await fetchAssignedPatients(sw.id);
+        assignedResults.forEach(assignedIds => {
           assignedIds.forEach(id => allAssignedIdsSet.add(id));
-        }
-
-        // Store unique assigned patient IDs
+        });
+  
         setAssignedPatientIds(Array.from(allAssignedIdsSet));
       }
     };
-
+  
     loadData();
   }, []);
+  
 
 
   // Filter patients based on search, but don’t remove assigned ones
@@ -76,7 +78,6 @@ export default function PatientAssignment() {
 
     try {
       const response = await postPatientAssignment(payload);
-      // console.log('API Response:', response);
 
       if (response.status) {
         setSuccessMessage(response.message);
@@ -100,7 +101,6 @@ export default function PatientAssignment() {
         setTimeout(() => setErrorMessage(''), 3000);
       }
     } catch (error) {
-      console.error('Error during patient assignment:', error);
       setErrorMessage('Something went wrong. Please try again.');
       setSuccessMessage('');
       setTimeout(() => setErrorMessage(''), 3000);

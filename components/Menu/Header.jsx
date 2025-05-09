@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { FaBars, FaCog, FaBell } from "react-icons/fa";
+import { FaBars, FaCog } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { IoMdNotifications } from "react-icons/io";
 import { HiUserCircle } from "react-icons/hi2";
@@ -99,64 +99,6 @@ export default function Header({ menuOpen, toggleMenu }) {
             </ul>
           </div>
         )}
-
-
-
-
-        {/* <Tmodal
-          isOpen={isOpen}
-          onClose={onClose}
-          title="Are you sure you want to logout?"
-          footer={
-            <>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Cancel
-              </Button>
-              <Button
-                color="primary"
-                onPress={() => {
-                  setLoading(true); // Start loading
-                  // Check if admin is logged in
-                  if (admin) {
-                    console.log("Admin is logged in. Proceeding to logout.");
-                    logoutAdmin();
-                    localStorage.removeItem("admin"); // Remove admin from localStorage
-                    const adminToken = localStorage.getItem("admin");
-                    console.log("Admin Token After Removal: ", adminToken);
-
-                    onClose();
-                    setTimeout(() => {
-                      router.push("/admin/login");
-                    }, 200);
-                  }
-                  // Check if user is logged in
-                  else if (user) {
-                    // Clear user data and remove from localStorage
-                    setUser(null); // Clears the user state
-                    setUserEmail(""); // Clear the user email
-                    localStorage.removeItem("user"); // Remove user from localStorage
-
-                    // Log to check if the user token is removed
-                    const userToken = localStorage.getItem("user");
-                    console.log("User Token After Removal: ", userToken); // Should print null
-
-                    onClose();
-                    setTimeout(() => {
-                      router.push("/login"); // Redirect to user login
-                    }, 200);
-                  }
-                }}
-              >
-               {loading ? (
-    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> // Loader
-  ) : (
-    "Confirm"
-  )}
-              </Button>
-            </>
-          }
-        /> */}
-
 
         <Tmodal
           isOpen={isOpen}

@@ -43,15 +43,19 @@ export default function UserDetail() {
         <div className="w-full bg-gray-100 md:p-6 p-0">
             <div className="w-full space-y-5 bg-white shadow-lg rounded-lg p-4">
                 <div className="md:p-4">
-                    <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">
+                    <h2 className="text-2xl md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">
                         User Detail
                     </h2>
                     <ul className="space-y-2 text-gray-700">
-                        {Object.entries(user).map(([key, value]) => (
-                            <li key={key}>
-                                <strong className="capitalize">{key.replace(/_/g, ' ')}:</strong> {value || "N/A"}
-                            </li>
-                        ))}
+                        {Object.entries(user).map(([key, value]) => {
+                            if (key === 'status' || key === "user_type") return null; // Skip status
+                            return (
+                                <li key={key}>
+                                    <strong className="capitalize">{key.replace(/_/g, ' ')}:</strong> {value}
+                                </li>
+                            );
+                        })}
+
                     </ul>
                 </div>
             </div>

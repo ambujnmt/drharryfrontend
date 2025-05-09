@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { fetchUsers } from '../../utils/fetchApi';
 import { LanguageContext } from "../../context/LanguageContext";
 import { FaAngleLeft, FaAngleRight, FaEye, FaPen } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import { Link } from "@heroui/react";
 
 
@@ -13,6 +12,8 @@ export default function AddUser() {
     const [clientLocale, setClientLocale] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 15;
+    const [searchTerm, setSearchTerm] = useState("");
+
 
     useEffect(() => {
         setClientLocale(locale.toUpperCase());
@@ -32,12 +33,35 @@ export default function AddUser() {
         getUsers();
     }, []);
 
+    const filteredUsers = useMemo(() => {
+        const search = searchTerm.toLowerCase();
+    
+        return users.filter((user) => {
+            const name = user.name?.toLowerCase() || "";
+            const mobile = user.mobile?.toLowerCase() || "";
+            const email = user.email?.toLowerCase() || "";
+            const gender = user.gender?.toLowerCase() || "";
+    
+            // Check exact match for gender to avoid 'male' matching 'female'
+            const genderMatch = search === "male" || search === "female"
+                ? gender === search
+                : gender.includes(search);
+    
+            return (
+                name.includes(search) ||
+                mobile.includes(search) ||
+                email.includes(search) ||
+                genderMatch
+            );
+        });
+    }, [searchTerm, users]);
+    
     // Pagination logic
     const totalPages = useMemo(() => {
-        return Math.ceil(users.length / usersPerPage);
-    }, [users]);
+        return Math.ceil(filteredUsers.length / usersPerPage);
+    }, [filteredUsers]);
     const startIndex = (currentPage - 1) * usersPerPage;
-    const currentUsers = users.slice(startIndex, startIndex + usersPerPage);
+    const currentUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -46,9 +70,9 @@ export default function AddUser() {
     };
 
     return (
-        <div className="w-full bg-gray-100 md:p-6 p-0">
-            <div className="w-full space-y-5 bg-white shadow-lg rounded-lg p-4">
-                <div className="md:p-4">
+        <div className="w-full bg-gray-100">
+            <div className="w-full space-y-5 bg-gray-100 shadow-lg rounded-lg p-4">
+                <div className="md:p-4 mt-5 bg-white  rounded-xl">
                     <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">
                         User List
                     </h2>
@@ -59,8 +83,21 @@ export default function AddUser() {
                         </div>
                     ) : (
                         <>
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full bg-white  -gray-300 text-sm text-left">
+                            <div className="mb-4">
+                                <input
+                                    type="text"
+                                    placeholder="Search by Name, Mobile, Email, or Gender"
+                                    value={searchTerm}
+                                    onChange={(e) => {
+                                        setSearchTerm(e.target.value);
+                                        setCurrentPage(1); // Reset to page 1 on search
+                                    }}
+                                    className="w-full px-4 py-1 border border-gray-300 rounded-md"
+                                />
+                            </div>
+
+                             <div className="overflow-x-auto">
+                            <table className="bg-white  -gray-300 text-sm text-left">
                                     <thead className="bg-gray-200 text-gray-700">
                                         <tr>
                                             <th className=" px-4 py-2">S.No.</th>

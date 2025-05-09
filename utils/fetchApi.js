@@ -357,6 +357,70 @@ export const fetchAssignedPatients = async (userId) => {
   }
 };
 
+export const fetchSocialWorkersWithPatients = async () => {
+  try {
+    const response = await fetch(
+      'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/socialworkers-patients'
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching social workers with patients:', error);
+    return { status: false, message: 'Failed to fetch data' };
+  }
+};
+
+// utils/fetchapi.js
+
+export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, schedule_time }) => {
+  try {
+    const response = await fetch(
+      'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/save-schedular-data',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id,
+          patient_id,
+          schedule_day,
+          schedule_time,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('API Error:', error);
+    return { status: false, message: 'Something went wrong while saving schedule.' };
+  }
+};
+
+export const deleteAssignedScheduler = async (data) => {
+  const formData = new FormData();
+  for (const key in data) {
+      formData.append(key, data[key]);
+  }
+
+  try {
+      const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-assign-schedular', {
+          method: 'POST',
+          body: formData
+      });
+
+      const result = await response.json();
+      return result;
+  } catch (error) {
+      console.error("API Error:", error);
+      return {
+          status: false,
+          message: "An error occurred while deleting."
+      };
+  }
+};
+
 
 
 const fetchGoogleToken = async (token) => {

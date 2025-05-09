@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { fetchUsers, updateUser ,changeUserStatus} from '../../utils/fetchApi';
+import { fetchUsers, updateUser, changeUserStatus } from '../../utils/fetchApi';
 
 export default function UserUpdate() {
     const router = useRouter();
@@ -23,8 +23,6 @@ export default function UserUpdate() {
             }
             setLoading(false);
         };
-        console.log("Router ID:", id); // 👈 Debug log
-
         if (id) getUserFromList();
     }, [id]);
 
@@ -52,48 +50,33 @@ export default function UserUpdate() {
 
     const handleSubmit = async e => {
         e.preventDefault();
-    
-        console.log("Form data before validation:", formData);
-    
-        // Validate the form data first
         if (!validate()) return;
-    
+
         try {
-            // Step 1: Update user details (using your existing updateUser function)
             const res = await updateUser(id, formData);
-    
+
             if (res?.status === true) {
-                console.log("✅ User update successful:", res.message);
-    
-                // Step 2: Call changeUserStatus API (this can be used after the user details update)
+
                 const statusUpdate = await changeUserStatus(id, formData.status); // Pass the user id and status (active, suspended, etc.)
-    
+
                 if (statusUpdate.status === true) {
-                    console.log("✅ Status update successful:", statusUpdate.message);
-                    setStatusMessage("User updated and status changed successfully!");
+                    setStatusMessage(res?.message || res?.message_italian);
                     setStatusType("success");
-    
-                    // After 1.5 seconds, navigate to the user list page
+
                     setTimeout(() => {
                         router.replace('/user/userList'); // cleaner than reload
                     }, 1500);
                 } else {
-                    console.error("❌ Status update failed:", statusUpdate.message);
-                    setStatusMessage(statusUpdate.message);
+                    setStatusMessage(res?.message);
                     setStatusType("error");
                 }
-            } else {
-                console.error("❌ User update failed:", res?.message);
-                setStatusMessage(res?.message);
-                setStatusType("error");
-            }
+            } 
         } catch (error) {
-            console.error("❌ An error occurred:", error);
             setStatusMessage("An unexpected error occurred while updating.");
             setStatusType("error");
         }
     };
-    
+
 
 
     if (loading) return <div className="flex justify-center items-center h-screen">
@@ -119,26 +102,80 @@ export default function UserUpdate() {
         birthday: 'Date of Birth',
         address: 'Address',
         profile_img: 'Profile Image URL',
-        status: 'Account Status',
+        status_value: 'Account Status',
     };
 
     return (
         <div className=" mx-auto mt-10 bg-white shadow-md p-6 rounded-md">
-            <h2 className="text-xl font-semibold mb-4">Update User</h2>
+            <h2 className="text-3xl font-semibold mb-4 text-center">Update User</h2>
 
             {statusMessage && (
                 <div
-                    className={`p-4 mb-4 text-center text-white rounded-md ${statusType === 'success' ? 'bg-green-500' : 'bg-red-500'}`}
+                    className={` mb-4 text-center ${statusType === 'success' ? 'text-green-500' : 'text-red-500'}`}
                 >
                     {statusMessage}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+
+            <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-2 gap-4">
+
                 {/* Dynamically render fields */}
                 {Object.entries(formData).map(([key, value]) => {
                     if (nonEditableFields.includes(key)) return null;
 
+                    // Show only status_value, not status
+                    if (key === 'status') {
+                        return (
+                            <input
+                                key="status"
+                                type="hidden"
+                                name="status"
+                                value={value || ''}
+                                readOnly
+                            />
+                        );
+                    }
+
+                    // Render status_value as a dropdown
+                    if (key === 'status_value') {
+                        return (
+                            <div key="status_value">
+                                <label className="block text-sm font-medium capitalize">
+                                    {fieldLabels[key] || 'Status'}
+                                </label>
+                                <select
+                                    name="status_value"
+                                    value={formData.status_value || ''}
+                                    onChange={(e) => {
+                                        const selected = e.target.value;
+
+                                        // Map to correct status values for backend
+                                        const statusMap = {
+                                            Active: 1,
+                                            Inactive: 2,
+                                            Suspended: 3
+                                        };
+
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            status_value: selected,
+                                            status: statusMap[selected], // set actual value expected by API
+                                        }));
+                                    }}
+                                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                                >
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                    <option value="Suspended">Suspended</option>
+                                </select>
+
+                            </div>
+                        );
+                    }
+
+                    // Regular input or select
                     return (
                         <div key={key}>
                             <label className="block text-sm font-medium capitalize">
@@ -147,10 +184,9 @@ export default function UserUpdate() {
                             {key === 'user_type' ? (
                                 <select
                                     name={key}
-                                    value={value || ''}
+                                    value={value}
                                     onChange={handleChange}
-                                    placeholder="Select User Type"
-                                    className="w-full border rounded px-3 py-2"
+                                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
                                 >
                                     <option value="2">Social Worker</option>
                                     <option value="3">Patient</option>
@@ -161,23 +197,22 @@ export default function UserUpdate() {
                                 <input
                                     type="text"
                                     name={key}
-                                    value={value || ''}
+                                    value={value}
                                     onChange={handleChange}
-                                    className="w-full border rounded px-3 py-2"
+                                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
                                 />
                             )}
                             {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
                         </div>
                     );
                 })}
-
-
+</div>
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 w-full mt-4 block mx-auto"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 mt-4 block mx-auto"
                 >
-                    Update User
+                    Update
                 </button>
             </form>
         </div>
