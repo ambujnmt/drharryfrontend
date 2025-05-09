@@ -69,37 +69,28 @@ export default function PatientScheduling() {
         setSelectedPatientId(null);
     };
 
+const formatTime = (timeStr) => {
+    if (!timeStr || typeof timeStr !== 'string') return '';
 
-    const formatTime = (timeStr) => {
-        if (!timeStr || typeof timeStr !== 'string') {
-            console.error(`Invalid time format: "${timeStr}"`);
-            return '';
-        }
-    
-        const parts = timeStr.split(':');
-        if (parts.length !== 2) {
-            console.error(`Time string not in HH:MM format: "${timeStr}"`);
-            return '';
-        }
-    
-        const hour = parseInt(parts[0], 10);
-        const minute = parseInt(parts[1], 10);
-    
-        if (isNaN(hour) || isNaN(minute)) {
-            console.error(`Failed to parse time: hour="${parts[0]}", minute="${parts[1]}"`);
-            return '';
-        }
-    
-        const date = new Date();
-        date.setHours(hour, minute, 0, 0);
-    
-        return date.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-        });
-    };
-    
+    const time = timeStr.trim();
+
+    // If already in AM/PM format, return as-is
+    if (/AM|PM/i.test(time)) {
+        return time.toUpperCase();
+    }
+
+    const [hourStr, minuteStr] = time.split(':');
+    let hour = parseInt(hourStr, 10);
+    const minute = parseInt(minuteStr, 10);
+
+    if (isNaN(hour) || isNaN(minute)) return '';
+
+    const isPM = hour >= 12;
+    const formattedHour = ((hour + 11) % 12) + 1;
+    const ampm = isPM ? 'PM' : 'AM';
+
+    return `${formattedHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${ampm}`;
+};
 
 
     return (
@@ -191,12 +182,17 @@ export default function PatientScheduling() {
                                             <td className="px-4 py-2">{patient.name}</td>
                                             <td className="px-4 py-2">{patient.mobile}</td>
                                             <td className="px-4 py-2">{patient.email}</td>
-                                            <td className="px-4 py-2 whitespace-pre-line">{days.join('\n')}</td>
-                                            <td className="px-4 py-2 whitespace-pre-line">
-                                                {times.map((t, i) => (
-                                                    <div key={i}>{formatTime(t)}</div>
-                                                ))}
-                                            </td>
+                                            <td className="px-4 py-2">
+    {days.map((day, i) => (
+        <div key={i}>{day}</div>
+    ))}
+</td>
+<td className="px-4 py-2">
+    {times.map((t, i) => (
+        <div key={i}>{formatTime(t)}</div>
+    ))}
+</td>
+
 
                                             <td className="px-4 py-2">
                                                 <span className={`px-2 py-1 text-white rounded-xl ${patient.status === 1 ? 'bg-green-500' : 'bg-red-500'}`}>
