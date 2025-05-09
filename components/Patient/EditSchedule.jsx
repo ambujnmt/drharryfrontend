@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Input } from '@heroui/react';
-import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css';
-import 'react-clock/dist/Clock.css';
+// import TimePicker from 'react-time-picker';
+// import 'react-time-picker/dist/TimePicker.css';
+// import 'react-clock/dist/Clock.css';
 import { saveSchedulerData, fetchSocialWorkersWithPatients } from '../../utils/fetchApi';
+
+// Function to convert 24-hour time format to AM/PM format
+const convertToAMPM = (time24) => {
+    let [hour, minute] = time24.split(':');
+    hour = parseInt(hour);
+
+    const suffix = hour >= 12 ? 'PM' : 'AM';
+    if (hour > 12) hour -= 12;
+    if (hour === 0) hour = 12;
+
+    return `${hour.toString().padStart(2, '0')}:${minute} ${suffix}`;
+};
 
 export default function EditSchedule() {
     const router = useRouter();
@@ -20,55 +32,38 @@ export default function EditSchedule() {
         if (!router.isReady || !id) return;
 
         const fetchPatient = async () => {
-            console.log("Fetching patient with id:", id);
             const result = await fetchSocialWorkersWithPatients();
-
-            console.log("API result:", result); // Log the full API response
 
             if (result.status && Array.isArray(result.data)) {
                 let found = null;
                 let socialWorkerId = null;
                 for (const sw of result.data) {
-                    // Iterate over patients to find the one with matching patient_id
                     const match = sw.patients?.find(p => String(p.patient_id) === String(id));
                     if (match) {
                         found = match;
-                        socialWorkerId = sw.user_id; // Get the user_id of the social worker
+                        socialWorkerId = sw.user_id;
                         break;
                     }
                 }
 
-                console.log("Found patient:", found); // Log the found patient object
-                console.log("Social Worker ID:", socialWorkerId); // Log the user_id of the social worker
-
                 if (found) {
                     setPatientData({
-                        ...found, // Spread the existing patient data
-                        user_id: socialWorkerId // Add user_id (social worker) to patientData
+                        ...found,
+                        user_id: socialWorkerId
                     });
 
-                    if (!socialWorkerId) {
-                        console.error("user_id (social worker) is missing for the patient");
-                    } else {
-                        console.log("user_id (social worker):", socialWorkerId);
-                        const daysArray = Array.isArray(found.schedule_day) ? found.schedule_day : [];
-                        const timeArray = Array.isArray(found.schedule_time) ? found.schedule_time : [];
+                    const daysArray = Array.isArray(found.schedule_day) ? found.schedule_day : [];
+                    const timeArray = Array.isArray(found.schedule_time) ? found.schedule_time : [];
 
-                        const timeMap = {};
-                        daysArray.forEach((day, index) => {
-                            const time = timeArray[index];
-                            timeMap[day] = [time || null];  // ✅ use null instead of ''
-                        });
+                    const timeMap = {};
+                    daysArray.forEach((day, index) => {
+                        const time = timeArray[index];
+                        timeMap[day] = [convertToAMPM(time) || null];  // Convert to AM/PM format
+                    });
 
-
-                        setSelectedDays(daysArray);
-                        setTimeSlots(timeMap);
-                    }
-                } else {
-                    console.error("Patient not found in result.");
+                    setSelectedDays(daysArray);
+                    setTimeSlots(timeMap);
                 }
-            } else {
-                console.error("API returned error or invalid data format.");
             }
         };
 
@@ -114,6 +109,28 @@ export default function EditSchedule() {
         });
     };
 
+    const handleTimeChange = (day, index, value, type) => {
+        setTimeSlots(prev => {
+            const existing = prev[day] ? [...prev[day]] : [''];
+            let currentTime = existing[index] || '12:00 AM';
+
+            let [hour, minuteWithAMPM] = currentTime.split(':');
+            let [minute, ampm] = (minuteWithAMPM || '00 AM').split(' ');
+
+            if (type === 'hour') hour = value;
+            else if (type === 'minute') minute = value;
+            else if (type === 'ampm') ampm = value;
+
+            const newTime = `${hour.padStart(2, '0')}:${minute} ${ampm}`;
+            existing[index] = newTime;
+
+            return {
+                ...prev,
+                [day]: existing
+            };
+        });
+    };
+
 
     const handleUpdate = async () => {
         if (!patientData.user_id) {
@@ -124,31 +141,12 @@ export default function EditSchedule() {
         const schedule_day = [];
         const schedule_time = [];
 
-        // Format function to convert 24-hour time to AM/PM
-        const formatTime = (timeStr) => {
-            if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(':')) return '';
-
-            const [hourStr, minuteStr] = timeStr.split(':');
-            const hour = parseInt(hourStr, 10);
-            const minute = parseInt(minuteStr, 10);
-
-            if (isNaN(hour) || isNaN(minute)) {
-                console.warn(`Invalid time format received: ${timeStr}`);
-                return '';
-            }
-
-            const ampm = hour >= 12 ? 'PM' : 'AM';
-            const hour12 = hour % 12 || 12;
-            return `${hour12}:${minute.toString().padStart(2, '0')} ${ampm}`;
-        };
-
-
         selectedDays.forEach(day => {
             const times = timeSlots[day] || [];
             times.forEach(time => {
                 if (time) {
                     schedule_day.push(day);
-                    schedule_time.push(formatTime(time)); // <-- Convert here
+                    schedule_time.push(time); // Already in AM/PM format
                 }
             });
         });
@@ -173,7 +171,6 @@ export default function EditSchedule() {
             setApiMessage({ type: 'error', text: response.message });
         }
     };
-
 
 
     if (!patientData) return <div className="flex justify-center items-center py-52">
@@ -223,14 +220,40 @@ export default function EditSchedule() {
                             {selectedDays.includes(day) && (
                                 <div className="flex flex-wrap gap-2">
                                     {(timeSlots[day] || []).map((t, idx) => (
-                                        <TimePicker
-                                            key={idx}
-                                            onChange={(value) => updateTimeSlot(day, idx, value || '')}
-                                            value={t || ''}
-                                            format="h:mm a"
-                                            disableClock
-                                            className="w-28"
-                                        />
+                                        <div key={idx} className="flex gap-2">
+                                            <select
+                                                className="border rounded p-1"
+                                                value={(t || '').split(':')[0]?.padStart(2, '0')}
+                                                onChange={(e) => handleTimeChange(day, idx, e.target.value, 'hour')}
+                                            >
+                                                {[...Array(12)].map((_, i) => {
+                                                    const hour = (i + 1).toString().padStart(2, '0');
+                                                    return <option key={hour} value={hour}>{hour}</option>;
+                                                })}
+                                            </select>
+
+                                            <select
+                                                className="border rounded p-1"
+                                                value={(t || '').split(':')[1]?.split(' ')[0] || '00'}
+                                                onChange={(e) => handleTimeChange(day, idx, e.target.value, 'minute')}
+                                            >
+                                                {[...Array(60)].map((_, i) => {
+                                                    const min = i.toString().padStart(2, '0');
+                                                    return <option key={min} value={min}>{min}</option>;
+                                                })}
+                                            </select>
+
+
+                                            <select
+                                                className="border rounded p-1"
+                                                value={(t || '').split(' ')[1] || 'AM'}
+                                                onChange={(e) => handleTimeChange(day, idx, e.target.value, 'ampm')}
+                                            >
+                                                <option value="AM">AM</option>
+                                                <option value="PM">PM</option>
+                                            </select>
+                                        </div>
+
                                     ))}
                                 </div>
                             )}
@@ -238,7 +261,6 @@ export default function EditSchedule() {
                     ))}
                 </div>
             </div>
-
 
             <button
                 onClick={handleUpdate}

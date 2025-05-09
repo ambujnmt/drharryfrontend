@@ -11,17 +11,22 @@ export default function PatientScheduling() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedPatientId, setSelectedPatientId] = useState(null);
     const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    // Fetching social workers and their associated patients
     const loadUsers = async () => {
+        setLoading(true); // Set loading to true when starting to fetch
         const data = await fetchUsers();
         if (data?.data) {
             const socialWorkers = data.data.filter(user => user.user_type === 2);
             setUsersByType({ socialWorkers });
         }
+        setLoading(false); // Set loading to false once data is fetched
     };
 
     const loadPatients = async (socialWorkerId) => {
+        setLoading(true);
         const data = await fetchSocialWorkersWithPatients();
         if (data?.status && Array.isArray(data.data)) {
             const selectedWorker = data.data.find(sw => String(sw.user_id) === String(socialWorkerId));
@@ -32,6 +37,7 @@ export default function PatientScheduling() {
                 }));
             }
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -52,6 +58,7 @@ export default function PatientScheduling() {
         }));
 
         onClose();
+        setLoading(true); // Set loading state when performing the delete action
 
         const res = await deleteAssignedScheduler({
             user_id: selected.socialWorker,
@@ -60,38 +67,31 @@ export default function PatientScheduling() {
 
         setMessage(res.message);
 
-        if (!res.status) {
+        if (res.status) {
+            // After successful deletion, reload patients
             await loadPatients(selected.socialWorker);
         } else {
-            await loadPatients(selected.socialWorker);
+            // If there’s an error, handle the failure
+            setLoading(false);
         }
 
         setSelectedPatientId(null);
     };
 
-const formatTime = (timeStr) => {
-    if (!timeStr || typeof timeStr !== 'string') return '';
+    const formatTime = (timeStr) => {
+        if (!timeStr || typeof timeStr !== 'string') return '';
+        const time = timeStr.trim();
+        if (/AM|PM/i.test(time)) return time.toUpperCase();
 
-    const time = timeStr.trim();
-
-    // If already in AM/PM format, return as-is
-    if (/AM|PM/i.test(time)) {
-        return time.toUpperCase();
-    }
-
-    const [hourStr, minuteStr] = time.split(':');
-    let hour = parseInt(hourStr, 10);
-    const minute = parseInt(minuteStr, 10);
-
-    if (isNaN(hour) || isNaN(minute)) return '';
-
-    const isPM = hour >= 12;
-    const formattedHour = ((hour + 11) % 12) + 1;
-    const ampm = isPM ? 'PM' : 'AM';
-
-    return `${formattedHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${ampm}`;
-};
-
+        const [hourStr, minuteStr] = time.split(':');
+        let hour = parseInt(hourStr, 10);
+        const minute = parseInt(minuteStr, 10);
+        if (isNaN(hour) || isNaN(minute)) return '';
+        const isPM = hour >= 12;
+        const formattedHour = ((hour + 11) % 12) + 1;
+        const ampm = isPM ? 'PM' : 'AM';
+        return `${formattedHour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${ampm}`;
+    };
 
     return (
         <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md pb-44">
@@ -121,9 +121,7 @@ const formatTime = (timeStr) => {
                                         onChange={(e) => handleSocialWorkerSelection(e.target.value)}
                                         className="mr-2"
                                     />
-                                    <label className="flex-1 cursor-pointer">
-                                        {socialWorker.name}
-                                    </label>
+                                    <label className="flex-1 cursor-pointer">{socialWorker.name}</label>
                                 </div>
                             ))}
                         {usersByType.socialWorkers.length === 0 && (
@@ -183,16 +181,15 @@ const formatTime = (timeStr) => {
                                             <td className="px-4 py-2">{patient.mobile}</td>
                                             <td className="px-4 py-2">{patient.email}</td>
                                             <td className="px-4 py-2">
-    {days.map((day, i) => (
-        <div key={i}>{day}</div>
-    ))}
-</td>
-<td className="px-4 py-2">
-    {times.map((t, i) => (
-        <div key={i}>{formatTime(t)}</div>
-    ))}
-</td>
-
+                                                {days.map((day, i) => (
+                                                    <div key={i}>{day}</div>
+                                                ))}
+                                            </td>
+                                            <td className="px-4 py-2">
+                                                {times.map((t, i) => (
+                                                    <div key={i}>{formatTime(t)}</div>
+                                                ))}
+                                            </td>
 
                                             <td className="px-4 py-2">
                                                 <span className={`px-2 py-1 text-white rounded-xl ${patient.status === 1 ? 'bg-green-500' : 'bg-red-500'}`}>
