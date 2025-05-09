@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Input } from '@heroui/react';
-// import TimePicker from 'react-time-picker';
-// import 'react-time-picker/dist/TimePicker.css';
-// import 'react-clock/dist/Clock.css';
 import { saveSchedulerData, fetchSocialWorkersWithPatients } from '../../utils/fetchApi';
 
 // Function to convert 24-hour time format to AM/PM format
 const convertToAMPM = (time24) => {
+    // If already in AM/PM format, return as-is
+    if (time24.includes('AM') || time24.includes('PM')) return time24;
+
     let [hour, minute] = time24.split(':');
     hour = parseInt(hour);
 
@@ -17,6 +17,7 @@ const convertToAMPM = (time24) => {
 
     return `${hour.toString().padStart(2, '0')}:${minute} ${suffix}`;
 };
+
 
 export default function EditSchedule() {
     const router = useRouter();
@@ -114,8 +115,17 @@ export default function EditSchedule() {
             const existing = prev[day] ? [...prev[day]] : [''];
             let currentTime = existing[index] || '12:00 AM';
 
-            let [hour, minuteWithAMPM] = currentTime.split(':');
-            let [minute, ampm] = (minuteWithAMPM || '00 AM').split(' ');
+            let hour = '12', minute = '00', ampm = 'AM';
+
+            if (currentTime && currentTime.includes(':')) {
+                const timeParts = currentTime.trim().split(':');
+                hour = timeParts[0]?.padStart(2, '0') || '12';
+
+                const minuteAndAmPm = (timeParts[1] || '00 AM').trim().split(' ');
+                minute = minuteAndAmPm[0]?.padStart(2, '0') || '00';
+                ampm = minuteAndAmPm[1]?.toUpperCase() === 'PM' ? 'PM' : 'AM';
+            }
+
 
             if (type === 'hour') hour = value;
             else if (type === 'minute') minute = value;
