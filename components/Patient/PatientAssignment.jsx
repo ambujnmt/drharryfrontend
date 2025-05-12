@@ -16,37 +16,35 @@ export default function PatientAssignment() {
   const [assignedPatientIds, setAssignedPatientIds] = useState([]); // Will now be fetched per social worker
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Spinner state
 
   useEffect(() => {
     const loadData = async () => {
       const usersData = await fetchUsers();
-  
+
       if (usersData?.data) {
         const socialWorkers = usersData.data.filter(user => user.user_type === 2);
         const patients = usersData.data.filter(user => user.user_type === 3);
-  
+
         setUsersByType({ socialWorkers, patients });
-  
-        // Fetch all assigned patients in parallel
+
         const assignedResults = await Promise.all(
           socialWorkers.map(sw => fetchAssignedPatients(sw.id))
         );
-  
+
         const allAssignedIdsSet = new Set();
         assignedResults.forEach(assignedIds => {
           assignedIds.forEach(id => allAssignedIdsSet.add(id));
         });
-  
+
         setAssignedPatientIds(Array.from(allAssignedIdsSet));
       }
     };
-  
+
     loadData();
   }, []);
-  
 
 
-  // Filter patients based on search, but don’t remove assigned ones
   const filteredPatients = usersByType.patients.filter(patient =>
     patient.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -64,18 +62,19 @@ export default function PatientAssignment() {
     setSelected({ socialWorker: socialWorkerId, patients: [] });
   };
 
-
 const handleAssignPatients = async () => {
+  setSuccessMessage('');
+  setErrorMessage('');
+
   if (!selected.socialWorker || selected.patients.length === 0) {
-    alert('Please select a social worker and at least one patient');
+    setErrorMessage('Please select a social worker and at least one patient.');
+    setTimeout(() => setErrorMessage(''), 1000);
     return;
   }
 
   try {
-    // 1. Fetch existing patients assigned to the selected social worker
+    setLoading(true); // start loader
     const existingAssigned = await fetchAssignedPatients(selected.socialWorker);
-
-    // 2. Merge existing with newly selected, avoiding duplicates
     const mergedPatientIds = Array.from(new Set([...existingAssigned, ...selected.patients]));
 
     const payload = {
@@ -88,9 +87,7 @@ const handleAssignPatients = async () => {
     if (response.status) {
       setSuccessMessage(response.message);
       setErrorMessage('');
-      setTimeout(() => setSuccessMessage(''), 3000);
 
-      // Re-fetch all assigned patients for all social workers
       const socialWorkers = usersByType.socialWorkers;
       const allAssignedIdsSet = new Set();
 
@@ -101,26 +98,33 @@ const handleAssignPatients = async () => {
 
       setAssignedPatientIds(Array.from(allAssignedIdsSet));
       setSelected({ socialWorker: '', patients: [] });
+
+      // Wait before hiding success message and stopping the loader
+      setTimeout(() => {
+        setSuccessMessage('');
+        setLoading(false); // stop loader only after success message is shown
+      }, 1000);
+
     } else {
       setErrorMessage(response.message);
       setSuccessMessage('');
-      setTimeout(() => setErrorMessage(''), 3000);
+      setLoading(false); // stop loader immediately on failure
+      setTimeout(() => setErrorMessage(''), 1000);
     }
   } catch (error) {
     setErrorMessage('Something went wrong. Please try again.');
     setSuccessMessage('');
-    setTimeout(() => setErrorMessage(''), 3000);
+    setLoading(false);
+    setTimeout(() => setErrorMessage(''), 1000);
   }
 };
-
-
 
   return (
     <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
       <h2 className="text-xl font-bold mb-6">Patient Assignment</h2>
 
-      {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
-      {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
+      {successMessage && <div className="text-green-600 font-medium mb-4">{successMessage}</div>}
+      {errorMessage && <div className="text-red-600 font-medium mb-4">{errorMessage}</div>}
 
       {/* Social Worker Dropdown */}
       <div className="mb-4">
@@ -174,8 +178,14 @@ const handleAssignPatients = async () => {
       <button
         onClick={handleAssignPatients}
         className="rounded-xl p-2 bg-blue-500 text-white mx-auto block"
-      >
-        Assign Patients
+        disabled={loading}
+
+      >{loading ? (
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+      ) : (
+        'Assign Patients'
+      )}
+
       </button>
     </div>
   );

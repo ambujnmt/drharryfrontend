@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
 import { adminLogin } from "../../utils/fetchApi"

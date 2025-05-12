@@ -31,6 +31,7 @@ export default function EditSchedule() {
     const [patientData, setPatientData] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [timeSlots, setTimeSlots] = useState({});
+    const [loading, setLoading] = useState(false); // Spinner state
 
     const daysOfWeek = ['Everyday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -129,6 +130,8 @@ export default function EditSchedule() {
             return;
         }
 
+        setLoading(true); // Start loader
+
         const schedule_day = [];
         const schedule_time = [];
 
@@ -156,12 +159,16 @@ export default function EditSchedule() {
         if (response.status) {
             setApiMessage({ type: 'success', text: response.message });
             setTimeout(() => {
+                setApiMessage({ type: '', text: '' });
                 router.push('/patient/patientScheduling');
             }, 1000);
         } else {
             setApiMessage({ type: 'error', text: response.message });
         }
+
+        setLoading(false); // Stop loader
     };
+
 
     if (!patientData) return (
         <div className="flex justify-center items-center py-52">
@@ -225,10 +232,15 @@ export default function EditSchedule() {
             </div>
 
             <button
+                disabled={loading}
                 onClick={handleUpdate}
                 className="rounded-xl px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition mx-auto block"
-            >
-                Update
+            >{loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+            ) : (
+                "Update"
+            )}
+
             </button>
         </div>
     );
