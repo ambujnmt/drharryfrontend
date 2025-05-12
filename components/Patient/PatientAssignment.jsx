@@ -65,47 +65,54 @@ export default function PatientAssignment() {
   };
 
 
-  const handleAssignPatients = async () => {
-    if (!selected.socialWorker || selected.patients.length === 0) {
-      alert('Please select a social worker and at least one patient');
-      return;
-    }
+const handleAssignPatients = async () => {
+  if (!selected.socialWorker || selected.patients.length === 0) {
+    alert('Please select a social worker and at least one patient');
+    return;
+  }
+
+  try {
+    // 1. Fetch existing patients assigned to the selected social worker
+    const existingAssigned = await fetchAssignedPatients(selected.socialWorker);
+
+    // 2. Merge existing with newly selected, avoiding duplicates
+    const mergedPatientIds = Array.from(new Set([...existingAssigned, ...selected.patients]));
 
     const payload = {
       user_id: selected.socialWorker,
-      patient_ids: selected.patients,
+      patient_ids: mergedPatientIds,
     };
 
-    try {
-      const response = await postPatientAssignment(payload);
+    const response = await postPatientAssignment(payload);
 
-      if (response.status) {
-        setSuccessMessage(response.message);
-        setErrorMessage('');
-        setTimeout(() => setSuccessMessage(''), 3000);
+    if (response.status) {
+      setSuccessMessage(response.message);
+      setErrorMessage('');
+      setTimeout(() => setSuccessMessage(''), 3000);
 
-        // Re-fetch all assigned patients for all social workers
-        const socialWorkers = usersByType.socialWorkers;
-        const allAssignedIdsSet = new Set();
+      // Re-fetch all assigned patients for all social workers
+      const socialWorkers = usersByType.socialWorkers;
+      const allAssignedIdsSet = new Set();
 
-        for (const sw of socialWorkers) {
-          const assignedIds = await fetchAssignedPatients(sw.id);
-          assignedIds.forEach(id => allAssignedIdsSet.add(id));
-        }
-
-        setAssignedPatientIds(Array.from(allAssignedIdsSet));
-        setSelected({ socialWorker: '', patients: [] });
-      } else {
-        setErrorMessage(response.message);
-        setSuccessMessage('');
-        setTimeout(() => setErrorMessage(''), 3000);
+      for (const sw of socialWorkers) {
+        const assignedIds = await fetchAssignedPatients(sw.id);
+        assignedIds.forEach(id => allAssignedIdsSet.add(id));
       }
-    } catch (error) {
-      setErrorMessage('Something went wrong. Please try again.');
+
+      setAssignedPatientIds(Array.from(allAssignedIdsSet));
+      setSelected({ socialWorker: '', patients: [] });
+    } else {
+      setErrorMessage(response.message);
       setSuccessMessage('');
       setTimeout(() => setErrorMessage(''), 3000);
     }
-  };
+  } catch (error) {
+    setErrorMessage('Something went wrong. Please try again.');
+    setSuccessMessage('');
+    setTimeout(() => setErrorMessage(''), 3000);
+  }
+};
+
 
 
   return (

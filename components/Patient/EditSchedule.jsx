@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Input } from '@heroui/react';
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+import 'react-clock/dist/Clock.css';
 import { saveSchedulerData, fetchSocialWorkersWithPatients } from '../../utils/fetchApi';
 
-// Function to convert 24-hour time format to AM/PM format
+// Convert 24-hour string to 12-hour format
 const convertToAMPM = (time24) => {
-    // If already in AM/PM format, return as-is
-    if (time24.includes('AM') || time24.includes('PM')) return time24;
-
-    let [hour, minute] = time24.split(':');
-    hour = parseInt(hour);
-
-    const suffix = hour >= 12 ? 'PM' : 'AM';
-    if (hour > 12) hour -= 12;
-    if (hour === 0) hour = 12;
-
-    return `${hour.toString().padStart(2, '0')}:${minute} ${suffix}`;
+    const [hour, minute] = time24.split(':');
+    let h = parseInt(hour, 10);
+    const suffix = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return `${h.toString().padStart(2, '0')}:${minute} ${suffix}`;
 };
 
+// Convert 12-hour format to 24-hour for backend
+const convertTo24Hour = (time12) => {
+    const [time, modifier] = time12.split(' ');
+    let [hours, minutes] = time.split(':').map(Number);
+    if (modifier === 'PM' && hours !== 12) hours += 12;
+    if (modifier === 'AM' && hours === 12) hours = 0;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+};
 
 export default function EditSchedule() {
     const router = useRouter();
@@ -59,10 +64,11 @@ export default function EditSchedule() {
                     const timeMap = {};
                     daysArray.forEach((day, index) => {
                         const time = timeArray[index];
-                        timeMap[day] = [convertToAMPM(time) || null];  // Convert to AM/PM format
+                        if (!timeMap[day]) timeMap[day] = [];
+                        timeMap[day].push(time); // Keep as 24-hour string for TimePicker
                     });
 
-                    setSelectedDays(daysArray);
+                    setSelectedDays([...new Set(daysArray)]);
                     setTimeSlots(timeMap);
                 }
             }
@@ -99,6 +105,13 @@ export default function EditSchedule() {
         }
     };
 
+    const addTimeSlot = (day) => {
+        setTimeSlots(prev => ({
+            ...prev,
+            [day]: [...(prev[day] || []), '']
+        }));
+    };
+
     const updateTimeSlot = (day, index, value) => {
         setTimeSlots(prev => {
             const updatedDaySlots = [...(prev[day] || [])];
@@ -110,41 +123,9 @@ export default function EditSchedule() {
         });
     };
 
-    const handleTimeChange = (day, index, value, type) => {
-        setTimeSlots(prev => {
-            const existing = prev[day] ? [...prev[day]] : [''];
-            let currentTime = existing[index] || '12:00 AM';
-
-            let hour = '12', minute = '00', ampm = 'AM';
-
-            if (currentTime && currentTime.includes(':')) {
-                const timeParts = currentTime.trim().split(':');
-                hour = timeParts[0]?.padStart(2, '0') || '12';
-
-                const minuteAndAmPm = (timeParts[1] || '00 AM').trim().split(' ');
-                minute = minuteAndAmPm[0]?.padStart(2, '0') || '00';
-                ampm = minuteAndAmPm[1]?.toUpperCase() === 'PM' ? 'PM' : 'AM';
-            }
-
-
-            if (type === 'hour') hour = value;
-            else if (type === 'minute') minute = value;
-            else if (type === 'ampm') ampm = value;
-
-            const newTime = `${hour.padStart(2, '0')}:${minute} ${ampm}`;
-            existing[index] = newTime;
-
-            return {
-                ...prev,
-                [day]: existing
-            };
-        });
-    };
-
-
     const handleUpdate = async () => {
-        if (!patientData.user_id) {
-            setApiMessage({ type: 'error', text: 'User ID (social worker) is missing. Please try again.' });
+        if (!patientData?.user_id) {
+            setApiMessage({ type: 'error', text: 'User ID missing.' });
             return;
         }
 
@@ -156,7 +137,7 @@ export default function EditSchedule() {
             times.forEach(time => {
                 if (time) {
                     schedule_day.push(day);
-                    schedule_time.push(time); // Already in AM/PM format
+                    schedule_time.push(convertTo24Hour(time)); // convert for backend
                 }
             });
         });
@@ -168,7 +149,7 @@ export default function EditSchedule() {
             schedule_time
         };
 
-        console.log("Payload being sent to backend (AM/PM format):", payload);
+        console.log('Payload sent to backend:', payload);
 
         const response = await saveSchedulerData(payload);
 
@@ -182,19 +163,18 @@ export default function EditSchedule() {
         }
     };
 
-
-    if (!patientData) return <div className="flex justify-center items-center py-52">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-    </div>;
+    if (!patientData) return (
+        <div className="flex justify-center items-center py-52">
+            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+    );
 
     return (
-        <div className=" mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+        <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
             <h2 className="text-xl font-bold mb-4">Edit Patient Schedule</h2>
+
             {apiMessage.text && (
-                <div
-                    className={`mb-4 p-3 rounded ${apiMessage.type === 'success' ? ' text-green-500' : 'text-red-500'
-                        }`}
-                >
+                <div className={`mb-4 p-3 rounded ${apiMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
                     {apiMessage.text}
                 </div>
             )}
@@ -205,18 +185,16 @@ export default function EditSchedule() {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-2">
-                <Input type="number" value={patientData.mobile} disabled label="Mobile" labelPlacement="outside" variant="bordered" />
+                <Input type="number" value={patientData.mobile || ''} disabled label="Mobile" labelPlacement="outside" variant="bordered" />
                 <Input type="text" value={patientData.status_value} disabled label="Status" labelPlacement="outside" variant="bordered" />
             </div>
 
             <div className="gap-4 mb-4">
-                {/* Days Selector */}
                 <label className="block font-medium mb-2">Patient scheduled day and time</label>
                 <div className="flex flex-col border-2 border-gray-200 rounded-xl p-4 gap-3">
                     {daysOfWeek.map((day) => (
-                        <div key={day} className="flex items-start gap-4">
-                            {/* Day with Checkbox */}
-                            <label className="flex items-center gap-2">
+                        <div key={day} className="flex  gap-2">
+                            <label className="flex items-center gap-2 font-medium">
                                 <input
                                     type="checkbox"
                                     checked={selectedDays.includes(day)}
@@ -226,45 +204,19 @@ export default function EditSchedule() {
                                 {day}
                             </label>
 
-                            {/* Show Time Slots only if this day is selected */}
                             {selectedDays.includes(day) && (
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex  gap-2 items-center">
                                     {(timeSlots[day] || []).map((t, idx) => (
-                                        <div key={idx} className="flex gap-2">
-                                            <select
-                                                className="border rounded p-1"
-                                                value={(t || '').split(':')[0]?.padStart(2, '0')}
-                                                onChange={(e) => handleTimeChange(day, idx, e.target.value, 'hour')}
-                                            >
-                                                {[...Array(12)].map((_, i) => {
-                                                    const hour = (i + 1).toString().padStart(2, '0');
-                                                    return <option key={hour} value={hour}>{hour}</option>;
-                                                })}
-                                            </select>
-
-                                            <select
-                                                className="border rounded p-1"
-                                                value={(t || '').split(':')[1]?.split(' ')[0] || '00'}
-                                                onChange={(e) => handleTimeChange(day, idx, e.target.value, 'minute')}
-                                            >
-                                                {[...Array(60)].map((_, i) => {
-                                                    const min = i.toString().padStart(2, '0');
-                                                    return <option key={min} value={min}>{min}</option>;
-                                                })}
-                                            </select>
-
-
-                                            <select
-                                                className="border rounded p-1"
-                                                value={(t || '').split(' ')[1] || 'AM'}
-                                                onChange={(e) => handleTimeChange(day, idx, e.target.value, 'ampm')}
-                                            >
-                                                <option value="AM">AM</option>
-                                                <option value="PM">PM</option>
-                                            </select>
-                                        </div>
-
+                                        <TimePicker
+                                            key={idx}
+                                            onChange={(val) => updateTimeSlot(day, idx, val || '')}
+                                            value={t || ''}
+                                            format="h:mm a"
+                                            disableClock
+                                            className="w-28"
+                                        />
                                     ))}
+
                                 </div>
                             )}
                         </div>
@@ -274,7 +226,7 @@ export default function EditSchedule() {
 
             <button
                 onClick={handleUpdate}
-                className="rounded-xl px-3 py-1 bg-blue-500 text-white mx-auto block"
+                className="rounded-xl px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition mx-auto block"
             >
                 Update
             </button>

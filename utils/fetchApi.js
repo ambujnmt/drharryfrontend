@@ -401,23 +401,27 @@ export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, sch
 export const deleteAssignedScheduler = async (data) => {
   const formData = new FormData();
   for (const key in data) {
-      formData.append(key, data[key]);
+    formData.append(key, data[key]);
   }
 
   try {
-      const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-assign-schedular', {
-          method: 'POST',
-          body: formData
-      });
+    const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-assign-schedular', {
+      method: 'POST',
+      body: formData
+    });
 
-      const result = await response.json();
-      return result;
+    if (!response.ok) {
+      throw new Error(`Server responded with ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
   } catch (error) {
-      console.error("API Error:", error);
-      return {
-          status: false,
-          message: "An error occurred while deleting."
-      };
+    console.error("API Error:", error);
+    return {
+      status: false,
+      message: "An error occurred while deleting."
+    };
   }
 };
 
