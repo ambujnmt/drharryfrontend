@@ -6,7 +6,7 @@ import { Link } from "@heroui/react";
 
 
 export default function AddUser() {
-    const { locale } = useContext(LanguageContext);
+  const { locale, translateText } = useContext(LanguageContext);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [clientLocale, setClientLocale] = useState("");
@@ -74,7 +74,7 @@ export default function AddUser() {
             <div className="w-full space-y-5 bg-gray-100 shadow-lg rounded-lg p-4">
                 <div className="md:p-4 mt-5 bg-white  rounded-xl">
                     <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">
-                        User List
+                        {translateText("User List")}
                     </h2>
 
                     {loading ? (
@@ -86,7 +86,7 @@ export default function AddUser() {
                             <div className="mb-4">
                                 <input
                                     type="text"
-                                    placeholder="Search by Name, Mobile, Email, or Gender"
+                                    placeholder={translateText("Search by Name, Mobile, Email, or Gender")}
                                     value={searchTerm}
                                     onChange={(e) => {
                                         setSearchTerm(e.target.value);
@@ -100,15 +100,15 @@ export default function AddUser() {
                             <table className="bg-white  -gray-300 text-sm text-left">
                                     <thead className="bg-gray-200 text-gray-700">
                                         <tr>
-                                            <th className=" px-4 py-2">S.No.</th>
-                                            <th className=" px-4 py-2">Name</th>
-                                            <th className=" px-4 py-2">Mobile</th>
-                                            <th className=" px-4 py-2">Email</th>
-                                            <th className=" px-4 py-2">Gender</th>
-                                            <th className=" px-4 py-2">Address</th>
-                                            <th className=" px-4 py-2">Status</th>
-                                            <th className=" px-4 py-2">User Type</th>
-                                            <th className=" px-4 py-2">Action</th>
+                                            <th className=" px-4 py-2">{translateText("S.No.")}</th>
+                                            <th className=" px-4 py-2">{translateText("Name")}</th>
+                                            <th className=" px-4 py-2">{translateText("Mobile")}</th>
+                                            <th className=" px-4 py-2">{translateText("email")}</th>
+                                            <th className=" px-4 py-2">{translateText("gender")}</th>
+                                            <th className=" px-4 py-2">{translateText("address")}</th>
+                                            <th className=" px-4 py-2">{translateText("status")}</th>
+                                            <th className=" px-4 py-2">{translateText("user_type")}</th>
+                                            <th className=" px-4 py-2">{translateText("Action")}</th>
 
                                         </tr>
                                     </thead>

@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { fetchUsers } from '../../utils/fetchApi';
+import { LanguageContext } from "../../context/LanguageContext";
+
 
 export default function UserDetail() {
     const router = useRouter();
     const { id } = router.query;
+    const { locale, translateText } = useContext(LanguageContext);
+    const [clientLocale, setClientLocale] = useState("");
 
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setClientLocale(locale.toUpperCase());
+    }, [locale]);
 
     useEffect(() => {
         const getUserDetail = async () => {
@@ -43,8 +51,8 @@ export default function UserDetail() {
         <div className="w-full bg-gray-100 md:p-6 p-0">
             <div className="w-full space-y-5 bg-white shadow-lg rounded-lg p-4">
                 <div className="md:p-4">
-                    <h2 className="text-2xl md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">
-                        User Detail
+                    <h2 className="text-2xl md:text-xl lg:text-2xl xl:text-2xl font-semibold mb-4 text-center">
+                        {translateText("User Detail")}
                     </h2>
                     <ul className="space-y-2 text-gray-700">
                         {Object.entries(user).map(([key, value]) => {

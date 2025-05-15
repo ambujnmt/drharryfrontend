@@ -370,6 +370,7 @@ export const fetchSocialWorkersWithPatients = async () => {
   }
 };
 
+
 // utils/fetchapi.js
 
 export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, schedule_time }) => {
@@ -423,6 +424,22 @@ export const deleteAssignedScheduler = async (data) => {
       message: "An error occurred while deleting."
     };
   }
+};
+
+export const getDayList = async () => {
+    try {
+        const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/day-list');
+        const text = await response.text();
+        const data = text ? JSON.parse(text) : {};
+
+        if (response.ok) {
+            return { status: true, data };
+        } else {
+            return { status: false, message: data.message || "Failed to fetch day list" };
+        }
+    } catch (error) {
+        return { status: false, message: error.message || "API Error" };
+    }
 };
 
 

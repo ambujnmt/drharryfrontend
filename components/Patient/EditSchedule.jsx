@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Input } from '@heroui/react';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 import { saveSchedulerData, fetchSocialWorkersWithPatients } from '../../utils/fetchApi';
+import { LanguageContext } from "../../context/LanguageContext";
 
 // Convert 24-hour string to 12-hour format
 const convertToAMPM = (time24) => {
@@ -31,7 +33,13 @@ export default function EditSchedule() {
     const [patientData, setPatientData] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
     const [timeSlots, setTimeSlots] = useState({});
-    const [loading, setLoading] = useState(false); // Spinner state
+    const { locale, translateText } = useContext(LanguageContext);
+    const [clientLocale, setClientLocale] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setClientLocale(locale.toUpperCase());
+    }, [locale]);
 
     const daysOfWeek = ['Everyday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -124,50 +132,55 @@ export default function EditSchedule() {
         });
     };
 
-    const handleUpdate = async () => {
-        if (!patientData?.user_id) {
-            setApiMessage({ type: 'error', text: 'User ID missing.' });
-            return;
-        }
+    
+const handleUpdate = async () => {
+    if (!patientData?.user_id) {
+        setApiMessage({ type: 'error', text: 'User ID missing.' });
+        return;
+    }
 
-        setLoading(true); // Start loader
+    setLoading(true); // Start loader
 
-        const schedule_day = [];
-        const schedule_time = [];
+    const schedule_day = [];
+    const schedule_time = [];
 
-        selectedDays.forEach(day => {
-            const times = timeSlots[day] || [];
-            times.forEach(time => {
-                if (time) {
-                    schedule_day.push(day);
-                    schedule_time.push(convertTo24Hour(time)); // convert for backend
-                }
-            });
+    selectedDays.forEach(day => {
+        const times = timeSlots[day] || [];
+        times.forEach(time => {
+            if (time) {
+                schedule_day.push(day);
+                schedule_time.push(convertTo24Hour(time));
+            }
         });
+    });
 
-        const payload = {
-            user_id: patientData.user_id,
-            patient_id: patientData.patient_id,
-            schedule_day,
-            schedule_time
-        };
+    const payload = {
+        user_id: patientData.user_id,
+        patient_id: patientData.patient_id,
+        schedule_day,
+        schedule_time
+    };
 
-        console.log('Payload sent to backend:', payload);
-
+    try {
         const response = await saveSchedulerData(payload);
 
         if (response.status) {
             setApiMessage({ type: 'success', text: response.message });
+
+            // Delay navigation to show success message
             setTimeout(() => {
-                setApiMessage({ type: '', text: '' });
+                setLoading(false); // Stop loader
                 router.push('/patient/patientScheduling');
             }, 1000);
         } else {
             setApiMessage({ type: 'error', text: response.message });
+            setLoading(false); // Stop loader on error
         }
-
-        setLoading(false); // Stop loader
-    };
+    } catch (error) {
+        setApiMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
+        setLoading(false); // Stop loader on error
+    }
+};
 
 
     if (!patientData) return (
@@ -178,7 +191,7 @@ export default function EditSchedule() {
 
     return (
         <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-            <h2 className="text-xl font-bold mb-4">Edit Patient Schedule</h2>
+            <h2 className="text-2xl text-center font-bold mb-4">{translateText("Edit Patient Schedule")}</h2>
 
             {apiMessage.text && (
                 <div className={`mb-4 p-3 rounded ${apiMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
@@ -187,17 +200,17 @@ export default function EditSchedule() {
             )}
 
             <div className="grid grid-cols-2 gap-4 mb-2">
-                <Input type="text" value={patientData.name} disabled label="Name" labelPlacement="outside" variant="bordered" />
-                <Input type="email" value={patientData.email} disabled label="Email" labelPlacement="outside" variant="bordered" />
+                <Input type="text" value={patientData.name} disabled label={translateText("name")} labelPlacement="outside" variant="bordered" />
+                <Input type="email" value={patientData.email} disabled label={translateText("email")} labelPlacement="outside" variant="bordered" />
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-2">
-                <Input type="number" value={patientData.mobile || ''} disabled label="Mobile" labelPlacement="outside" variant="bordered" />
-                <Input type="text" value={patientData.status_value} disabled label="Status" labelPlacement="outside" variant="bordered" />
+                <Input type="number" value={patientData.mobile || ''} disabled label={translateText("Mobile")} labelPlacement="outside" variant="bordered" />
+                <Input type="text" value={patientData.status_value} disabled label={translateText("status")} labelPlacement="outside" variant="bordered" />
             </div>
 
             <div className="gap-4 mb-4">
-                <label className="block font-medium mb-2">Patient scheduled day and time</label>
+                <label className="block font-medium mb-2">{translateText("Patient scheduled day and time")}</label>
                 <div className="flex flex-col border-2 border-gray-200 rounded-xl p-4 gap-3">
                     {daysOfWeek.map((day) => (
                         <div key={day} className="flex  gap-2">
@@ -235,13 +248,15 @@ export default function EditSchedule() {
                 disabled={loading}
                 onClick={handleUpdate}
                 className="rounded-xl px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 transition mx-auto block"
-            >{loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-            ) : (
-                "Update"
-            )}
+            >
+                {loading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                ) : (
+                    translateText("Update")
+                )}
 
             </button>
         </div>
     );
 }
+

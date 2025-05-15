@@ -1,16 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { fetchUsers, updateUser, changeUserStatus } from '../../utils/fetchApi';
+import { LanguageContext } from "../../context/LanguageContext";
 
 export default function UserUpdate() {
     const router = useRouter();
     const { id } = router.query;
-
+    const { locale, translateText } = useContext(LanguageContext);
+    const [clientLocale, setClientLocale] = useState("");
+    const [users, setUsers] = useState([]);
     const [formData, setFormData] = useState({});
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
     const [statusMessage, setStatusMessage] = useState("");
     const [statusType, setStatusType] = useState("");
+
+    useEffect(() => {
+        setClientLocale(locale.toUpperCase());
+    }, [locale]);
+
 
     useEffect(() => {
         const getUserFromList = async () => {
@@ -52,36 +60,37 @@ export default function UserUpdate() {
         e.preventDefault();
         if (!validate()) return;
 
+        setLoading(true); // Show button spinner
+
         try {
             const res = await updateUser(id, formData);
 
             if (res?.status === true) {
-
-                const statusUpdate = await changeUserStatus(id, formData.status); // Pass the user id and status (active, suspended, etc.)
+                const statusUpdate = await changeUserStatus(id, formData.status);
 
                 if (statusUpdate.status === true) {
                     setStatusMessage(res?.message || res?.message_italian);
                     setStatusType("success");
 
                     setTimeout(() => {
-                        router.replace('/user/userList'); // cleaner than reload
+                        router.replace('/user/userList');
                     }, 1500);
                 } else {
                     setStatusMessage(res?.message);
                     setStatusType("error");
                 }
-            } 
+            } else {
+                setStatusMessage("Update failed.");
+                setStatusType("error");
+            }
         } catch (error) {
             setStatusMessage("An unexpected error occurred while updating.");
             setStatusType("error");
+        } finally {
+            setLoading(false); // Stop spinner
         }
     };
 
-
-
-    if (loading) return <div className="flex justify-center items-center h-screen">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-    </div>;
 
 
     const nonEditableFields = [
@@ -91,23 +100,23 @@ export default function UserUpdate() {
     ];
 
     const fieldLabels = {
-        name: 'Name',
-        mobile: 'Mobile Number',
-        country_code: 'Country Code',
-        email: 'Email Address',
-        social_id: 'Social ID',
-        provider: 'Provider',
-        user_type: 'User Type',
-        gender: 'Gender',
-        birthday: 'Date of Birth',
-        address: 'Address',
-        profile_img: 'Profile Image URL',
-        status_value: 'Account Status',
+        name: translateText("name"),
+        mobile: translateText("mobile_number"),
+        country_code: translateText("Country Code"),
+        email: translateText("email_address"),
+        social_id: translateText("Social ID"),
+        provider: translateText("Provider"),
+        user_type: translateText("user_type"),
+        gender: translateText("gender"),
+        birthday: translateText("date_of_birth"),
+        address: translateText("address"),
+        profile_img: translateText("Profile Image URL"),
+        status_value: translateText("Account Status"),
     };
 
     return (
         <div className=" mx-auto mt-10 bg-white shadow-md p-6 rounded-md">
-            <h2 className="text-3xl font-semibold mb-4 text-center">Update User</h2>
+            <h2 className="text-3xl font-semibold mb-4 text-center">{translateText("Update User")}</h2>
 
             {statusMessage && (
                 <div
@@ -119,100 +128,105 @@ export default function UserUpdate() {
 
 
             <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
 
-                {/* Dynamically render fields */}
-                {Object.entries(formData).map(([key, value]) => {
-                    if (nonEditableFields.includes(key)) return null;
+                    {/* Dynamically render fields */}
+                    {Object.entries(formData).map(([key, value]) => {
+                        if (nonEditableFields.includes(key)) return null;
 
-                    // Show only status_value, not status
-                    if (key === 'status') {
+                        // Show only status_value, not status
+                        if (key === 'status') {
+                            return (
+                                <input
+                                    key="status"
+                                    type="hidden"
+                                    name="status"
+                                    value={value || ''}
+                                    readOnly
+                                />
+                            );
+                        }
+
+                        // Render status_value as a dropdown
+                        if (key === 'status_value') {
+                            return (
+                                <div key="status_value">
+                                    <label className="block text-sm font-medium capitalize">
+                                        {fieldLabels[key] || 'Status'}
+                                    </label>
+                                    <select
+                                        name="status_value"
+                                        value={formData.status_value || ''}
+                                        onChange={(e) => {
+                                            const selected = e.target.value;
+
+                                            // Map to correct status values for backend
+                                            const statusMap = {
+                                                Active: 1,
+                                                Inactive: 2,
+                                                Suspended: 3
+                                            };
+
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                status_value: selected,
+                                                status: statusMap[selected], // set actual value expected by API
+                                            }));
+                                        }}
+                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                                    >
+                                        <option value="Active">{translateText("Active")}</option>
+                                        <option value="Inactive">{translateText("Inactive")}</option>
+                                        <option value="Suspended">{translateText("Suspended")}</option>
+                                    </select>
+
+                                </div>
+                            );
+                        }
+
+                        // Regular input or select
                         return (
-                            <input
-                                key="status"
-                                type="hidden"
-                                name="status"
-                                value={value || ''}
-                                readOnly
-                            />
-                        );
-                    }
-
-                    // Render status_value as a dropdown
-                    if (key === 'status_value') {
-                        return (
-                            <div key="status_value">
+                            <div key={key}>
                                 <label className="block text-sm font-medium capitalize">
-                                    {fieldLabels[key] || 'Status'}
+                                    {fieldLabels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                 </label>
-                                <select
-                                    name="status_value"
-                                    value={formData.status_value || ''}
-                                    onChange={(e) => {
-                                        const selected = e.target.value;
-
-                                        // Map to correct status values for backend
-                                        const statusMap = {
-                                            Active: 1,
-                                            Inactive: 2,
-                                            Suspended: 3
-                                        };
-
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            status_value: selected,
-                                            status: statusMap[selected], // set actual value expected by API
-                                        }));
-                                    }}
-                                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                                >
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
-                                    <option value="Suspended">Suspended</option>
-                                </select>
-
+                                {key === 'user_type' ? (
+                                    <select
+                                        name={key}
+                                        value={value}
+                                        onChange={handleChange}
+                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                                    >
+                                        <option value="2">{translateText("social_worker")}</option>
+                                        <option value="3">{translateText("patient")}</option>
+                                        <option value="4">{translateText("user")}</option>
+                                        <option value="1" hidden>{translateText("doctor")}</option>
+                                    </select>
+                                ) : (
+                                    <input
+                                        type="text"
+                                        name={key}
+                                        value={value}
+                                        onChange={handleChange}
+                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                                    />
+                                )}
+                                {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
                             </div>
                         );
-                    }
-
-                    // Regular input or select
-                    return (
-                        <div key={key}>
-                            <label className="block text-sm font-medium capitalize">
-                                {fieldLabels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                            </label>
-                            {key === 'user_type' ? (
-                                <select
-                                    name={key}
-                                    value={value}
-                                    onChange={handleChange}
-                                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                                >
-                                    <option value="2">Social Worker</option>
-                                    <option value="3">Patient</option>
-                                    <option value="4">User</option>
-                                    <option value="1" hidden>Doctor</option>
-                                </select>
-                            ) : (
-                                <input
-                                    type="text"
-                                    name={key}
-                                    value={value}
-                                    onChange={handleChange}
-                                    className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                                />
-                            )}
-                            {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
-                        </div>
-                    );
-                })}
-</div>
+                    })}
+                </div>
                 {/* Submit Button */}
                 <button
                     type="submit"
+                    disabled={loading}
                     className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 mt-4 block mx-auto"
                 >
-                    Update
+                    {loading ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    ) : (
+                        translateText("Update User")
+                    )}
                 </button>
             </form>
         </div>

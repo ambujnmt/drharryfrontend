@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useContext, useEffect, useState } from 'react';
 import { fetchUsers, fetchSocialWorkersWithPatients, deleteAssignedScheduler } from '../../utils/fetchApi';
 import { FaPen } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link, useDisclosure, Button } from '@heroui/react';
 import Tmodal from '../Tmodal/Tmodal';
+import { LanguageContext } from "../../context/LanguageContext";
 
 export default function PatientScheduling() {
     const [usersByType, setUsersByType] = useState({ socialWorkers: [] });
@@ -13,6 +15,12 @@ export default function PatientScheduling() {
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { locale, translateText } = useContext(LanguageContext);
+    const [clientLocale, setClientLocale] = useState("");
+
+    useEffect(() => {
+        setClientLocale(locale.toUpperCase());
+    }, [locale]);
 
     // Fetching social workers and their associated patients
     const loadUsers = async () => {
@@ -49,34 +57,74 @@ export default function PatientScheduling() {
         await loadPatients(socialWorkerId);
     };
 
-    const handleDeleteConfirm = async () => {
-        if (!selected.socialWorker || !selectedPatientId) return;
+    //    const handleDeleteConfirm = async () => {
+    //     if (!selected.socialWorker || !selectedPatientId) return;
 
+    //     // 1. Update selected state by removing the patient from the list
+    //     setSelected(prev => {
+    //         const updatedPatients = prev.patients.filter(p => p.patient_id !== selectedPatientId);
+    //         console.log("Updated patients:", updatedPatients); // <-- ADD THIS LINE HERE
+    //         return {
+    //             ...prev,
+    //             patients: updatedPatients
+    //         };
+    //     });
+
+    //     onClose();
+    //     setLoading(true); // Set loading state when performing the delete action
+
+    //     // 2. Make API call to delete from backend
+    //     const res = await deleteAssignedScheduler({
+    //         user_id: selected.socialWorker,
+    //         patient_id: selectedPatientId
+    //     });
+
+    //     setMessage(res.message);
+
+    //     if (res.status) {
+    //         // 3. Refresh patient list from backend
+    //         await loadPatients(selected.socialWorker);
+    //     } else {
+    //         // 4. If there’s an error, handle the failure
+    //         setLoading(false);
+    //     }
+
+    //     setSelectedPatientId(null);
+    // };
+
+
+ const handleDeleteConfirm = async () => {
+    if (!selected.socialWorker || !selectedPatientId) return;
+
+    setLoading(true);
+
+    const res = await deleteAssignedScheduler({
+        user_id: selected.socialWorker,
+        patient_id: selectedPatientId
+    });
+
+setMessage(res.message);
+console.log("API message:", res.message);
+
+    if (res.status) {
+        // Remove patient from UI immediately without reloading from API
         setSelected(prev => ({
             ...prev,
-            patients: prev.patients.filter(p => p.patient_id !== selectedPatientId)
+            patients: prev.patients.filter(p => p.patient_id !== selectedPatientId),
         }));
+    }
 
-        onClose();
-        setLoading(true); // Set loading state when performing the delete action
+    setSelectedPatientId(null);
+    setLoading(false);
+          onClose();
 
-        const res = await deleteAssignedScheduler({
-            user_id: selected.socialWorker,
-            patient_id: selectedPatientId
-        });
 
-        setMessage(res.message);
+    // Optional: clear message after 5 seconds
+    setTimeout(() => setMessage(''), 3000);
+};
 
-        if (res.status) {
-            // After successful deletion, reload patients
-            await loadPatients(selected.socialWorker);
-        } else {
-            // If there’s an error, handle the failure
-            setLoading(false);
-        }
 
-        setSelectedPatientId(null);
-    };
+
 
     const formatTime = (timeStr) => {
         if (!timeStr || typeof timeStr !== 'string') return '';
@@ -95,17 +143,17 @@ export default function PatientScheduling() {
 
     return (
         <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md pb-44">
-            <h2 className="text-xl font-bold mb-6">Patient Scheduling</h2>
+            <h2 className="text-2xl text-center font-bold mb-6">{translateText("Patient Scheduling")}</h2>
 
             {/* Search & Filter */}
             <div className="mb-4">
-                <label className="block font-medium mb-2">Filter by Social Worker</label>
+                <label className="block font-medium mb-2">{translateText("Filter by Social Worker")}</label>
                 <div className="relative">
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search by name"
+                        placeholder={translateText("Search by name")}
                         className="w-full p-2 border rounded mb-2"
                     />
                     <div className="absolute left-0 right-0 max-h-40 overflow-y-auto border border-t-0 bg-white z-10 mb-40">
@@ -131,23 +179,20 @@ export default function PatientScheduling() {
                 </div>
             </div>
 
-            {/* Message */}
-            {message && (
-                <div className="mb-4 p-3 rounded bg-blue-50 text-blue-800">
-                    {message}
-                </div>
-            )}
+           
+     
+
 
             {/* Patients Table */}
             {selected.socialWorker && (
                 <div>
                     <div className='flex mt-44 justify-between items-center mb-4'>
                         <h3 className="text-lg font-semibold">
-                            Scheduler for Social Worker:{' '}
+                            {translateText("Scheduler for Social Worker")}:{' '}
                             {usersByType.socialWorkers.find(sw => String(sw.id) === selected.socialWorker)?.name}
                         </h3>
                         <Link href="/patient/patientAssignment" className='text-slate-950 font-semibold bg-blue-100 px-20 py-1.5 rounded-xl'>
-                            New
+                            {translateText("New")}
                         </Link>
                     </div>
 
@@ -155,14 +200,14 @@ export default function PatientScheduling() {
                         <table className="w-full table-auto">
                             <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="px-4 py-2">S No.</th>
-                                    <th className="px-4 py-2">Patient Name</th>
-                                    <th className="px-4 py-2">Mobile Number</th>
-                                    <th className="px-4 py-2">Email</th>
-                                    <th className="px-4 py-2">Scheduled Days</th>
-                                    <th className="px-4 py-2">Scheduled Time</th>
-                                    <th className="px-4 py-2">Status</th>
-                                    <th className="px-4 py-2">Action</th>
+                                    <th className="px-4 py-2">{translateText("S.No.")}</th>
+                                    <th className="px-4 py-2">{translateText("Patient Name")}</th>
+                                    <th className="px-4 py-2">{translateText("Mobile Number")}</th>
+                                    <th className="px-4 py-2">{translateText("Email")}</th>
+                                    <th className="px-4 py-2">{translateText("Scheduled Days")}</th>
+                                    <th className="px-4 py-2">{translateText("Scheduled Time")}</th>
+                                    <th className="px-4 py-2">{translateText("status")}</th>
+                                    <th className="px-4 py-2">{translateText("Action")}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -217,7 +262,7 @@ export default function PatientScheduling() {
                             </tbody>
                         </table>
                     ) : (
-                        <p className="mt-4">No patients assigned to this social worker.</p>
+                        <p className="mt-4">{translateText("No patients assigned to this social worker.")}</p>
                     )}
                 </div>
             )}
@@ -230,10 +275,14 @@ export default function PatientScheduling() {
                 footer={
                     <>
                         <Button color="danger" variant="light" onPress={onClose}>
-                            Cancel
+                            {translateText("Cancel")}
                         </Button>
-                        <Button color="primary" onPress={handleDeleteConfirm}>
-                            Confirm
+                        <Button disabled={loading} color="primary" onPress={handleDeleteConfirm}>
+                            {loading ? (
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                            ) : (
+                                translateText("Confirm")
+                            )}
                         </Button>
                     </>
                 }
@@ -241,3 +290,6 @@ export default function PatientScheduling() {
         </div>
     );
 }
+
+
+

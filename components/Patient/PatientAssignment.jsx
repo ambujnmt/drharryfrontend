@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { fetchUsers, postPatientAssignment, fetchAssignedPatients } from '../../utils/fetchApi';
+import { LanguageContext } from "../../context/LanguageContext";
 
 export default function PatientAssignment() {
   const [usersByType, setUsersByType] = useState({
@@ -11,12 +12,18 @@ export default function PatientAssignment() {
     socialWorker: '',
     patients: [],
   });
-
+    const { locale, translateText } = useContext(LanguageContext);
+    const [clientLocale, setClientLocale] = useState("");
   const [searchQuery, setSearchQuery] = useState('');
   const [assignedPatientIds, setAssignedPatientIds] = useState([]); // Will now be fetched per social worker
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false); // Spinner state
+
+ useEffect(() => {
+        setClientLocale(locale.toUpperCase());
+    }, [locale]);
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -121,20 +128,20 @@ const handleAssignPatients = async () => {
 
   return (
     <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-xl font-bold mb-6">Patient Assignment</h2>
+      <h2 className="text-2xl text-center font-bold mb-6">{translateText("Patient Assignment")}</h2>
 
       {successMessage && <div className="text-green-600 font-medium mb-4">{successMessage}</div>}
       {errorMessage && <div className="text-red-600 font-medium mb-4">{errorMessage}</div>}
 
       {/* Social Worker Dropdown */}
       <div className="mb-4">
-        <label className="block font-medium mb-2">Select Social Worker</label>
+        <label className="block font-medium mb-2">{translateText("social_worker")}</label>
         <select
           value={selected.socialWorker}
           onChange={e => handleSocialWorkerSelection(e.target.value)}
           className="w-full p-2 border rounded"
         >
-          <option value="">-- Select Social Worker --</option>
+          <option value="">{translateText("Select Social Worker")}</option>
           {usersByType.socialWorkers.map(user => (
             <option key={user.id} value={user.id}>{user.name}</option>
           ))}
@@ -143,12 +150,12 @@ const handleAssignPatients = async () => {
 
       {/* Patient Search and List */}
       <div className="mb-4">
-        <label className="block font-medium mb-2">Select Patients</label>
+        <label className="block font-medium mb-2">{translateText("patient")}</label>
         <input
           type="text"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Search by name"
+          placeholder={translateText("Search by name")}
           className="w-full p-2 border rounded mb-2"
         />
         <div className="border max-h-40 overflow-y-auto">
@@ -183,7 +190,7 @@ const handleAssignPatients = async () => {
       >{loading ? (
         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
       ) : (
-        'Assign Patients'
+        translateText("Assign Patients")
       )}
 
       </button>
