@@ -84,7 +84,6 @@ export default function SideMenu({ isOpen, onClose }) {
                 </ul>
               </AccordionItem>
             </Accordion>
-
           )}
           <Accordion variant="light">
             <AccordionItem
@@ -153,6 +152,8 @@ export default function SideMenu({ isOpen, onClose }) {
               </ul>
             </AccordionItem>
           </Accordion>
+
+          {admin && (
           <Accordion variant="light">
             <AccordionItem
               key="6"
@@ -176,10 +177,7 @@ export default function SideMenu({ isOpen, onClose }) {
               </ul>
             </AccordionItem>
           </Accordion>
-          {/* <li className="p-2 flex items-center gap-2 hover:bg-[#91b4e5] rounded">
-            <MdContactPhone />
-            {translateText("contact")}
-          </li> */}
+          )}
         </ul>
       </div>
     </div>

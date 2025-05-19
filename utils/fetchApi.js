@@ -256,6 +256,33 @@ export async function fetchUsers() {
     return null;
   }
 }
+
+// add user
+export const addUser = async (data) => {
+  try {
+    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/add-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const text = await response.text();
+
+    try {
+      const result = JSON.parse(text);
+      return result;
+    } catch {
+      return { status: false, message: "Invalid JSON response" };
+    }
+
+  } catch {
+    return { status: false, message: "Network request failed" };
+  }
+};
+
 // update-user
 export async function updateUser(id, data) {
   try {

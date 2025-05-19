@@ -26,9 +26,14 @@ export default function UserUpdate() {
             if (allUsers?.data && id) {
                 const foundUser = allUsers.data.find(u => u.id.toString() === id.toString());
                 if (foundUser) {
-                    setFormData(foundUser); // get all keys from user object
+                    setFormData({
+                        ...foundUser,
+                        password: '********' // display dummy asterisks
+                    });
+
                 }
             }
+
             setLoading(false);
         };
         if (id) getUserFromList();
@@ -56,48 +61,57 @@ export default function UserUpdate() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        if (!validate()) return;
+const handleSubmit = async e => {
+    e.preventDefault();
+    if (!validate()) return;
 
-        setLoading(true); // Show button spinner
+    setLoading(true); // Show button spinner
 
-        try {
-            const res = await updateUser(id, formData);
+    // Clone formData for submission
+    const submitData = { ...formData };
 
-            if (res?.status === true) {
-                const statusUpdate = await changeUserStatus(id, formData.status);
+    // Remove password if it's not actually updated
+    if (submitData.password === '********' || !submitData.password?.trim()) {
+        delete submitData.password;
+    }
 
-                if (statusUpdate.status === true) {
-                    setStatusMessage(res?.message || res?.message_italian);
-                    setStatusType("success");
+    try {
+        const res = await updateUser(id, submitData);
 
-                    setTimeout(() => {
-                        router.replace('/user/userList');
-                    }, 1500);
-                } else {
-                    setStatusMessage(res?.message);
-                    setStatusType("error");
-                }
+        if (res?.status === true) {
+            const statusUpdate = await changeUserStatus(id, submitData.status);
+
+            if (statusUpdate.status === true) {
+                setStatusMessage(res?.message || res?.message_italian);
+                setStatusType("success");
+
+                setTimeout(() => {
+                    router.replace('/user/userList');
+                }, 1500);
             } else {
-                setStatusMessage("Update failed.");
+                setStatusMessage(res?.message);
                 setStatusType("error");
             }
-        } catch (error) {
-            setStatusMessage("An unexpected error occurred while updating.");
+        } else {
+            setStatusMessage("Update failed.");
             setStatusType("error");
-        } finally {
-            setLoading(false); // Stop spinner
         }
-    };
+    } catch (error) {
+        setStatusMessage("An unexpected error occurred while updating.");
+        setStatusType("error");
+    } finally {
+        setLoading(false); // Stop spinner
+    }
+};
 
 
 
     const nonEditableFields = [
-        'id', 'password', 'otp', 'otp_expiry', 'access_token', 'device_token',
+        'id', 'otp', 'otp_expiry', 'access_token', 'device_token',
         'remember_token', 'email_verified_at', 'phone_verified_at',
         'created_at', 'updated_at'
     ];
+
 
     const fieldLabels = {
         name: translateText("name"),
@@ -105,6 +119,7 @@ export default function UserUpdate() {
         country_code: translateText("Country Code"),
         email: translateText("email_address"),
         social_id: translateText("Social ID"),
+        password: translateText("password"),
         provider: translateText("Provider"),
         user_type: translateText("user_type"),
         gender: translateText("gender"),
@@ -204,13 +219,14 @@ export default function UserUpdate() {
                                     </select>
                                 ) : (
                                     <input
-                                        type="text"
+                                        type={key === 'password' ? 'password' : 'text'}
                                         name={key}
                                         value={value}
                                         onChange={handleChange}
                                         className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
                                     />
                                 )}
+
                                 {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
                             </div>
                         );
