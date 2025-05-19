@@ -12,7 +12,7 @@ export default function AddUser() {
         email: "",
         userType: "",
     });
-
+    const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
     const [show, setShow] = useState(false);
@@ -63,6 +63,8 @@ export default function AddUser() {
         e.preventDefault();
         if (!validate()) return;
 
+        setLoading(true); // Show button spinner
+
         const apiData = {
             name: formData.name,
             email: formData.email,
@@ -85,6 +87,8 @@ export default function AddUser() {
         } else {
             setErrors({ api: result.message });
         }
+
+        setLoading(false);
     };
 
     return (
@@ -187,10 +191,15 @@ export default function AddUser() {
 
 
                         <button
+                            disabled={loading}
                             type="submit"
                             className="w-28 md:mt-4 mt-2 block mx-auto bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition"
                         >
-                            {translateText("submit")}
+                            {loading ? (
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                            ) : (
+                                translateText("submit")
+                            )}
                         </button>
                     </form>
                 </div>
