@@ -52,66 +52,63 @@ export default function UserUpdate() {
 
     const validate = () => {
         const newErrors = {};
-        if (!formData.name?.trim()) newErrors.name = 'Name is required';
-        if (!formData.email) newErrors.email = 'Email is required';
+        if (!formData.name?.trim()) newErrors.name = 'Required';
+        if (!formData.email) newErrors.email = 'Required';
         else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Invalid email format';
-        if (!formData.mobile) newErrors.mobile = 'Mobile is required';
+        if (!formData.mobile) newErrors.mobile = 'Required';
         else if (!/^\d{10}$/.test(formData.mobile)) newErrors.mobile = 'Mobile must be 10 digits';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-const handleSubmit = async e => {
-    e.preventDefault();
-    if (!validate()) return;
+    const handleSubmit = async e => {
+        e.preventDefault();
+        if (!validate()) return;
 
-    setLoading(true); // Show button spinner
+        setLoading(true); // Show button spinner
 
-    // Clone formData for submission
-    const submitData = { ...formData };
+        // Clone formData for submission
+        const submitData = { ...formData };
 
-    // Remove password if it's not actually updated
-    if (submitData.password === '********' || !submitData.password?.trim()) {
-        delete submitData.password;
-    }
+        // Remove password if it's not actually updated
+        if (submitData.password === '********' || !submitData.password?.trim()) {
+            delete submitData.password;
+        }
 
-    try {
-        const res = await updateUser(id, submitData);
+        try {
+            const res = await updateUser(id, submitData);
 
-        if (res?.status === true) {
-            const statusUpdate = await changeUserStatus(id, submitData.status);
+            if (res?.status === true) {
+                const statusUpdate = await changeUserStatus(id, submitData.status);
 
-            if (statusUpdate.status === true) {
-                setStatusMessage(res?.message || res?.message_italian);
-                setStatusType("success");
+                if (statusUpdate.status === true) {
+                    setStatusMessage(res?.message || res?.message_italian);
+                    setStatusType("success");
 
-                setTimeout(() => {
-                    router.replace('/user/userList');
-                }, 1500);
+                    setTimeout(() => {
+                        router.replace('/user/userList');
+                    }, 1500);
+                } else {
+                    setStatusMessage(res?.message);
+                    setStatusType("error");
+                }
             } else {
-                setStatusMessage(res?.message);
+                setStatusMessage("Update failed.");
                 setStatusType("error");
             }
-        } else {
-            setStatusMessage("Update failed.");
+        } catch (error) {
+            setStatusMessage("An unexpected error occurred while updating.");
             setStatusType("error");
+        } finally {
+            setLoading(false); // Stop spinner
         }
-    } catch (error) {
-        setStatusMessage("An unexpected error occurred while updating.");
-        setStatusType("error");
-    } finally {
-        setLoading(false); // Stop spinner
-    }
-};
-
-
+    };
 
     const nonEditableFields = [
         'id', 'otp', 'otp_expiry', 'access_token', 'device_token',
         'remember_token', 'email_verified_at', 'phone_verified_at',
         'created_at', 'updated_at'
     ];
-
 
     const fieldLabels = {
         name: translateText("name"),
@@ -217,6 +214,17 @@ const handleSubmit = async e => {
                                         <option value="4">{translateText("user")}</option>
                                         <option value="1" hidden>{translateText("doctor")}</option>
                                     </select>
+                                ) : key === 'gender' ? (
+                                    <select
+                                        name={key}
+                                        value={value}
+                                        onChange={handleChange}
+                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                                    >
+                                        <option value="">{translateText("Select Gender")}</option>
+                                        <option value="Male">{translateText("Male")}</option>
+                                        <option value="Female">{translateText("Female")}</option>
+                                    </select>
                                 ) : (
                                     <input
                                         type={key === 'password' ? 'password' : 'text'}
@@ -233,17 +241,28 @@ const handleSubmit = async e => {
                     })}
                 </div>
                 {/* Submit Button */}
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 mt-4 block mx-auto"
-                >
-                    {loading ? (
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-                    ) : (
-                        translateText("Update User")
-                    )}
-                </button>
+                <div className="flex justify-center gap-4 mt-6">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
+                    >
+                        {loading ? (
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                        ) : (
+                            translateText("Update")
+                        )}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => router.push('/user/userList')}
+                        className="bg-gray-400 text-white px-4 py-2 rounded-xl hover:bg-gray-500"
+                    >
+                        {translateText("Cancel")}
+                    </button>
+                </div>
+
             </form>
         </div>
     );

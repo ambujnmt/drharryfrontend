@@ -6,7 +6,7 @@ export default function AssignedPatients() {
   const [socialWorkers, setSocialWorkers] = useState([]);
   const { locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
-  
+  const [loading, setLoading] = useState(true); // ✅ Step 1: Add loading state
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
@@ -14,6 +14,7 @@ export default function AssignedPatients() {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true); // ✅ Start loading
       const response = await fetchSocialWorkersWithPatients();
       if (response.status && Array.isArray(response.data)) {
         const filteredWorkers = response.data
@@ -30,6 +31,7 @@ export default function AssignedPatients() {
       } else {
         setSocialWorkers([]);
       }
+      setLoading(false); // ✅ End loading
     };
 
     loadData();
@@ -46,7 +48,12 @@ export default function AssignedPatients() {
     <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl text-center font-bold mb-6">{translateText("Assigned Patients")}</h2>
 
-      {socialWorkers.length === 0 ? (
+      {/* ✅ Step 3: Conditional rendering */}
+      {loading ? (
+        <div className="flex justify-center items-center py-10">
+          <div className="w-10 h-10 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) : socialWorkers.length === 0 ? (
         <p className="text-center text-gray-500">{translateText("No assigned patients found.")}</p>
       ) : (
         <table className="w-full table-auto border-collapse">

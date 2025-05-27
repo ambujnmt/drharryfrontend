@@ -48,7 +48,7 @@ export default function Header({ menuOpen, toggleMenu }) {
       </button>
 
       <div className="flex  items-center space-x-4 text-2xl relative">
-        {admin && (
+        {admin && (!user || Object.keys(user).length === 0) && (
           <Link
             href="/admin/passChange"
             className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
@@ -57,8 +57,13 @@ export default function Header({ menuOpen, toggleMenu }) {
           </Link>
         )}
 
+        {user && !admin && (
+          <Link href={`/user/profile/${user.user_id}`} className="cursor-pointer text-white text-2xl">
+            <HiUserCircle />
+          </Link>
+        )}
 
-        <HiUserCircle className="cursor-pointer" />
+
 
         <div className="relative" onClick={() => setNotificationOpen(!notificationOpen)}>
           <IoMdNotifications />
@@ -93,7 +98,6 @@ export default function Header({ menuOpen, toggleMenu }) {
         {dropdownOpen && (
           <div className="absolute right-0 top-12 w-40 bg-white text-black shadow-lg rounded-md  z-50">
             <ul className="text-sm">
-              <li className="p-2 hover:bg-gray-200 hover:rounded-t-md cursor-pointer">{translateText("profile")}</li>
               <li className="p-2 hover:bg-gray-200 cursor-pointer">{translateText("settings")}</li>
               <li className=" hover:bg-gray-200 hover:rounded-b-md cursor-pointer"><Button className="w-full bg-white flex justify-start hover:bg-gray-200" onPress={onOpen}>{translateText("logout")}</Button></li>
             </ul>

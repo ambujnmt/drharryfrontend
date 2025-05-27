@@ -145,7 +145,6 @@ export default function AdminLogin() {
                             {errors.password && <p className="text-gray-300 text-sm mt-1">{errors.password}</p>}
                         </div>
 
-                        {errors.api && <p className="text-red-500 text-sm mb-4">{errors.api}</p>}
                         <button
                             type="submit"
                             disabled={loading}

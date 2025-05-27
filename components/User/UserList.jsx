@@ -6,13 +6,14 @@ import { Link } from "@heroui/react";
 
 
 export default function AddUser() {
-  const { locale, translateText } = useContext(LanguageContext);
+    const { locale, translateText } = useContext(LanguageContext);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [clientLocale, setClientLocale] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 15;
     const [searchTerm, setSearchTerm] = useState("");
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: "ascending" });
 
 
     useEffect(() => {
@@ -35,33 +36,68 @@ export default function AddUser() {
 
     const filteredUsers = useMemo(() => {
         const search = searchTerm.toLowerCase();
-    
+
         return users.filter((user) => {
             const name = user.name?.toLowerCase() || "";
             const mobile = user.mobile?.toLowerCase() || "";
             const email = user.email?.toLowerCase() || "";
             const gender = user.gender?.toLowerCase() || "";
-    
-            // Check exact match for gender to avoid 'male' matching 'female'
+            const userType = user.user_type_value?.toLowerCase() || "";
+            const status = user.status === 1 ? "active" : "inactive";
+
+            // Ensure gender matches exactly for "male" or "female"
             const genderMatch = search === "male" || search === "female"
                 ? gender === search
                 : gender.includes(search);
-    
+
             return (
                 name.includes(search) ||
                 mobile.includes(search) ||
                 email.includes(search) ||
-                genderMatch
+                genderMatch ||
+                userType.includes(search) ||
+                status.includes(search)
             );
         });
     }, [searchTerm, users]);
-    
+
+    const sortedUsers = useMemo(() => {
+        const sortableUsers = [...filteredUsers];
+
+        if (sortConfig.key) {
+            sortableUsers.sort((a, b) => {
+                const aVal = a[sortConfig.key] ?? '';
+                const bVal = b[sortConfig.key] ?? '';
+
+                if (aVal < bVal) return sortConfig.direction === 'ascending' ? -1 : 1;
+                if (aVal > bVal) return sortConfig.direction === 'ascending' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        return sortableUsers;
+    }, [filteredUsers, sortConfig]);
+
+
     // Pagination logic
     const totalPages = useMemo(() => {
         return Math.ceil(filteredUsers.length / usersPerPage);
     }, [filteredUsers]);
     const startIndex = (currentPage - 1) * usersPerPage;
-    const currentUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
+    const currentUsers = sortedUsers.slice(startIndex, startIndex + usersPerPage);
+
+
+    const handleSort = (key) => {
+        setSortConfig((prevConfig) => {
+            if (prevConfig.key === key) {
+                return {
+                    key,
+                    direction: prevConfig.direction === "ascending" ? "descending" : "ascending",
+                };
+            }
+            return { key, direction: "ascending" };
+        });
+    };
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -73,9 +109,24 @@ export default function AddUser() {
         <div className="w-full bg-gray-100">
             <div className="w-full space-y-5 bg-gray-100 shadow-lg rounded-lg p-4">
                 <div className="md:p-4 mt-5 bg-white  rounded-xl">
-                    <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">
-                        {translateText("User List")}
-                    </h2>
+                    <div className="flex justify-between">
+
+                        <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-left">
+                            {translateText("User List")}
+                        </h2>
+                        <div className="flex justify-end mb-4">
+                            <input
+                                type="text"
+                                placeholder={translateText("Search by Name, Mobile, Email, Gender, Type, or Status")}
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setCurrentPage(1); // Reset to page 1 on search
+                                }}
+                                className="px-4 py-1 border border-gray-300 rounded-md"
+                            />
+                        </div>
+                    </div>
 
                     {loading ? (
                         <div className="flex justify-center items-center py-10">
@@ -83,31 +134,32 @@ export default function AddUser() {
                         </div>
                     ) : (
                         <>
-                            <div className="mb-4">
-                                <input
-                                    type="text"
-                                    placeholder={translateText("Search by Name, Mobile, Email, or Gender")}
-                                    value={searchTerm}
-                                    onChange={(e) => {
-                                        setSearchTerm(e.target.value);
-                                        setCurrentPage(1); // Reset to page 1 on search
-                                    }}
-                                    className="w-full px-4 py-1 border border-gray-300 rounded-md"
-                                />
-                            </div>
 
-                             <div className="overflow-x-auto">
-                            <table className="bg-white  -gray-300 text-sm text-left">
+                            <div className="overflow-x-auto">
+                                <table className="bg-white  -gray-300 text-sm text-left w-full">
                                     <thead className="bg-gray-200 text-gray-700">
                                         <tr>
                                             <th className=" px-4 py-2">{translateText("S.No.")}</th>
-                                            <th className=" px-4 py-2">{translateText("Name")}</th>
-                                            <th className=" px-4 py-2">{translateText("Mobile")}</th>
-                                            <th className=" px-4 py-2">{translateText("email")}</th>
-                                            <th className=" px-4 py-2">{translateText("gender")}</th>
-                                            <th className=" px-4 py-2">{translateText("address")}</th>
-                                            <th className=" px-4 py-2">{translateText("status")}</th>
-                                            <th className=" px-4 py-2">{translateText("user_type")}</th>
+                                            <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort("name")}>
+                                                {translateText("Name")}
+                                            </th>                                            <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort("mobile")}>
+                                                {translateText("Mobile")}
+                                            </th>
+                                            <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort("email")}>
+                                                {translateText("email")}
+                                            </th>
+                                            <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort("gender")}>
+                                                {translateText("gender")}
+                                            </th>
+                                            <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort("address")}>
+                                                {translateText("address")}
+                                            </th>
+                                            <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort("status")}>
+                                                {translateText("status")}
+                                            </th>
+                                            <th className="px-4 py-2 cursor-pointer" onClick={() => handleSort("user_type_value")}>
+                                                {translateText("user_type")}
+                                            </th>
                                             <th className=" px-4 py-2">{translateText("Action")}</th>
 
                                         </tr>
@@ -140,7 +192,7 @@ export default function AddUser() {
                             </div>
 
                             {/* Pagination Controls */}
-                            <div className="flex justify-center mt-6 space-x-2">
+                            <div className="flex justify-end mt-6 space-x-2">
                                 {/* Prev Button */}
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}

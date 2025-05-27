@@ -57,73 +57,36 @@ export default function PatientScheduling() {
         await loadPatients(socialWorkerId);
     };
 
-    //    const handleDeleteConfirm = async () => {
-    //     if (!selected.socialWorker || !selectedPatientId) return;
 
-    //     // 1. Update selected state by removing the patient from the list
-    //     setSelected(prev => {
-    //         const updatedPatients = prev.patients.filter(p => p.patient_id !== selectedPatientId);
-    //         console.log("Updated patients:", updatedPatients); // <-- ADD THIS LINE HERE
-    //         return {
-    //             ...prev,
-    //             patients: updatedPatients
-    //         };
-    //     });
+    const handleDeleteConfirm = async () => {
+        if (!selected.socialWorker || !selectedPatientId) return;
 
-    //     onClose();
-    //     setLoading(true); // Set loading state when performing the delete action
+        setLoading(true);
 
-    //     // 2. Make API call to delete from backend
-    //     const res = await deleteAssignedScheduler({
-    //         user_id: selected.socialWorker,
-    //         patient_id: selectedPatientId
-    //     });
+        const res = await deleteAssignedScheduler({
+            user_id: selected.socialWorker,
+            patient_id: selectedPatientId
+        });
 
-    //     setMessage(res.message);
+        setMessage(res.message);
+        console.log("API message:", res.message);
 
-    //     if (res.status) {
-    //         // 3. Refresh patient list from backend
-    //         await loadPatients(selected.socialWorker);
-    //     } else {
-    //         // 4. If there’s an error, handle the failure
-    //         setLoading(false);
-    //     }
+        if (res.status) {
+            // Remove patient from UI immediately without reloading from API
+            setSelected(prev => ({
+                ...prev,
+                patients: prev.patients.filter(p => p.patient_id !== selectedPatientId),
+            }));
+        }
 
-    //     setSelectedPatientId(null);
-    // };
+        setSelectedPatientId(null);
+        setLoading(false);
+        onClose();
 
 
- const handleDeleteConfirm = async () => {
-    if (!selected.socialWorker || !selectedPatientId) return;
-
-    setLoading(true);
-
-    const res = await deleteAssignedScheduler({
-        user_id: selected.socialWorker,
-        patient_id: selectedPatientId
-    });
-
-setMessage(res.message);
-console.log("API message:", res.message);
-
-    if (res.status) {
-        // Remove patient from UI immediately without reloading from API
-        setSelected(prev => ({
-            ...prev,
-            patients: prev.patients.filter(p => p.patient_id !== selectedPatientId),
-        }));
-    }
-
-    setSelectedPatientId(null);
-    setLoading(false);
-          onClose();
-
-
-    // Optional: clear message after 5 seconds
-    setTimeout(() => setMessage(''), 3000);
-};
-
-
+        // Optional: clear message after 5 seconds
+        setTimeout(() => setMessage(''), 3000);
+    };
 
 
     const formatTime = (timeStr) => {
@@ -169,7 +132,12 @@ console.log("API message:", res.message);
                                         onChange={(e) => handleSocialWorkerSelection(e.target.value)}
                                         className="mr-2"
                                     />
-                                    <label className="flex-1 cursor-pointer">{socialWorker.name}</label>
+                                    <label
+                                        className="flex-1 cursor-pointer"
+                                        onClick={() => handleSocialWorkerSelection(String(socialWorker.id))}
+                                    >
+                                        {socialWorker.name}
+                                    </label>
                                 </div>
                             ))}
                         {usersByType.socialWorkers.length === 0 && (
@@ -178,9 +146,6 @@ console.log("API message:", res.message);
                     </div>
                 </div>
             </div>
-
-           
-     
 
 
             {/* Patients Table */}
@@ -195,100 +160,109 @@ console.log("API message:", res.message);
                             {translateText("New")}
                         </Link>
                     </div>
+{
+  selected.patients.length > 0 ? (
+    <table className="w-full table-auto">
+      <thead>
+        <tr className="bg-gray-100">
+          <th className="px-4 py-2">{translateText("S.No.")}</th>
+          <th className="px-4 py-2">{translateText("Patient Name")}</th>
+          <th className="px-4 py-2">{translateText("Mobile Number")}</th>
+          <th className="px-4 py-2">{translateText("Email")}</th>
+          <th className="px-4 py-2">{translateText("Scheduled Days")}</th>
+          <th className="px-4 py-2">{translateText("Scheduled Time")}</th>
+          <th className="px-4 py-2">{translateText("status")}</th>
+          <th className="px-4 py-2">{translateText("Action")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {selected.patients.map((patient, index) => {
+          const days = Array.isArray(patient.schedule_day)
+            ? patient.schedule_day
+            : (patient.schedule_day || "").split(",");
+          const times = Array.isArray(patient.schedule_time)
+            ? patient.schedule_time
+            : (patient.schedule_time || "").split(",").filter(Boolean);
 
-                    {selected.patients.length > 0 ? (
-                        <table className="w-full table-auto">
-                            <thead>
-                                <tr className="bg-gray-100">
-                                    <th className="px-4 py-2">{translateText("S.No.")}</th>
-                                    <th className="px-4 py-2">{translateText("Patient Name")}</th>
-                                    <th className="px-4 py-2">{translateText("Mobile Number")}</th>
-                                    <th className="px-4 py-2">{translateText("Email")}</th>
-                                    <th className="px-4 py-2">{translateText("Scheduled Days")}</th>
-                                    <th className="px-4 py-2">{translateText("Scheduled Time")}</th>
-                                    <th className="px-4 py-2">{translateText("status")}</th>
-                                    <th className="px-4 py-2">{translateText("Action")}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {selected.patients.map((patient, index) => {
-                                    const days = Array.isArray(patient.schedule_day)
-                                        ? patient.schedule_day
-                                        : (patient.schedule_day || "").split(",");
-                                    const times = Array.isArray(patient.schedule_time)
-                                        ? patient.schedule_time
-                                        : (patient.schedule_time || "").split(",").filter(Boolean);
+          return (
+            <tr key={patient.patient_id}>
+              <td className="px-4 py-2">{index + 1}</td>
+              <td className="px-4 py-2">{patient.name}</td>
+              <td className="px-4 py-2">{patient.mobile}</td>
+              <td className="px-4 py-2">{patient.email}</td>
+              <td className="px-4 py-2">
+                {days.map((day, i) => (
+                  <div key={i}>{day}</div>
+                ))}
+              </td>
+              <td className="px-4 py-2">
+                {times.map((t, i) => (
+                  <div key={i}>{formatTime(t)}</div>
+                ))}
+              </td>
 
-                                    return (
-                                        <tr key={patient.patient_id}>
-                                            <td className="px-4 py-2">{index + 1}</td>
-                                            <td className="px-4 py-2">{patient.name}</td>
-                                            <td className="px-4 py-2">{patient.mobile}</td>
-                                            <td className="px-4 py-2">{patient.email}</td>
-                                            <td className="px-4 py-2">
-                                                {days.map((day, i) => (
-                                                    <div key={i}>{day}</div>
-                                                ))}
-                                            </td>
-                                            <td className="px-4 py-2">
-                                                {times.map((t, i) => (
-                                                    <div key={i}>{formatTime(t)}</div>
-                                                ))}
-                                            </td>
-
-                                            <td className="px-4 py-2">
-                                                <span className={`px-2 py-1 text-white rounded-xl ${patient.status === 1 ? 'bg-green-500' : 'bg-red-500'}`}>
-                                                    {patient.status === 1 ? 'Active' : 'Inactive'}
-                                                </span>
-                                            </td>
-                                            <td className="px-4 py-2">
-                                                <div className="flex justify-center items-center gap-2 text-blue-500">
-                                                    <Link href={`/patient/editSchedule/${patient.patient_id}`}>
-                                                        <FaPen className="text-lg" />
-                                                    </Link>
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedPatientId(patient.patient_id);
-                                                            onOpen();
-                                                        }}
-                                                    >
-                                                        <MdDelete className="text-xl" />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <p className="mt-4">{translateText("No patients assigned to this social worker.")}</p>
-                    )}
+              <td className="px-4 py-2">
+                <span
+                  className={`px-2 py-1 text-white rounded-xl ${
+                    patient.status === 1 ? "bg-green-500" : "bg-red-500"
+                  }`}
+                >
+                  {patient.status === 1 ? "Active" : "Inactive"}
+                </span>
+              </td>
+              <td className="px-4 py-2">
+                <div className="flex justify-center items-center gap-2 text-blue-500">
+                  <Link href={`/patient/editSchedule/${patient.patient_id}`}>
+                    <FaPen className="text-lg" />
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setSelectedPatientId(patient.patient_id);
+                      onOpen();
+                    }}
+                  >
+                    <MdDelete className="text-xl" />
+                  </button>
                 </div>
-            )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  ) : loading ? (
+    <div className="w-8 h-8 my-16 border-2 border-blue-700 border-t-transparent rounded-full animate-spin mx-auto"></div>
+  ) : (
+    <p className="mt-4 text-center text-gray-600">
+      {translateText("No patients assigned to this social worker.")}
+    </p>
+  )
+}
 
-            {/* Confirmation Modal */}
-            <Tmodal
-                isOpen={isOpen}
-                onClose={onClose}
-                title="Are you sure you want to remove this assigned patient?"
-                footer={
-                    <>
-                        <Button color="danger" variant="light" onPress={onClose}>
-                            {translateText("Cancel")}
-                        </Button>
-                        <Button disabled={loading} color="primary" onPress={handleDeleteConfirm}>
-                            {loading ? (
-                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-                            ) : (
-                                translateText("Confirm")
-                            )}
-                        </Button>
-                    </>
-                }
-            />
-        </div>
-    );
+                    {/* Confirmation Modal */}
+                    <Tmodal
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        title="Are you sure you want to remove this assigned patient?"
+                        footer={
+                            <>
+                                <Button color="danger" variant="light" onPress={onClose}>
+                                    {translateText("Cancel")}
+                                </Button>
+                                <Button disabled={loading} color="primary" onPress={handleDeleteConfirm}>
+                                    {loading ? (
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                                    ) : (
+                                        translateText("Confirm")
+                                    )}
+                                </Button>
+                            </>
+                        }
+                    />
+                </div>
+        )}
+    </div>
+  );
 }
 
 

@@ -177,7 +177,6 @@ export default function LoginForm() {
                 {translateText("password_forgot")}
               </Link>
             </p>
-            {errors.api && <p className="text-red-500 text-sm mb-4">{errors.api}</p>}
             <button
               type="submit"
               disabled={loading}

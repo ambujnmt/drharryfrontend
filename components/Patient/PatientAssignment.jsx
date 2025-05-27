@@ -128,7 +128,7 @@ const handleAssignPatients = async () => {
 
   return (
     <div className="mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-      <h2 className="text-2xl text-center font-bold mb-6">{translateText("Patient Assignment")}</h2>
+      <h2 className="text-2xl text-left font-bold mb-6">{translateText("Patient Assignment")}</h2>
 
       {successMessage && <div className="text-green-600 font-medium mb-4">{successMessage}</div>}
       {errorMessage && <div className="text-red-600 font-medium mb-4">{errorMessage}</div>}

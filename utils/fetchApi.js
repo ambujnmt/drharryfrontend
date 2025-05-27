@@ -398,8 +398,6 @@ export const fetchSocialWorkersWithPatients = async () => {
 };
 
 
-// utils/fetchapi.js
-
 export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, schedule_time }) => {
   try {
     const response = await fetch(
@@ -453,21 +451,44 @@ export const deleteAssignedScheduler = async (data) => {
   }
 };
 
-export const getDayList = async () => {
-    try {
-        const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/day-list');
-        const text = await response.text();
-        const data = text ? JSON.parse(text) : {};
-
-        if (response.ok) {
-            return { status: true, data };
-        } else {
-            return { status: false, message: data.message || "Failed to fetch day list" };
-        }
-    } catch (error) {
-        return { status: false, message: error.message || "API Error" };
+export async function fetchProfile(userId) {
+  const response = await fetch(
+    'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/get-user',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: userId }),
     }
-};
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user data');
+  }
+
+  const result = await response.json();
+  return result;
+}
+
+// utils/fetchApi.js
+
+export async function updateProfileApi(formData) {
+  try {
+    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/update-profile", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    // API might return validation error with status = false
+    return data;
+  } catch (error) {
+    return { status: false, message: "Something went wrong, please try again." };
+  }
+}
+
 
 
 
