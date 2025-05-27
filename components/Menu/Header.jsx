@@ -48,14 +48,15 @@ export default function Header({ menuOpen, toggleMenu }) {
       </button>
 
       <div className="flex  items-center space-x-4 text-2xl relative">
-        {admin && (!user || Object.keys(user).length === 0) && (
-          <Link
-            href="/admin/passChange"
-            className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Change Password
-          </Link>
-        )}
+      {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
+  <Link
+    href="/admin/passChange"
+    className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
+  >
+    Change Password
+  </Link>
+)}
+
 
         {user && !admin && (
           <Link href={`/user/profile/${user.user_id}`} className="cursor-pointer text-white text-2xl">

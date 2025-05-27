@@ -56,7 +56,7 @@ export default function SideMenu({ isOpen, onClose }) {
             </Link>
           </li>
 
-        {admin && (!user || Object.keys(user).length === 0) && (
+      {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
             <Accordion variant="light">
               <AccordionItem
                 key="6"
@@ -86,7 +86,7 @@ export default function SideMenu({ isOpen, onClose }) {
             </Accordion>
           )}
 
-        {admin && (!user || Object.keys(user).length === 0) && (
+      {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
             <Accordion variant="light">
               <AccordionItem
                 key="3"
