@@ -58,7 +58,7 @@ export default function Header({ menuOpen, toggleMenu }) {
 )}
 
 
-        {user && !admin && (
+        {user && (
           <Link href={`/user/profile/${user.user_id}`} className="cursor-pointer text-white text-2xl">
             <HiUserCircle />
           </Link>

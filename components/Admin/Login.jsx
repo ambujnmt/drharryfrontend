@@ -6,6 +6,8 @@ import { adminLogin } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
 import { useAdmin } from "../../context/AdminContext"; 
+import { useUser } from "../../context/UserContext";
+import {Head} from "../../layouts/head"
 
 
 export default function AdminLogin() {
@@ -15,6 +17,10 @@ export default function AdminLogin() {
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
     const [loading, setLoading] = useState(false);
+  const { user } = useUser(); // get user context
+const [checking, setChecking] = useState(true);
+const [isLoadingUser, setIsLoadingUser] = useState(true);
+
 
     useEffect(() => {
         setClientLocale(locale.toUpperCase());
@@ -47,11 +53,26 @@ export default function AdminLogin() {
 
     const { admin, loginAdmin } = useAdmin();
 
-    useEffect(() => {
-        if (admin) {
-            router.push("/dashboard");
-        }
-    }, [admin]);
+useEffect(() => {
+  // Simulate async check or just wait for context to settle
+  if (user !== undefined && admin !== undefined) {
+    setIsLoadingUser(false);
+  }
+}, [user, admin]);
+
+useEffect(() => {
+  // wait one tick to simulate loading context or read localStorage yourself
+  setChecking(false);
+}, []);
+
+if (checking) {
+  return null; // or spinner
+}
+
+if (admin || user) {
+  router.replace("/dashboard");
+  return null;
+}
 
 
     const handleSubmit = async (e) => {
@@ -83,10 +104,12 @@ export default function AdminLogin() {
     };
 
     return (
+        
         <div
-            className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+        className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+        style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
         >
+        <Head title="Admin Login" />
             <div className="absolute top-2 right-2">
                 <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
                     <Dropdown>

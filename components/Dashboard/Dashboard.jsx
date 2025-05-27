@@ -3,6 +3,7 @@ import { FaUser, FaChartBar } from "react-icons/fa";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import { LanguageContext } from "../../context/LanguageContext";
+import { Head } from "../../layouts/head"
 
 const barData = [
   { name: "Jan", users: 400, employees: 240 },
@@ -73,6 +74,8 @@ export default function Dashboard() {
   const [chartHeight, setChartHeight] = useState(300);
   return (
     <div className="w-full bg-gray-100 md:p-6 p-0">
+      <Head title="Dashboard" />
+
       <div className="w-full space-y-5 bg-white shadow-lg rounded-lg p-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-r from-[#7da0d8] via-[#a7c1e0] to-[#93C5FD] p-6 rounded-lg shadow-lg flex flex-col items-center text-white">

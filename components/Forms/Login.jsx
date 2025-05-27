@@ -7,6 +7,7 @@ import { loginUser } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
 import { useUser } from "../../context/UserContext";
+import { useAdmin } from "../../context/AdminContext"; 
 
 
 
@@ -18,6 +19,8 @@ export default function LoginForm() {
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
   const [loading, setLoading] = useState(false);
+    const { admin, loginAdmin } = useAdmin();
+const [checking, setChecking] = useState(true);
 
 
   useEffect(() => {
@@ -50,15 +53,29 @@ export default function LoginForm() {
   const [successMessage, setSuccessMessage] = useState("");
 
   const { user, setUser, setUserEmail } = useUser();
-  useEffect(() => {
-    if (user) {
-    }
-  }, [user]);
+//   useEffect(() => {
+//     if (user) {
+//     }
+//   }, [user]);
 
-  if (user) {
-    router.push("/dashboard");
-    return;
-  }
+//  if (user) {
+//   router.push("/dashboard");
+//   return null; // Prevent login form from rendering
+// }
+
+useEffect(() => {
+  // wait one tick to simulate loading context or read localStorage yourself
+  setChecking(false);
+}, []);
+
+if (checking) {
+  return null; // or spinner
+}
+
+if (admin || user) {
+  router.replace("/dashboard");
+  return null;
+}
 
 
   const handleSubmit = async (e) => {
