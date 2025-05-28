@@ -36,15 +36,16 @@ export default function AddUser() {
     const validate = () => {
         let newErrors = {};
 
-        if (!formData.name.trim()) newErrors.name = translateText("full_name") + " " + translateText("required_field");
+        if (!formData.name.trim()) newErrors.name = "Required";
         if (!formData.email) {
-            newErrors.email = translateText("emailRequired");
+            newErrors.email = "Required";
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-            newErrors.email = translateText("invalid_email");
+            newErrors.email = "Invalid email format";
         }
-        if (!formData.userType) newErrors.userType = translateText("user_type") + " " + translateText("required_field");
-        if (!password) newErrors.password = translateText("password_required");
-        if (!confirm) newErrors.confirm = translateText("confirm_password_required");
+
+        if (!formData.userType) newErrors.userType = "Required";
+        if (!password) newErrors.password = "Required";
+        if (!confirm) newErrors.confirm = "Required";
         if (password && confirm && password !== confirm) {
             newErrors.confirm = "Passwords do not match";
         }
@@ -52,6 +53,7 @@ export default function AddUser() {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -142,7 +144,10 @@ export default function AddUser() {
                                     variant="bordered"
                                     type={show ? "text" : "password"}
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
+                                    }}
                                 />
                                 {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                             </div>
@@ -154,7 +159,10 @@ export default function AddUser() {
                                     variant="bordered"
                                     type={show ? "text" : "password"}
                                     value={confirm}
-                                    onChange={(e) => setConfirm(e.target.value)}
+                                    onChange={(e) => {
+                                        setConfirm(e.target.value);
+                                        setErrors((prevErrors) => ({ ...prevErrors, confirm: "" }));
+                                    }}
                                 />
                                 {errors.confirm && <p className="text-red-500 text-sm mt-1">{errors.confirm}</p>}
                             </div>

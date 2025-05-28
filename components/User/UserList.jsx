@@ -86,6 +86,13 @@ export default function AddUser() {
     const startIndex = (currentPage - 1) * usersPerPage;
     const currentUsers = sortedUsers.slice(startIndex, startIndex + usersPerPage);
 
+    
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
 
     const handleSort = (key) => {
         setSortConfig((prevConfig) => {
@@ -97,12 +104,6 @@ export default function AddUser() {
             }
             return { key, direction: "ascending" };
         });
-    };
-
-    const handlePageChange = (page) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
     };
 
     return (
@@ -117,13 +118,13 @@ export default function AddUser() {
                         <div className="flex justify-end mb-4">
                             <input
                                 type="text"
-                                placeholder={translateText("Search by Name, Mobile, Email, Gender, Type, or Status")}
+                                placeholder={translateText("Search by Name, Mobile...")}
                                 value={searchTerm}
                                 onChange={(e) => {
                                     setSearchTerm(e.target.value);
                                     setCurrentPage(1); // Reset to page 1 on search
                                 }}
-                                className="px-4 py-1 border border-gray-300 rounded-md"
+                                className="px-4 py-1 border border-gray-300 rounded-md w-60"
                             />
                         </div>
                     </div>

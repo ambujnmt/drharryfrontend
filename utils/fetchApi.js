@@ -302,7 +302,6 @@ export async function updateUser(id, data) {
   }
 }
 
-// utils/fetchApi.js
 export const changeUserStatus = async (userId, status) => {
   try {
     const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/change-user-status`, {
@@ -323,8 +322,6 @@ export const changeUserStatus = async (userId, status) => {
     return { status: false, message: 'Failed to update status' };
   }
 };
-
-// utils/fetchApi.js
 
 export const postPatientAssignment = async (payload) => {
   const url = 'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/save-patient-assignment';

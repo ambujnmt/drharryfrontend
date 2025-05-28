@@ -74,7 +74,6 @@ export default function SideMenu({ isOpen, onClose }) {
                 }
               >
                 <ul className="space-y-1 text-[#e1e3e6]">
-                  <li className="p-2 hover:bg-[#91b4e5] rounded">{translateText("allUsers")}</li>
                   <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/addUser" className="text-[#e1e3e6]">{translateText("addUser")}</Link></li>
                   <li className="p-2 hover:bg-[#91b4e5] rounded">
                     <Link href="/user/userList" className="text-[#e1e3e6]">
@@ -113,27 +112,7 @@ export default function SideMenu({ isOpen, onClose }) {
             </Accordion>
           )}
 
-          <Accordion variant="light">
-            <AccordionItem
-              key="4"
-              classNames={{
-                item: "p-2 hover:bg-[#91b4e5] rounded",
-                title: "text-white", trigger: "py-[0.5rem]",
-                indicator: "text-white"
-              }}
-              aria-label="Patient"
-              title={
-                <span className="flex items-center gap-2">
-                  <MdOutlineSick /> {translateText("patient")}
-                </span>
-              }
-            >
-              <ul className="space-y-1 ">
-                <li className="p-2 hover:bg-[#91b4e5] rounded">{translateText("patientList")}</li>
-                <li className="p-2 hover:bg-[#91b4e5] rounded">{translateText("patientDetails")}</li>
-              </ul>
-            </AccordionItem>
-          </Accordion>
+   
 
 
         </ul>
