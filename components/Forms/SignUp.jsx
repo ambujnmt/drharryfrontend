@@ -29,19 +29,18 @@ export default function SignupForm() {
 
   const validate = () => {
     let newErrors = {};
-    if (!formData.name?.trim()) {
-      newErrors.name = `${translateText("full_name")} ${translateText("required_field")}`;
-    }
+    if (!formData.name.trim()) newErrors.name = "Required";
+
     if (!formData.email) {
-      newErrors.email = translateText("emailRequired") || "Email is required";
+      newErrors.email = "Required";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-      newErrors.email = translateText("invalidEmail") || "Invalid email address";
+      newErrors.email = "Invalid email format";
     }
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = "Required";
     }
     if (!formData.c_password) {
-      newErrors.c_password = "Confirm Password is required";
+      newErrors.c_password = "Required";
     }
     if (formData.password && formData.c_password && formData.password !== formData.c_password) {
       newErrors.c_password = "Passwords do not match";
@@ -50,6 +49,8 @@ export default function SignupForm() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+
 
   const [successMessage, setSuccessMessage] = useState("");
   const { setUserEmail } = useUser();
@@ -124,7 +125,6 @@ export default function SignupForm() {
 
         <div className="w-full md:w-1/2  flex flex-col justify-center">
           <p className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center text-white">{translateText("register")}</p>
-          {errors.email && <p className="text-white my-3 text-lg">{errors.email}</p>}
           {successMessage && (
             <p className="text-white my-3 text-lg">{successMessage}</p>
           )}
@@ -137,7 +137,11 @@ export default function SignupForm() {
           <form onSubmit={handleSubmit} className="flex flex-col">
             <div className=" w-full  gap-2">
               <Input
-                label={translateText("name")}
+                label={
+                  <span className="text-white">
+                    {translateText("name")} <span className="text-gray-300">*</span>
+                  </span>
+                }
                 type="name"
                 name="name"
                 variant="underlined"
@@ -147,11 +151,16 @@ export default function SignupForm() {
                 value={formData.name}
                 onChange={handleChange}
               />
+
               {errors.name && <p className="text-gray-300 mt-1 text-sm">{errors.name}</p>}
             </div>
             <div className=" w-full  gap-2">
               <Input
-                label={translateText("email")}
+                label={
+                  <span className="text-white">
+                    {translateText("email")} <span className="text-gray-300">*</span>
+                  </span>
+                }
                 type="email"
                 name="email"
                 variant="underlined"
@@ -162,16 +171,18 @@ export default function SignupForm() {
                 value={formData.email}
                 onChange={handleChange}
                 isInvalid={!!errors.email}
-                errorMessage={errors.email}
               />
-
 
               {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div >
                 <Input
-                  label={translateText("password")}
+                  label={
+                  <span className="text-white">
+                    {translateText("password")} <span className="text-gray-300">*</span>
+                  </span>
+                }
                   variant="underlined"
                   type="password"
                   name="password"
@@ -186,7 +197,11 @@ export default function SignupForm() {
               </div>
               <div>
                 <Input
-                  label={translateText("c_password")}
+                  label={
+                  <span className="text-white">
+                    {translateText("c_password")} <span className="text-gray-300">*</span>
+                  </span>
+                }
                   classNames={{
                     label: "text-white text-[13px]",
                     input: "text-white"

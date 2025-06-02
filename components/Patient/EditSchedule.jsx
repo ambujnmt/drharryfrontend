@@ -28,7 +28,7 @@ const convertTo24Hour = (time12) => {
 
 export default function EditSchedule() {
     const router = useRouter();
-    const { id } = router.query;
+const { id, user_id } = router.query;
     const [apiMessage, setApiMessage] = useState({ type: '', text: '' });
     const [patientData, setPatientData] = useState(null);
     const [selectedDays, setSelectedDays] = useState([]);
@@ -46,42 +46,89 @@ export default function EditSchedule() {
     useEffect(() => {
         if (!router.isReady || !id) return;
 
-        const fetchPatient = async () => {
-            const result = await fetchSocialWorkersWithPatients();
+        // const fetchPatient = async () => {
+        //     const result = await fetchSocialWorkersWithPatients();
 
-            if (result.status && Array.isArray(result.data)) {
-                let found = null;
-                let socialWorkerId = null;
-                for (const sw of result.data) {
-                    const match = sw.patients?.find(p => String(p.patient_id) === String(id));
-                    if (match) {
-                        found = match;
-                        socialWorkerId = sw.user_id;
-                        break;
-                    }
-                }
+        //     if (result.status && Array.isArray(result.data)) {
+        //         let found = null;
+        //         let socialWorkerId = null;
+        //         for (const sw of result.data) {
+        //             const match = sw.patients?.find(p => String(p.patient_id) === String(id));
+        //             if (match) {
+        //                 found = match;
+        //                 socialWorkerId = sw.user_id;
+        //                 break;
+        //             }
+        //         }
 
-                if (found) {
-                    setPatientData({
-                        ...found,
-                        user_id: socialWorkerId
+        //         if (found) {
+        //             setPatientData({
+        //                 ...found,
+        //                 user_id: socialWorkerId
+        //             });
+
+        //             const daysArray = Array.isArray(found.schedule_day) ? found.schedule_day : [];
+        //             const timeArray = Array.isArray(found.schedule_time) ? found.schedule_time : [];
+
+        //             const timeMap = {};
+        //             daysArray.forEach((day, index) => {
+        //                 const time = timeArray[index];
+        //                 if (!timeMap[day]) timeMap[day] = [];
+        //                 timeMap[day].push(time); // Keep as 24-hour string for TimePicker
+        //             });
+
+        //             setSelectedDays([...new Set(daysArray)]);
+        //             setTimeSlots(timeMap);
+        //         }
+        //     }
+        // };
+const fetchPatient = async () => {
+    const result = await fetchSocialWorkersWithPatients();
+
+    if (result.status && Array.isArray(result.data)) {
+        const matches = [];
+
+        for (const sw of result.data) {
+            // If user_id is provided, skip irrelevant social workers
+            if (user_id && String(sw.user_id) !== String(user_id)) continue;
+
+            sw.patients?.forEach(p => {
+                if (String(p.patient_id) === String(id)) {
+                    matches.push({
+                        ...p,
+                        user_id: sw.user_id,
+                        sw_name: sw.name,
+                        sw_email: sw.email
                     });
-
-                    const daysArray = Array.isArray(found.schedule_day) ? found.schedule_day : [];
-                    const timeArray = Array.isArray(found.schedule_time) ? found.schedule_time : [];
-
-                    const timeMap = {};
-                    daysArray.forEach((day, index) => {
-                        const time = timeArray[index];
-                        if (!timeMap[day]) timeMap[day] = [];
-                        timeMap[day].push(time); // Keep as 24-hour string for TimePicker
-                    });
-
-                    setSelectedDays([...new Set(daysArray)]);
-                    setTimeSlots(timeMap);
                 }
-            }
-        };
+            });
+        }
+
+        if (matches.length === 0) return;
+
+        // If multiple matches, prefer the one with more scheduled days
+        const bestMatch = matches.reduce((prev, current) =>
+            (current.schedule_day?.length || 0) > (prev.schedule_day?.length || 0) ? current : prev
+        );
+
+        setPatientData(bestMatch);
+
+        const daysArray = Array.isArray(bestMatch.schedule_day) ? bestMatch.schedule_day : [];
+        const timeArray = Array.isArray(bestMatch.schedule_time) ? bestMatch.schedule_time : [];
+
+        const timeMap = {};
+        daysArray.forEach((day, index) => {
+            const time = timeArray[index];
+            if (!timeMap[day]) timeMap[day] = [];
+            timeMap[day].push(time);
+        });
+
+        setSelectedDays([...new Set(daysArray)]);
+        setTimeSlots(timeMap);
+    }
+};
+
+
 
         fetchPatient();
     }, [router.isReady, id]);

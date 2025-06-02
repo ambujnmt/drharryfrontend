@@ -14,30 +14,36 @@ export default function UserUpdate() {
     const [loading, setLoading] = useState(true);
     const [statusMessage, setStatusMessage] = useState("");
     const [statusType, setStatusType] = useState("");
+    const [previewImg, setPreviewImg] = useState("");
+
 
     useEffect(() => {
         setClientLocale(locale.toUpperCase());
     }, [locale]);
 
 
-    useEffect(() => {
-        const getUserFromList = async () => {
-            const allUsers = await fetchUsers();
-            if (allUsers?.data && id) {
-                const foundUser = allUsers.data.find(u => u.id.toString() === id.toString());
-                if (foundUser) {
-                    setFormData({
-                        ...foundUser,
-                        password: '********' // display dummy asterisks
-                    });
+useEffect(() => {
+    const getUserFromList = async () => {
+        const allUsers = await fetchUsers();
+        if (allUsers?.data && id) {
+            const foundUser = allUsers.data.find(u => u.id.toString() === id.toString());
+            if (foundUser) {
+                setFormData({
+                    ...foundUser,
+                    password: '********' // display dummy asterisks
+                });
 
+                if (foundUser.profile_img) {
+                    setPreviewImg(foundUser.profile_img);
                 }
             }
+        }
 
-            setLoading(false);
-        };
-        if (id) getUserFromList();
-    }, [id]);
+        setLoading(false);
+    };
+    if (id) getUserFromList();
+}, [id]);
+
 
     const handleChange = e => {
         setFormData(prev => ({
@@ -61,48 +67,51 @@ export default function UserUpdate() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        if (!validate()) return;
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setLoading(true);
 
-        setLoading(true); // Show button spinner
+    try {
+        const formPayload = new FormData();
 
-        // Clone formData for submission
-        const submitData = { ...formData };
-
-        // Remove password if it's not actually updated
-        if (submitData.password === '********' || !submitData.password?.trim()) {
-            delete submitData.password;
+        for (let key in formData) {
+            // Attach image file directly
+            if (key === "profile_img" && formData[key] instanceof File) {
+                formPayload.append(key, formData[key]);
+            } else {
+                formPayload.append(key, formData[key]);
+            }
         }
 
-        try {
-            const res = await updateUser(id, submitData);
+        // Send FormData instead of JSON
+        const res = await updateUser(id, formPayload, true); // assume 'true' tells the function it's multipart
 
-            if (res?.status === true) {
-                const statusUpdate = await changeUserStatus(id, submitData.status);
+        if (res?.status === true) {
+            const statusUpdate = await changeUserStatus(id, formData.status);
 
-                if (statusUpdate.status === true) {
-                    setStatusMessage(res?.message || res?.message_italian);
-                    setStatusType("success");
-
-                    setTimeout(() => {
-                        router.replace('/user/userList');
-                    }, 1500);
-                } else {
-                    setStatusMessage(res?.message);
-                    setStatusType("error");
-                }
+            if (statusUpdate.status === true) {
+                setStatusMessage(res?.message || res?.message_italian);
+                setStatusType("success");
+                setTimeout(() => {
+                    router.replace('/user/userList');
+                }, 1500);
             } else {
-                setStatusMessage("Update failed.");
+                setStatusMessage("Status update failed.");
                 setStatusType("error");
             }
-        } catch (error) {
-            setStatusMessage("An unexpected error occurred while updating.");
+        } else {
+            setStatusMessage("Update failed.");
             setStatusType("error");
-        } finally {
-            setLoading(false); // Stop spinner
         }
-    };
+    } catch (error) {
+        setStatusMessage("An unexpected error occurred while updating.");
+        setStatusType("error");
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     const nonEditableFields = [
         'id', 'otp', 'otp_expiry', 'access_token', 'device_token',
@@ -126,6 +135,15 @@ export default function UserUpdate() {
         status_value: translateText("Account Status"),
     };
 
+    const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        setFormData((prev) => ({ ...prev, profile_img: file }));
+        setPreviewImg(URL.createObjectURL(file)); // for preview
+    }
+};
+
+
     return (
         <div className=" mx-auto mt-10 bg-white shadow-md p-6 rounded-md">
             <h2 className="text-3xl font-semibold mb-4 text-center">{translateText("Update User")}</h2>
@@ -139,131 +157,151 @@ export default function UserUpdate() {
             )}
 
 
-            <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit}>
+    <div className="grid grid-cols-2 gap-4">
+        {/* Dynamically render fields */}
+        {Object.entries(formData).map(([key, value]) => {
+            if (nonEditableFields.includes(key)) return null;
+    if (key === 'profile_img') return null;  // Add this line to skip profile_img in loop
 
-                    {/* Dynamically render fields */}
-                    {Object.entries(formData).map(([key, value]) => {
-                        if (nonEditableFields.includes(key)) return null;
+            // Show only status_value, not status
+            if (key === 'status') {
+                return (
+                    <input
+                        key="status"
+                        type="hidden"
+                        name="status"
+                        value={value || ''}
+                        readOnly
+                    />
+                );
+            }
 
-                        // Show only status_value, not status
-                        if (key === 'status') {
-                            return (
-                                <input
-                                    key="status"
-                                    type="hidden"
-                                    name="status"
-                                    value={value || ''}
-                                    readOnly
-                                />
-                            );
-                        }
+            // Render status_value as a dropdown
+            if (key === 'status_value') {
+                return (
+                    <div key="status_value">
+                        <label className="block text-sm font-medium capitalize">
+                            {fieldLabels[key] || 'Status'}
+                        </label>
+                        <select
+                            name="status_value"
+                            value={formData.status_value || ''}
+                            onChange={(e) => {
+                                const selected = e.target.value;
+                                const statusMap = {
+                                    Active: 1,
+                                    Inactive: 2,
+                                    Suspended: 3
+                                };
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    status_value: selected,
+                                    status: statusMap[selected],
+                                }));
+                            }}
+                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                        >
+                            <option value="Active">{translateText("Active")}</option>
+                            <option value="Inactive">{translateText("Inactive")}</option>
+                            <option value="Suspended">{translateText("Suspended")}</option>
+                        </select>
+                    </div>
+                );
+            }
 
-                        // Render status_value as a dropdown
-                        if (key === 'status_value') {
-                            return (
-                                <div key="status_value">
-                                    <label className="block text-sm font-medium capitalize">
-                                        {fieldLabels[key] || 'Status'}
-                                    </label>
-                                    <select
-                                        name="status_value"
-                                        value={formData.status_value || ''}
-                                        onChange={(e) => {
-                                            const selected = e.target.value;
+            return (
+                <div key={key}>
+                    <label className="block text-sm font-medium capitalize">
+                        {fieldLabels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </label>
 
-                                            // Map to correct status values for backend
-                                            const statusMap = {
-                                                Active: 1,
-                                                Inactive: 2,
-                                                Suspended: 3
-                                            };
+                    {key === 'user_type' ? (
+                        <select
+                            name={key}
+                            value={value}
+                            onChange={handleChange}
+                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                        >
+                            <option value="2">{translateText("social_worker")}</option>
+                            <option value="3">{translateText("patient")}</option>
+                            <option value="4">{translateText("user")}</option>
+                            <option value="1" hidden>{translateText("doctor")}</option>
+                        </select>
+                    ) : key === 'gender' ? (
+                        <select
+                            name={key}
+                            value={value}
+                            onChange={handleChange}
+                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                        >
+                            <option value="">{translateText("Select Gender")}</option>
+                            <option value="Male">{translateText("Male")}</option>
+                            <option value="Female">{translateText("Female")}</option>
+                        </select>
+                    ) : (
+                        <input
+                            type={key === 'password' ? 'password' : 'text'}
+                            name={key}
+                            value={value}
+                            onChange={handleChange}
+                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
+                        />
+                    )}
 
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                status_value: selected,
-                                                status: statusMap[selected], // set actual value expected by API
-                                            }));
-                                        }}
-                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                                    >
-                                        <option value="Active">{translateText("Active")}</option>
-                                        <option value="Inactive">{translateText("Inactive")}</option>
-                                        <option value="Suspended">{translateText("Suspended")}</option>
-                                    </select>
-
-                                </div>
-                            );
-                        }
-
-                        // Regular input or select
-                        return (
-                            <div key={key}>
-                                <label className="block text-sm font-medium capitalize">
-                                    {fieldLabels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                                </label>
-                                {key === 'user_type' ? (
-                                    <select
-                                        name={key}
-                                        value={value}
-                                        onChange={handleChange}
-                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                                    >
-                                        <option value="2">{translateText("social_worker")}</option>
-                                        <option value="3">{translateText("patient")}</option>
-                                        <option value="4">{translateText("user")}</option>
-                                        <option value="1" hidden>{translateText("doctor")}</option>
-                                    </select>
-                                ) : key === 'gender' ? (
-                                    <select
-                                        name={key}
-                                        value={value}
-                                        onChange={handleChange}
-                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                                    >
-                                        <option value="">{translateText("Select Gender")}</option>
-                                        <option value="Male">{translateText("Male")}</option>
-                                        <option value="Female">{translateText("Female")}</option>
-                                    </select>
-                                ) : (
-                                    <input
-                                        type={key === 'password' ? 'password' : 'text'}
-                                        name={key}
-                                        value={value}
-                                        onChange={handleChange}
-                                        className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                                    />
-                                )}
-
-                                {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
-                            </div>
-                        );
-                    })}
+                    {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
                 </div>
-                {/* Submit Button */}
-                <div className="flex justify-center gap-4 mt-6">
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
-                    >
-                        {loading ? (
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-                        ) : (
-                            translateText("Update")
-                        )}
-                    </button>
+            );
+        })}
 
-                    <button
-                        type="button"
-                        onClick={() => router.push('/user/userList')}
-                        className="bg-gray-400 text-white px-4 py-2 rounded-xl hover:bg-gray-500"
-                    >
-                        {translateText("Cancel")}
-                    </button>
-                </div>
+        <div className="col-span-2">
+            <label className="block text-sm font-medium">
+                {fieldLabels.profile_img || "Profile Image"}
+            </label>
 
-            </form>
+            {previewImg && (
+                <a href={previewImg} target="_blank" rel="noopener noreferrer">
+                    <img
+                        src={previewImg}
+                        alt="Profile Preview"
+                        className="h-24 w-24 object-cover border rounded-full my-2"
+                    />
+                </a>
+            )}
+
+            <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="mt-2"
+            />
+        </div>
+    </div>
+
+    {/* Submit & Cancel Buttons */}
+    <div className="flex justify-center gap-4 mt-6">
+        <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
+        >
+            {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+            ) : (
+                translateText("Update")
+            )}
+        </button>
+
+        <button
+            type="button"
+            onClick={() => router.push('/user/userList')}
+            className="bg-gray-400 text-white px-4 py-2 rounded-xl hover:bg-gray-500"
+        >
+            {translateText("Cancel")}
+        </button>
+    </div>
+</form>
+
         </div>
     );
 }

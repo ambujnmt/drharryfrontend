@@ -288,10 +288,7 @@ export async function updateUser(id, data) {
   try {
     const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/update-user/${id}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+      body: data, // send FormData directly
     });
 
     const result = await response.json();
@@ -301,6 +298,7 @@ export async function updateUser(id, data) {
     return { status: false, message: "API call failed" };
   }
 }
+
 
 export const changeUserStatus = async (userId, status) => {
   try {
@@ -421,32 +419,32 @@ export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, sch
   }
 };
 
-export const deleteAssignedScheduler = async (data) => {
-  const formData = new FormData();
-  for (const key in data) {
-    formData.append(key, data[key]);
-  }
-
-  try {
-    const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-assign-schedular', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server responded with ${response.status}`);
+  export const deleteAssignedScheduler = async (data) => {
+    const formData = new FormData();
+    for (const key in data) {
+      formData.append(key, data[key]);
     }
 
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error("API Error:", error);
-    return {
-      status: false,
-      message: "An error occurred while deleting."
-    };
-  }
-};
+    try {
+      const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-assign-schedular', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error("API Error:", error);
+      return {
+        status: false,
+        message: "An error occurred while deleting."
+      };
+    }
+  };
 
 export async function fetchProfile(userId) {
   const response = await fetch(

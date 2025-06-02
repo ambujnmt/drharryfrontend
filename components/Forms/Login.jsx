@@ -7,9 +7,7 @@ import { loginUser } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
 import { useUser } from "../../context/UserContext";
-import { useAdmin } from "../../context/AdminContext"; 
-
-
+import { useAdmin } from "../../context/AdminContext";
 
 
 export default function LoginForm() {
@@ -19,8 +17,8 @@ export default function LoginForm() {
   const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
   const [loading, setLoading] = useState(false);
-    const { admin, loginAdmin } = useAdmin();
-const [checking, setChecking] = useState(true);
+  const { admin, loginAdmin } = useAdmin();
+  const [checking, setChecking] = useState(true);
 
 
   useEffect(() => {
@@ -31,13 +29,13 @@ const [checking, setChecking] = useState(true);
     let newErrors = {};
 
     if (!formData.email) {
-      newErrors.email = translateText("emailRequired");
+      newErrors.email = "Required";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
       newErrors.email = translateText("invalidEmail");
     }
 
     if (!formData.password) {
-      newErrors.password = translateText("passwordRequired");
+      newErrors.password = "Required";
     } else if (formData.password.length < 6) {
       newErrors.password = translateText("passwordMinLength");
     }
@@ -53,29 +51,29 @@ const [checking, setChecking] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
 
   const { user, setUser, setUserEmail } = useUser();
-//   useEffect(() => {
-//     if (user) {
-//     }
-//   }, [user]);
+  //   useEffect(() => {
+  //     if (user) {
+  //     }
+  //   }, [user]);
 
-//  if (user) {
-//   router.push("/dashboard");
-//   return null; // Prevent login form from rendering
-// }
+  //  if (user) {
+  //   router.push("/dashboard");
+  //   return null; // Prevent login form from rendering
+  // }
 
-useEffect(() => {
-  // wait one tick to simulate loading context or read localStorage yourself
-  setChecking(false);
-}, []);
+  useEffect(() => {
+    // wait one tick to simulate loading context or read localStorage yourself
+    setChecking(false);
+  }, []);
 
-if (checking) {
-  return null; // or spinner
-}
+  if (checking) {
+    return null; // or spinner
+  }
 
-if (admin || user) {
-  router.replace("/dashboard");
-  return null;
-}
+  if (admin || user) {
+    router.replace("/dashboard");
+    return null;
+  }
 
 
   const handleSubmit = async (e) => {
@@ -161,7 +159,11 @@ if (admin || user) {
           <form onSubmit={handleSubmit}>
             <div className=" w-full  gap-2">
               <Input
-                label={translateText("email")}
+                label={
+                  <span className="text-white">
+                    {translateText("email")} <span className="text-gray-300">*</span>
+                  </span>
+                }
                 type="email"
                 name="email"
                 variant="underlined"
@@ -176,7 +178,11 @@ if (admin || user) {
             </div>
             <div >
               <Input
-                label={translateText("password")}
+                label={
+                  <span className="text-white">
+                    {translateText("password")} <span className="text-gray-300">*</span>
+                  </span>
+                }
                 variant="underlined"
                 type="password"
                 name="password"
@@ -202,7 +208,7 @@ if (admin || user) {
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                 translateText("login") 
+                translateText("login")
               )}
             </button>
             <div

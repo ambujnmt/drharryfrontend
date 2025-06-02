@@ -86,7 +86,7 @@ export default function AddUser() {
     const startIndex = (currentPage - 1) * usersPerPage;
     const currentUsers = sortedUsers.slice(startIndex, startIndex + usersPerPage);
 
-    
+
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
@@ -108,7 +108,7 @@ export default function AddUser() {
 
     return (
         <div className="w-full bg-gray-100">
-            <div className="w-full space-y-5 bg-gray-100 shadow-lg rounded-lg p-4">
+            <div className="w-full space-y-5 bg-gray-100 shadow-lg rounded-lg p-2">
                 <div className="md:p-4 mt-5 bg-white  rounded-xl">
                     <div className="flex justify-between">
 

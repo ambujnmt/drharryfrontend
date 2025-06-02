@@ -11,11 +11,12 @@ export default function Otp() {
   const { setRegisteredUser } = useRegisteredUser(); // Access the setRegisteredUser function
   const [clientLocale, setClientLocale] = useState("");
   const [enteredEmail, setEnteredEmail] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");  
-  const [errorMessage, setErrorMessage] = useState(""); 
-  const [loading, setloading] = useState(false); 
-  const [isError, setIsError] = useState(false); 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setloading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const hiddenLinkRef = useRef(null);
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
@@ -24,8 +25,13 @@ export default function Otp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!enteredEmail) {
-      alert("Please enter your email.");
+    // Clear existing messages
+    setSuccessMessage("");
+    setErrorMessage("");
+    setEmailError("");
+
+    if (!enteredEmail.trim()) {
+      setEmailError(translateText("Required"));
       return;
     }
 
@@ -40,30 +46,26 @@ export default function Otp() {
         const successMsg = locale === 'ita' ? response.message_italian : response.message;
         setSuccessMessage(successMsg);
         setIsError(false);
-        setErrorMessage("");
-
-        // Set the registered user email in the context
-        setRegisteredUser(enteredEmail);  // Update context with entered email
+        setRegisteredUser(enteredEmail);
 
         setTimeout(() => {
           hiddenLinkRef.current?.click();
         }, 1000);
       } else {
-        setSuccessMessage("");
-        setIsError(true);
         const errorMsg = locale === 'ita' ? response.message_italian : response.message;
+        setIsError(true);
         setErrorMessage(errorMsg);
       }
     } catch (error) {
       setloading(false);
-      setSuccessMessage("");
       setIsError(true);
       setErrorMessage(error.message);
     }
   };
 
+
   return (
-<div
+    <div
       className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
     >      <div className="absolute top-2 right-2">
@@ -91,6 +93,11 @@ export default function Otp() {
           {isError && errorMessage && (
             <p className="text-center my-4 text-white">{errorMessage}</p>
           )}
+
+          {emailError && (
+            <p className="text-center my-4 text-white">{emailError}</p>
+          )}
+
           <div>
             <Input
               classNames={{ input: "text-black text-center", }}
@@ -108,11 +115,11 @@ export default function Otp() {
             disabled={loading}
             className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B]"
           >
-               {loading ? (
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        ) : (
-            translateText("after_you")
-          )}
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              translateText("after_you")
+            )}
           </button>
 
           {/* Hidden Link - triggers only if email is entered */}

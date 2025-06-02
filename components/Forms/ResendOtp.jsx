@@ -21,39 +21,42 @@ export default function ResendOtp() {
     setClientLocale(locale.toUpperCase());
   }, [locale]);
 
-  const handleOtpVerify = async (e) => {
-    e.preventDefault();
+const handleOtpVerify = async (e) => {
+  e.preventDefault();
 
-    if (!enteredOtp) {
-      alert("Please enter OTP.");
-      return;
-    }
+  setErrorMessage("");
+  setSuccessMessage("");
 
-    setloading(true);
+  if (!enteredOtp.trim()) {
+    setErrorMessage("Please enter the OTP sent to your email");
+    return;
+  }
 
-    try {
-      const response = await verifyResendOtpApi(registeredUserEmail, enteredOtp);
+  setloading(true);
 
-      setloading(false);
+  try {
+    const response = await verifyResendOtpApi(registeredUserEmail, enteredOtp);
 
-      if (response.status) {
-        setSuccessMessage(response.message);
-        setErrorMessage("");
+    setloading(false);
 
+    if (response.status) {
+      setSuccessMessage(response.message);
+      setErrorMessage("");
 
-        setTimeout(() => {
-          otpLinkRef.current?.click();
-        }, 2000);
-      } else {
-        setSuccessMessage("");
-        setErrorMessage(response.message);
-      }
-    } catch (error) {
-      setloading(false);
-      setErrorMessage(error.message);
+      setTimeout(() => {
+        otpLinkRef.current?.click();
+      }, 2000);
+    } else {
       setSuccessMessage("");
+      setErrorMessage(response.message);
     }
-  };
+  } catch (error) {
+    setloading(false);
+    setSuccessMessage("");
+    setErrorMessage(error.message);
+  }
+};
+
 
   return (
     <div

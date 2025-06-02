@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState,useRef  } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
@@ -18,8 +18,8 @@ export default function NewPass() {
     const [successMessage, setSuccessMessage] = useState("");
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
-      const [loading, setloading] = useState(false); 
-    
+    const [loading, setloading] = useState(false);
+
 
     useEffect(() => {
         setClientLocale(locale.toUpperCase());
@@ -28,10 +28,10 @@ export default function NewPass() {
     const validate = () => {
         let newErrors = {};
         if (!formData.password) {
-            newErrors.password = "Password is required";
+            newErrors.password = "Required";
         }
         if (!formData.c_password) {
-            newErrors.c_password = "Confirm Password is required";
+            newErrors.c_password = "Required";
         }
         if (formData.password && formData.c_password && formData.password !== formData.c_password) {
             newErrors.c_password = "Passwords do not match";
@@ -50,7 +50,7 @@ export default function NewPass() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validate()) return;
         console.log("registeredUserEmail:", registeredUserEmail);
 
@@ -59,43 +59,43 @@ export default function NewPass() {
             return;
         }
         setloading(true);
-        
+
         try {
             const result = await createNewPasswordApi(registeredUserEmail, formData.password);
-            
+
             setloading(false);
 
             setSuccessMessage(locale === "ita" ? result.message_italian : result.message);
-    
+
             setFormData({ password: "", c_password: "" });
-    
+
             setTimeout(() => {
                 linkRef.current?.click();
             }, 1000);
-            
+
         } catch (err) {
             setloading(false);
             const formattedErrors = {};
-            
+
             if (err.errors?.password) {
                 formattedErrors.password = err.errors.password[0];
             }
-    
+
             if (err.errors?.email) {
                 formattedErrors.api = err.errors.email[0];
             }
-    
+
             setErrors(formattedErrors);
         }
     };
-    
-    
+
+
 
     return (
-<div
-      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
-    >            <div className="absolute top-2 right-2">
+        <div
+            className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+            style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+        >            <div className="absolute top-2 right-2">
                 <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
                     <Dropdown>
                         <DropdownTrigger>
@@ -112,7 +112,7 @@ export default function NewPass() {
             </div>
 
             <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
-            <div className="w-full md:w-1/2 flex flex-col justify-center">
+                <div className="w-full md:w-1/2 flex flex-col justify-center">
                     <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">
                         {translateText("new_pass")}
                     </h2>
@@ -124,7 +124,11 @@ export default function NewPass() {
                     <form onSubmit={handleSubmit}>
                         <div className="w-full gap-2">
                             <Input
-                                label={translateText("password")}
+                                label={
+                                    <span className="text-white">
+                                        {translateText("password")} <span className="text-gray-300">*</span>
+                                    </span>
+                                }
                                 variant="underlined"
                                 type="password"
                                 name="password"
@@ -140,7 +144,11 @@ export default function NewPass() {
 
                         <div className="mb-16">
                             <Input
-                                label={translateText("c_password")}
+                                label={
+                                    <span className="text-white">
+                                        {translateText("c_password")} <span className="text-gray-300">*</span>
+                                    </span>
+                                }
                                 variant="underlined"
                                 type="password"
                                 name="c_password"
@@ -165,11 +173,11 @@ export default function NewPass() {
                             disabled={loading}
                             className="font-bold w-full text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] border-1 border-white  py-2 flex items-center justify-center"
                         >
-                              {loading ? (
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        ) : (
-                            translateText("enter")
-                        )}
+                            {loading ? (
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            ) : (
+                                translateText("enter")
+                            )}
                         </button>
                     </form>
                 </div>

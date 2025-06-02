@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { fetchUsers } from '../../utils/fetchApi';
 import { LanguageContext } from "../../context/LanguageContext";
+import { FaEye } from "react-icons/fa";
+import { Link } from '@heroui/react';
 
 
 export default function UserDetail() {
@@ -56,13 +58,33 @@ export default function UserDetail() {
                     </h2>
                     <ul className="space-y-2 text-gray-700">
                         {Object.entries(user).map(([key, value]) => {
-                            if (key === 'status' || key === "user_type") return null; // Skip status
+                            if (key === 'status' || key === "user_type") return null;
+                            if (key === 'profile_img') {
+                                return (
+                                    <li key={key} className='items-center flex gap-2'
+                                    >
+                                        <strong className="capitalize">{key.replace(/_/g, ' ')}:</strong>{' '}
+                                        {value ? (
+                                            <Link
+                                                href={value}
+                                                target="_blank"
+                                            >
+                                                <FaEye />
+                                            </Link>
+                                        ) : (
+                                            "No profile picture uploaded"
+                                        )}
+                                    </li>
+                                );
+                            }
+
                             return (
                                 <li key={key}>
                                     <strong className="capitalize">{key.replace(/_/g, ' ')}:</strong> {value}
                                 </li>
                             );
                         })}
+
 
                     </ul>
                 </div>

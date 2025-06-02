@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import SideMenu from "../../../components/Menu/SideMenu";
-import Header from "../../../components/Menu/Header";
-import Footer from "../../../components/Menu/Footer";
-import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
-import EditSchedule from "../../../components/Patient/EditSchedule";
+import SideMenu from "../../../../components/Menu/SideMenu";
+import Header from "../../../../components/Menu/Header";
+import Footer from "../../../../components/Menu/Footer";
+import PrivateRoute from "../../../../components/PrivateRoute/PrivateRoute";
+import EditSchedule from "../../../../components/Patient/EditSchedule";
 
 export default function AddUserPage() {
   const [menuOpen, setMenuOpen] = useState(false); 

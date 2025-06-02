@@ -5,9 +5,9 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { adminLogin } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
-import { useAdmin } from "../../context/AdminContext"; 
+import { useAdmin } from "../../context/AdminContext";
 import { useUser } from "../../context/UserContext";
-import {Head} from "../../layouts/head"
+import { Head } from "../../layouts/head"
 
 
 export default function AdminLogin() {
@@ -17,9 +17,9 @@ export default function AdminLogin() {
     const { switchLanguage, locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
     const [loading, setLoading] = useState(false);
-  const { user } = useUser(); // get user context
-const [checking, setChecking] = useState(true);
-const [isLoadingUser, setIsLoadingUser] = useState(true);
+    const { user } = useUser(); // get user context
+    const [checking, setChecking] = useState(true);
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
 
 
     useEffect(() => {
@@ -30,13 +30,13 @@ const [isLoadingUser, setIsLoadingUser] = useState(true);
         let newErrors = {};
 
         if (!formData.email) {
-            newErrors.email = translateText("emailRequired");
+            newErrors.email = "Required";
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
             newErrors.email = translateText("invalidEmail");
         }
 
         if (!formData.password) {
-            newErrors.password = translateText("passwordRequired");
+            newErrors.password = "Required";
         } else if (formData.password.length < 6) {
             newErrors.password = translateText("passwordMinLength");
         }
@@ -53,26 +53,26 @@ const [isLoadingUser, setIsLoadingUser] = useState(true);
 
     const { admin, loginAdmin } = useAdmin();
 
-useEffect(() => {
-  // Simulate async check or just wait for context to settle
-  if (user !== undefined && admin !== undefined) {
-    setIsLoadingUser(false);
-  }
-}, [user, admin]);
+    useEffect(() => {
+        // Simulate async check or just wait for context to settle
+        if (user !== undefined && admin !== undefined) {
+            setIsLoadingUser(false);
+        }
+    }, [user, admin]);
 
-useEffect(() => {
-  // wait one tick to simulate loading context or read localStorage yourself
-  setChecking(false);
-}, []);
+    useEffect(() => {
+        // wait one tick to simulate loading context or read localStorage yourself
+        setChecking(false);
+    }, []);
 
-if (checking) {
-  return null; // or spinner
-}
+    if (checking) {
+        return null; // or spinner
+    }
 
-if (admin || user) {
-  router.replace("/dashboard");
-  return null;
-}
+    if (admin || user) {
+        router.replace("/dashboard");
+        return null;
+    }
 
 
     const handleSubmit = async (e) => {
@@ -104,12 +104,12 @@ if (admin || user) {
     };
 
     return (
-        
+
         <div
-        className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+            className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
+            style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
         >
-        <Head title="Admin Login" />
+            <Head title="Admin Login" />
             <div className="absolute top-2 right-2">
                 <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
                     <Dropdown>
@@ -139,7 +139,11 @@ if (admin || user) {
                     <form onSubmit={handleSubmit}>
                         <div className=" w-full  gap-2">
                             <Input
-                                label={translateText("email")}
+                                label={
+                                    <span className="text-white">
+                                        {translateText("email")} <span className="text-gray-300">*</span>
+                                    </span>
+                                }
                                 type="email"
                                 name="email"
                                 variant="underlined"
@@ -154,7 +158,11 @@ if (admin || user) {
                         </div>
                         <div >
                             <Input
-                                label={translateText("password")}
+                                label={
+                                    <span className="text-white">
+                                        {translateText("password")} <span className="text-gray-300">*</span>
+                                    </span>
+                                }
                                 variant="underlined"
                                 type="password"
                                 name="password"
