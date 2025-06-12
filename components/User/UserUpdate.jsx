@@ -67,6 +67,51 @@ useEffect(() => {
         return Object.keys(newErrors).length === 0;
     };
 
+// const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!validate()) return;
+//     setLoading(true);
+
+//     try {
+//         const formPayload = new FormData();
+
+//         for (let key in formData) {
+//             // Attach image file directly
+//             if (key === "profile_img" && formData[key] instanceof File) {
+//                 formPayload.append(key, formData[key]);
+//             } else {
+//                 formPayload.append(key, formData[key]);
+//             }
+//         }
+
+//         // Send FormData instead of JSON
+//         const res = await updateUser(id, formPayload, true); // assume 'true' tells the function it's multipart
+
+//         if (res?.status === true) {
+//             const statusUpdate = await changeUserStatus(id, formData.status);
+
+//             if (statusUpdate.status === true) {
+//                 setStatusMessage(res?.message || res?.message_italian);
+//                 setStatusType("success");
+//                 setTimeout(() => {
+//                     router.replace('/user/userList');
+//                 }, 1500);
+//             } else {
+//                 setStatusMessage("Status update failed.");
+//                 setStatusType("error");
+//             }
+//         } else {
+//             setStatusMessage("Update failed.");
+//             setStatusType("error");
+//         }
+//     } catch (error) {
+//         setStatusMessage("An unexpected error occurred while updating.");
+//         setStatusType("error");
+//     } finally {
+//         setLoading(false);
+//     }
+// };
+
 const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -76,16 +121,27 @@ const handleSubmit = async (e) => {
         const formPayload = new FormData();
 
         for (let key in formData) {
+            const value = formData[key];
+
+            // Skip empty or undefined fields
+            if (
+                value === undefined ||
+                value === null ||
+                value === '' ||
+                (typeof value === 'string' && value.trim() === '')
+            ) {
+                continue;
+            }
+
             // Attach image file directly
-            if (key === "profile_img" && formData[key] instanceof File) {
-                formPayload.append(key, formData[key]);
+            if (key === "profile_img" && value instanceof File) {
+                formPayload.append(key, value);
             } else {
-                formPayload.append(key, formData[key]);
+                formPayload.append(key, value);
             }
         }
 
-        // Send FormData instead of JSON
-        const res = await updateUser(id, formPayload, true); // assume 'true' tells the function it's multipart
+        const res = await updateUser(id, formPayload, true);
 
         if (res?.status === true) {
             const statusUpdate = await changeUserStatus(id, formData.status);
@@ -101,17 +157,17 @@ const handleSubmit = async (e) => {
                 setStatusType("error");
             }
         } else {
-            setStatusMessage("Update failed.");
+            setStatusMessage(res?.message || "Update failed.");
             setStatusType("error");
         }
     } catch (error) {
+        console.error("Update error:", error);
         setStatusMessage("An unexpected error occurred while updating.");
         setStatusType("error");
     } finally {
         setLoading(false);
     }
 };
-
 
     const nonEditableFields = [
         'id', 'otp', 'otp_expiry', 'access_token', 'device_token',

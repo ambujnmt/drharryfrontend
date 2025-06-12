@@ -135,9 +135,8 @@ export default function AddUser() {
                         </div>
                     ) : (
                         <>
-
                             <div className="overflow-x-auto">
-                                <table className="bg-white  -gray-300 text-sm text-left w-full">
+                                <table className="bg-white text-sm text-left w-full table-fixedy">
                                     <thead className="bg-gray-200 text-gray-700">
                                         <tr>
                                             <th className=" px-4 py-2">{translateText("S.No.")}</th>

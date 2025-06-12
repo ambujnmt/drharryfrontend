@@ -299,7 +299,6 @@ export async function updateUser(id, data) {
   }
 }
 
-
 export const changeUserStatus = async (userId, status) => {
   try {
     const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/change-user-status`, {
