@@ -274,3 +274,7 @@ body .table-wrapper::-webkit-scrollbar {
 #recaptcha {
   display: none;
 }
+
+.ulEdit{
+      padding-left: 0.5rem
+}

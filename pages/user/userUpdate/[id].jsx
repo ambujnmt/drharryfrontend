@@ -41,7 +41,7 @@ export default function AddUserPage() {
           menuOpen={menuOpen}
           toggleMenu={() => setMenuOpen(!menuOpen)}
         />
-
+        
         <div className="flex-1 overflow-auto p-5 bg-gray-100">
           <UserUpdate />
         </div>

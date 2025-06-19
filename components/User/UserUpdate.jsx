@@ -1,7 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { fetchUsers, updateUser, changeUserStatus } from '../../utils/fetchApi';
 import { LanguageContext } from "../../context/LanguageContext";
+import PageTitle from '../Breadcrumb/PageTitle';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Card, Form } from "react-bootstrap";
+import { useDropzone } from 'react-dropzone';
+import { IoCloudUploadOutline } from "react-icons/io5";
 
 export default function UserUpdate() {
     const router = useRouter();
@@ -17,32 +22,58 @@ export default function UserUpdate() {
     const [previewImg, setPreviewImg] = useState("");
 
 
+    const onDrop = useCallback((acceptedFiles) => {
+        if (acceptedFiles && acceptedFiles.length > 0) {
+            const file = acceptedFiles[0];
+
+            if (!file.type.startsWith("image/")) {
+                setErrors({ profile_img: "Please upload a valid image." });
+                return;
+            }
+
+            setPreviewImg(URL.createObjectURL(file));
+            setFormData((prev) => ({ ...prev, profile_img: file })); // ✅ Add this line
+            setErrors((prev) => ({ ...prev, profile_img: null }));
+
+        }
+    }, []);
+
+
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: {
+            'image/*': ['.jpeg', '.jpg', '.png', '.gif']
+        },
+        multiple: true
+    });
+
     useEffect(() => {
         setClientLocale(locale.toUpperCase());
     }, [locale]);
 
 
-useEffect(() => {
-    const getUserFromList = async () => {
-        const allUsers = await fetchUsers();
-        if (allUsers?.data && id) {
-            const foundUser = allUsers.data.find(u => u.id.toString() === id.toString());
-            if (foundUser) {
-                setFormData({
-                    ...foundUser,
-                    password: '********' // display dummy asterisks
-                });
+    useEffect(() => {
+        const getUserFromList = async () => {
+            const allUsers = await fetchUsers();
+            if (allUsers?.data && id) {
+                const foundUser = allUsers.data.find(u => u.id.toString() === id.toString());
+                if (foundUser) {
+                    setFormData({
+                        ...foundUser,
+                        password: '********' // display dummy asterisks
+                    });
 
-                if (foundUser.profile_img) {
-                    setPreviewImg(foundUser.profile_img);
+                    if (foundUser.profile_img) {
+                        setPreviewImg(foundUser.profile_img);
+                    }
                 }
             }
-        }
 
-        setLoading(false);
-    };
-    if (id) getUserFromList();
-}, [id]);
+            setLoading(false);
+        };
+        if (id) getUserFromList();
+    }, [id]);
 
 
     const handleChange = e => {
@@ -67,107 +98,62 @@ useEffect(() => {
         return Object.keys(newErrors).length === 0;
     };
 
-// const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!validate()) return;
-//     setLoading(true);
 
-//     try {
-//         const formPayload = new FormData();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!validate()) return;
+        setLoading(true);
 
-//         for (let key in formData) {
-//             // Attach image file directly
-//             if (key === "profile_img" && formData[key] instanceof File) {
-//                 formPayload.append(key, formData[key]);
-//             } else {
-//                 formPayload.append(key, formData[key]);
-//             }
-//         }
+        try {
+            const formPayload = new FormData();
 
-//         // Send FormData instead of JSON
-//         const res = await updateUser(id, formPayload, true); // assume 'true' tells the function it's multipart
+            for (let key in formData) {
+                const value = formData[key];
 
-//         if (res?.status === true) {
-//             const statusUpdate = await changeUserStatus(id, formData.status);
+                if (
+                    value === undefined ||
+                    value === null ||
+                    value === '' ||
+                    (typeof value === 'string' && value.trim() === '')
+                ) {
+                    continue;
+                }
 
-//             if (statusUpdate.status === true) {
-//                 setStatusMessage(res?.message || res?.message_italian);
-//                 setStatusType("success");
-//                 setTimeout(() => {
-//                     router.replace('/user/userList');
-//                 }, 1500);
-//             } else {
-//                 setStatusMessage("Status update failed.");
-//                 setStatusType("error");
-//             }
-//         } else {
-//             setStatusMessage("Update failed.");
-//             setStatusType("error");
-//         }
-//     } catch (error) {
-//         setStatusMessage("An unexpected error occurred while updating.");
-//         setStatusType("error");
-//     } finally {
-//         setLoading(false);
-//     }
-// };
-
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setLoading(true);
-
-    try {
-        const formPayload = new FormData();
-
-        for (let key in formData) {
-            const value = formData[key];
-
-            // Skip empty or undefined fields
-            if (
-                value === undefined ||
-                value === null ||
-                value === '' ||
-                (typeof value === 'string' && value.trim() === '')
-            ) {
-                continue;
+                if (key === "profile_img" && value instanceof File) {
+                    formPayload.append(key, value);
+                } else {
+                    formPayload.append(key, value);
+                }
             }
 
-            // Attach image file directly
-            if (key === "profile_img" && value instanceof File) {
-                formPayload.append(key, value);
+
+            const res = await updateUser(id, formPayload, true);
+
+            if (res?.status === true) {
+                const statusUpdate = await changeUserStatus(id, formData.status);
+
+                if (statusUpdate.status === true) {
+                    setStatusMessage(res?.message || res?.message_italian);
+                    setStatusType("success");
+                    setTimeout(() => {
+                        router.replace('/user/userList');
+                    }, 1500);
+                } else {
+                    setStatusMessage("Status update failed.");
+                    setStatusType("error");
+                }
             } else {
-                formPayload.append(key, value);
-            }
-        }
-
-        const res = await updateUser(id, formPayload, true);
-
-        if (res?.status === true) {
-            const statusUpdate = await changeUserStatus(id, formData.status);
-
-            if (statusUpdate.status === true) {
-                setStatusMessage(res?.message || res?.message_italian);
-                setStatusType("success");
-                setTimeout(() => {
-                    router.replace('/user/userList');
-                }, 1500);
-            } else {
-                setStatusMessage("Status update failed.");
+                setStatusMessage(res?.message);
                 setStatusType("error");
             }
-        } else {
-            setStatusMessage(res?.message || "Update failed.");
+        } catch (error) {
+            console.error("Update error:", error);
+            setStatusMessage("An unexpected error occurred while updating.");
             setStatusType("error");
+        } finally {
+            setLoading(false);
         }
-    } catch (error) {
-        console.error("Update error:", error);
-        setStatusMessage("An unexpected error occurred while updating.");
-        setStatusType("error");
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     const nonEditableFields = [
         'id', 'otp', 'otp_expiry', 'access_token', 'device_token',
@@ -191,173 +177,212 @@ const handleSubmit = async (e) => {
         status_value: translateText("Account Status"),
     };
 
-    const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        setFormData((prev) => ({ ...prev, profile_img: file }));
-        setPreviewImg(URL.createObjectURL(file)); // for preview
-    }
-};
-
 
     return (
-        <div className=" mx-auto mt-10 bg-white shadow-md p-6 rounded-md">
-            <h2 className="text-3xl font-semibold mb-4 text-center">{translateText("Update User")}</h2>
-
-            {statusMessage && (
-                <div
-                    className={` mb-4 text-center ${statusType === 'success' ? 'text-green-500' : 'text-red-500'}`}
-                >
-                    {statusMessage}
-                </div>
-            )}
-
-
-          <form onSubmit={handleSubmit}>
-    <div className="grid grid-cols-2 gap-4">
-        {/* Dynamically render fields */}
-        {Object.entries(formData).map(([key, value]) => {
-            if (nonEditableFields.includes(key)) return null;
-    if (key === 'profile_img') return null;  // Add this line to skip profile_img in loop
-
-            // Show only status_value, not status
-            if (key === 'status') {
-                return (
-                    <input
-                        key="status"
-                        type="hidden"
-                        name="status"
-                        value={value || ''}
-                        readOnly
-                    />
-                );
-            }
-
-            // Render status_value as a dropdown
-            if (key === 'status_value') {
-                return (
-                    <div key="status_value">
-                        <label className="block text-sm font-medium capitalize">
-                            {fieldLabels[key] || 'Status'}
-                        </label>
-                        <select
-                            name="status_value"
-                            value={formData.status_value || ''}
-                            onChange={(e) => {
-                                const selected = e.target.value;
-                                const statusMap = {
-                                    Active: 1,
-                                    Inactive: 2,
-                                    Suspended: 3
-                                };
-                                setFormData((prev) => ({
-                                    ...prev,
-                                    status_value: selected,
-                                    status: statusMap[selected],
-                                }));
-                            }}
-                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                        >
-                            <option value="Active">{translateText("Active")}</option>
-                            <option value="Inactive">{translateText("Inactive")}</option>
-                            <option value="Suspended">{translateText("Suspended")}</option>
-                        </select>
-                    </div>
-                );
-            }
-
-            return (
-                <div key={key}>
-                    <label className="block text-sm font-medium capitalize">
-                        {fieldLabels[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </label>
-
-                    {key === 'user_type' ? (
-                        <select
-                            name={key}
-                            value={value}
-                            onChange={handleChange}
-                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                        >
-                            <option value="2">{translateText("social_worker")}</option>
-                            <option value="3">{translateText("patient")}</option>
-                            <option value="4">{translateText("user")}</option>
-                            <option value="1" hidden>{translateText("doctor")}</option>
-                        </select>
-                    ) : key === 'gender' ? (
-                        <select
-                            name={key}
-                            value={value}
-                            onChange={handleChange}
-                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                        >
-                            <option value="">{translateText("Select Gender")}</option>
-                            <option value="Male">{translateText("Male")}</option>
-                            <option value="Female">{translateText("Female")}</option>
-                        </select>
-                    ) : (
-                        <input
-                            type={key === 'password' ? 'password' : 'text'}
-                            name={key}
-                            value={value}
-                            onChange={handleChange}
-                            className="w-full border-2 border-gray-200 rounded-xl px-3 py-1.5"
-                        />
-                    )}
-
-                    {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
-                </div>
-            );
-        })}
-
-        <div className="col-span-2">
-            <label className="block text-sm font-medium">
-                {fieldLabels.profile_img || "Profile Image"}
-            </label>
-
-            {previewImg && (
-                <a href={previewImg} target="_blank" rel="noopener noreferrer">
-                    <img
-                        src={previewImg}
-                        alt="Profile Preview"
-                        className="h-24 w-24 object-cover border rounded-full my-2"
-                    />
-                </a>
-            )}
-
-            <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="mt-2"
+        <div>
+            <PageTitle
+                breadCrumbItems={[
+                    { label: "Dashboard", path: "/dashboard" },
+                    { label: "User List", path: "/user/userList" },
+                    { label: "Update User", active: true },
+                ]}
+                title={translateText("Update User")}
             />
-        </div>
-    </div>
+            <Card>
+                <Card.Body>
+                    <div>
 
-    {/* Submit & Cancel Buttons */}
-    <div className="flex justify-center gap-4 mt-6">
-        <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
-        >
-            {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-            ) : (
-                translateText("Update")
-            )}
-        </button>
+                        {statusMessage && (
+                            <div
+                                className={` mb-4 text-center ${statusType === 'success' ? 'text-green-500' : 'text-red-500'}`}
+                            >
+                                {statusMessage}
+                            </div>
+                        )}
 
-        <button
-            type="button"
-            onClick={() => router.push('/user/userList')}
-            className="bg-gray-400 text-white px-4 py-2 rounded-xl hover:bg-gray-500"
-        >
-            {translateText("Cancel")}
-        </button>
-    </div>
-</form>
+                        <form onSubmit={handleSubmit}>
+                            <div className="grid grid-cols-2 gap-4">
+                                {Object.entries(formData).map(([key, value]) => {
+                                    if (nonEditableFields.includes(key)) return null;
+                                    if (key === 'profile_img') return null;
 
+                                    if (key === 'status') {
+                                        return (
+                                            <input
+                                                key="status"
+                                                type="hidden"
+                                                name="status"
+                                                value={value || ''}
+                                                readOnly
+                                            />
+                                        );
+                                    }
+
+                                    if (key === 'status_value') {
+                                        return (
+                                            <div key="status_value">
+
+                                                <Form.Group controlId="status_value">
+                                                    <Form.Label className='text-sm text-gray-500'>
+                                                        {fieldLabels[key]?.toString() || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                                                    </Form.Label>
+                                                    <Form.Select
+                                                        name="status_value"
+                                                        value={formData.status_value || ''}
+                                                        onChange={(e) => {
+                                                            const selected = e.target.value;
+                                                            const statusMap = {
+                                                                Active: 1,
+                                                                Inactive: 2,
+                                                                Suspended: 3
+                                                            };
+                                                            setFormData((prev) => ({
+                                                                ...prev,
+                                                                status_value: selected,
+                                                                status: statusMap[selected],
+                                                            }));
+                                                        }}
+                                                        className="border-1 border-gray-300 rounded-md"
+                                                    >
+                                                        <option value="Active">{translateText("Active")}</option>
+                                                        <option value="Inactive">{translateText("Inactive")}</option>
+                                                        <option value="Suspended">{translateText("Suspended")}</option>
+                                                    </Form.Select>
+                                                    {errors.userType && (
+                                                        <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
+                                                    )}
+                                                </Form.Group>
+                                            </div>
+                                        );
+                                    }
+
+                                    return (
+                                        <div key={key}>
+                                            <Form.Label className="block text-sm text-gray-500  capitalize labelfix">
+                                                {fieldLabels[key]?.toString() || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+
+                                            </Form.Label>
+
+                                            {key === 'user_type' ? (
+
+                                                <Form.Group controlId="user_type" >
+                                                    <Form.Select
+                                                        name={key}
+                                                        value={value}
+                                                        onChange={handleChange}
+                                                        className="border-1 border-gray-300 rounded-md"
+                                                    >
+                                                        <option value="2">{translateText("social_worker")}</option>
+                                                        <option value="3">{translateText("patient")}</option>
+                                                        <option value="4">{translateText("user")}</option>
+                                                        <option value="1" hidden>{translateText("doctor")}</option>
+                                                    </Form.Select>
+                                                    {errors.userType && (
+                                                        <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
+                                                    )}
+                                                </Form.Group>
+                                            ) : key === 'gender' ? (
+                                                <Form.Group controlId="gender" >
+                                                    <Form.Select
+                                                        name={key}
+                                                        value={value}
+                                                        onChange={handleChange}
+                                                        className="border-1 border-gray-300 rounded-md"
+                                                    >
+
+                                                        <option value="Male">{translateText("Male")}</option>
+                                                        <option value="Female">{translateText("Female")}</option>
+                                                    </Form.Select>
+                                                </Form.Group>
+                                            ) : (
+
+                                                <Form.Group controlId={key}>
+
+                                                    <Form.Control
+                                                        type={key === 'password' ? 'password' : 'text'}
+                                                        name={key}
+                                                        value={value}
+                                                        onChange={handleChange}
+                                                        className="border border-gray-300 rounded-md"
+                                                    />
+                                                    {errors[key] && (
+                                                        <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
+                                                    )}
+                                                </Form.Group>
+
+                                            )}
+
+                                            {errors[key] && <p className="text-red-500 text-sm">{errors[key]}</p>}
+                                        </div>
+                                    );
+                                })}
+
+                                <div className="col-span-2">
+                                    <Form.Group>
+                                        <Form.Label className="text-sm text-gray-500">
+                                            {fieldLabels.profile_img}
+                                        </Form.Label>
+
+                                        {previewImg && (
+                                            <a href={previewImg} target="_blank" rel="noopener noreferrer">
+                                                <img
+                                                    src={previewImg}
+                                                    alt="Profile Preview"
+                                                    className="h-24 w-24 object-cover border rounded-full my-2"
+                                                />
+                                            </a>
+                                        )}
+
+                                        <div
+                                            {...getRootProps()}
+                                            className="border border-dotted rounded p-5 text-center"
+                                            style={{ cursor: 'pointer', background: '#f8f9fa' }}
+                                        >
+                                            <input {...getInputProps()} />
+                                            {
+                                                isDragActive ? (
+                                                    <p>Drop the files here ...</p>
+                                                ) : (
+                                                    <div>
+                                                        <IoCloudUploadOutline className="block m-auto text-[30px] text-gray-500" />
+                                                        <p className="mt-2 text-[23px] font-medium mb-1">Drop your images here, or click to browse</p>
+                                                        <small className="text-[13px] text-gray-500">(1600 x 1200 (4:3) recommended. PNG, JPG and GIF files are allowed)</small>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+
+                                    </Form.Group>
+                                </div>
+
+                            </div>
+
+                            {/* Submit & Cancel Buttons */}
+                            <div className="flex justify-center gap-2 mt-6">
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="btn btn-primary"
+                                >
+                                    {loading ? (
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                                    ) : (
+                                        translateText("Update")
+                                    )}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => router.push('/user/userList')}
+                                    className="btn btn-secondary"                                >
+                                    {translateText("Cancel")}
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </Card.Body>
+            </Card>
         </div>
     );
 }

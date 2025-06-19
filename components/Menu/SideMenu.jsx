@@ -37,7 +37,7 @@ export default function SideMenu({ isOpen, onClose }) {
       </div>
 
       {/* Header */}
-      <div className="w-full h-auto p-4 flex justify-start items-center mt-5 md:mt-0">
+      <div className="w-full h-auto p-4 flex justify-start items-center  md:mt-0">
         <img
           src="https://nmtdevserver.com/welli/logo.png"
           alt="Welli Logo"
@@ -48,7 +48,7 @@ export default function SideMenu({ isOpen, onClose }) {
 
       {/* Scrollable Menu Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <ul className="space-y-2 p-4">
+        <ul className="space-y-2 ulEdit">
           <li className="p-2 flex items-center hover:bg-[#91b4e5] rounded">
             <Link href="/dashboard" className="text-white gap-1 flex items-center">
               <MdDashboard />
@@ -73,7 +73,7 @@ export default function SideMenu({ isOpen, onClose }) {
                   </span>
                 }
               >
-                <ul className="space-y-1 text-[#e1e3e6]">
+                <ul className="space-y-1 text-[#e1e3e6] ulEdit">
                   <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/addUser" className="text-[#e1e3e6]">{translateText("addUser")}</Link></li>
                   <li className="p-2 hover:bg-[#91b4e5] rounded">
                     <Link href="/user/userList" className="text-[#e1e3e6]">
@@ -102,7 +102,7 @@ export default function SideMenu({ isOpen, onClose }) {
                   </span>
                 }
               >
-                <ul className="space-y-1 text-[#e1e3e6]">
+                <ul className="space-y-1 text-[#e1e3e6] ulEdit">
                   <li className="p-2 hover:bg-[#91b4e5]  rounded"><Link href="/patientEntry" className="text-[#e1e3e6]">{translateText("addPatient")}</Link></li>
                   <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/patient/patientAssignment" className="text-[#e1e3e6]">{translateText("Patient Assignment")}</Link></li>
                   <li className="p-2 hover:bg-[#91b4e5] rounded"><Link href="/patient/assignedPatients" className="text-[#e1e3e6]">{translateText("Assigned Patient")}</Link></li>
@@ -111,12 +111,10 @@ export default function SideMenu({ isOpen, onClose }) {
               </AccordionItem>
             </Accordion>
           )}
-
-   
-
-
         </ul>
       </div>
     </div>
   );
 }
+
+

@@ -4,52 +4,45 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import { LanguageProvider } from "../context/LanguageContext";
 import { UserProvider } from "../context/UserContext";
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { RegisteredUserProvider } from "../context/RegisteredUserContext";
-import { AdminProvider } from "../context/AdminContext"; // ✅ Import AdminProvider
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import '../styles/globals.css';
+import { AdminProvider } from "../context/AdminContext";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import "../styles/globals.css";
+const Snackbar = dynamic(() => import("@/components/utils/Snackbar"), { ssr: false });
 
-const Snackbar = dynamic(() => import('@/components/utils/Snackbar'), { ssr: false });
-
-function App({ Component, pageProps, websiteData }) {
+export function App({ Component, pageProps, websiteData }) {
   const router = useRouter();
   const getLayout = Component.getLayout || ((page) => page);
 
   return (
-    <GoogleOAuthProvider clientId="437775872420-c5kcesl6ufgtc673n5mqc8f2k6nkuf3o.apps.googleusercontent.com">
-      <GoogleReCaptchaProvider 
-      reCaptchaKey="6Lf5HicrAAAAAHORx0Kq1vVaVv5YICQUQxkz07J9"
-      scriptProps={{
-        async: true,
-        defer: true,
-        appendTo: 'head',
-        nonce: undefined,
-      }}
-      container={{ 
-        element: "recaptcha-container", 
-        parameters: { badge: 'inline' } 
-      }}
-      >
-        <div id="recaptcha-container" style={{ display: 'none' }}></div>
-        <LanguageProvider>
-          <UserProvider>
-            <RegisteredUserProvider>
-              <AdminProvider> {/* ✅ Wrap your app with AdminProvider */}
-                <HeroUIProvider navigate={router.push}>
-                  <DefaultLayout websiteData={websiteData}>
-                    {getLayout(<Component {...pageProps} />)}
-                  </DefaultLayout>
-                  <Snackbar />
-                </HeroUIProvider>
-              </AdminProvider>
-            </RegisteredUserProvider>
-          </UserProvider>
-        </LanguageProvider>
-        </GoogleReCaptchaProvider >
-    </GoogleOAuthProvider>
+      <GoogleOAuthProvider clientId="437775872420-c5kcesl6ufgtc673n5mqc8f2k6nkuf3o.apps.googleusercontent.com">
+        <GoogleReCaptchaProvider
+          reCaptchaKey="6Lf5HicrAAAAAHORx0Kq1vVaVv5YICQUQxkz07J9"
+          scriptProps={{ async: true, defer: true, appendTo: "head", nonce: undefined }}
+          container={{ element: "recaptcha-container", parameters: { badge: "inline" } }}
+        >
+          <div id="recaptcha-container" style={{ display: "none" }}></div>
+          <LanguageProvider>
+            <UserProvider>
+              <RegisteredUserProvider>
+                <AdminProvider>
+                  <HeroUIProvider navigate={router.push}>
+                    <DefaultLayout websiteData={websiteData}>
+                      {getLayout(<Component {...pageProps} />)}
+                    </DefaultLayout>
+                    <Snackbar />
+                  </HeroUIProvider>
+                </AdminProvider>
+              </RegisteredUserProvider>
+            </UserProvider>
+          </LanguageProvider>
+        </GoogleReCaptchaProvider>
+      </GoogleOAuthProvider>
   );
 }
+
+
 // App.getInitialProps = async () => {
 //   const websiteData = await getWebsiteData('65589cd533555354912975cd');
 //   function rearrangeScripts(scripts) {

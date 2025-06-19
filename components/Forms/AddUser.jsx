@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Input, Select, SelectItem } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
 import { addUser } from "../../utils/fetchApi";
+import { Card, Form, InputGroup } from "react-bootstrap";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import PageTitle from "../Breadcrumb/PageTitle";
 
 export default function AddUser() {
     const { translateText, locale } = useContext(LanguageContext);
@@ -15,15 +18,16 @@ export default function AddUser() {
     const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
-    const [show, setShow] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
     const [errors, setErrors] = useState({});
     const [showSuccess, setShowSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
 
-    useEffect(() => {
-        setClientLocale(locale.toUpperCase());
-        if (Object.keys(errors).length > 0) validate();
-    }, [locale]);
+useEffect(() => {
+    setClientLocale(locale.toUpperCase());
+    // Remove validation here to prevent auto-errors on language switch
+}, [locale]);
 
     const usertype = [
         { key: "1", label: "Doctor" },
@@ -31,7 +35,6 @@ export default function AddUser() {
         { key: "3", label: "Patient" },
         { key: "4", label: "User" },
     ];
-
 
     const validate = () => {
         let newErrors = {};
@@ -54,7 +57,6 @@ export default function AddUser() {
         return Object.keys(newErrors).length === 0;
     };
 
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -65,13 +67,13 @@ export default function AddUser() {
         e.preventDefault();
         if (!validate()) return;
 
-        setLoading(true); // Show button spinner
+        setLoading(true);
 
         const apiData = {
             name: formData.name,
             email: formData.email,
             password: password,
-            user_type: formData.userType, // This is now "1", "2", etc.
+            user_type: formData.userType,
         };
 
         const result = await addUser(apiData);
@@ -81,7 +83,6 @@ export default function AddUser() {
             setSuccessMessage(result.message);
             setTimeout(() => setShowSuccess(false), 3000);
 
-            // Clear form
             setFormData({ name: "", email: "", userType: "" });
             setPassword("");
             setConfirm("");
@@ -94,124 +95,153 @@ export default function AddUser() {
     };
 
     return (
-        <div className="w-full bg-gray-100 md:p-6 p-0">
-            <div className="w-full space-y-5 bg-white shadow-lg rounded-lg p-4 ">
-                <div className="md:p-4">
-                    <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">Add Users</h2>
-                    <form onSubmit={handleSubmit}>
-                        {showSuccess && (
-                            <div className=" my-5 text-center text-green-500 relative">
-                                <span className="block sm:inline">{successMessage}</span>
-                            </div>
-                        )}
-                        {errors.api && <p className="text-red-500 text-sm text-center">{errors.api}</p>}
+        <div className="">
+            <PageTitle
+                            breadCrumbItems={[
+                                { label: "Dashboard", path: "/dashboard" },
+                                { label: "Add User", active: true },
+                            ]}
+                            title={translateText("Add User")}
+                        />
+            <Card>
+                <Card.Body>
+                    <div className="">
+                        <div className="md:p-2">
+                            <form onSubmit={handleSubmit}>
+                                {showSuccess && (
+                                    <div className="my-5 text-center text-green-500 relative">
+                                        <span className="block sm:inline">{successMessage}</span>
+                                    </div>
+                                )}
+                                {errors.api && <p className="text-red-500 text-sm text-center">{errors.api}</p>}
 
-                        <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-                            <div className="mb-4">
-                                <Input
-                                    type="text"
-                                    name="name"
-                                    label={translateText("full_name")}
-                                    labelPlacement="outside"
-                                    placeholder={translateText("enter_name")}
-                                    variant="bordered"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                />
-                                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-                            </div>
-                            <div className="mb-4">
-                                <Input
-                                    type="text"
-                                    name="email"
-                                    label={translateText("email")}
-                                    labelPlacement="outside"
-                                    placeholder={translateText("enter_email")}
-                                    variant="bordered"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-                            </div>
+                                <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className="text-sm text-gray-500">{translateText("full_name")}</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="name"
+                                            placeholder={translateText("enter_name")}
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            className="border-1 border-gray-300 rounded-md"
+                                        />
+                                        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className="text-sm text-gray-500">{translateText("email")}</Form.Label>
+                                        <Form.Control
+                                            type="email"
+                                            name="email"
+                                            placeholder={translateText("enter_email")}
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className="border-1 border-gray-300 rounded-md"
+                                        />
+                                        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                                    </Form.Group>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label  className="text-sm text-gray-500">{translateText("password")}</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="Enter password"
+                                                value={password}
+                                                onChange={(e) => {
+                                                    setPassword(e.target.value);
+                                                    setErrors((prev) => ({ ...prev, password: "" }));
+                                                }}
+                                                className="border-1 border-gray-300 rounded-md"
+                                            />
+                                            <InputGroup.Text
+                                                className="cursor-pointer"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                            </InputGroup.Text>
+                                        </InputGroup>
+                                        {errors.password && (
+                                            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                                        )}
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3">
+                                        <Form.Label  className="text-sm text-gray-500">{translateText("c_password")}</Form.Label>
+                                        <InputGroup>
+                                            <Form.Control
+                                                type={showConfirm ? "text" : "password"}
+                                                placeholder="Confirm Password"
+                                                value={confirm}
+                                                onChange={(e) => {
+                                                    setConfirm(e.target.value);
+                                                    setErrors((prev) => ({ ...prev, confirm: "" }));
+                                                }}
+                                                className="border-1 border-gray-300 rounded-md"
+                                            />
+                                            <InputGroup.Text
+                                                className="cursor-pointer"
+                                                onClick={() => setShowConfirm(!showConfirm)}
+                                            >
+                                                {showConfirm ? <FaEyeSlash /> : <FaEye />}
+                                            </InputGroup.Text>
+                                        </InputGroup>
+                                        {errors.confirm && (
+                                            <p className="text-red-500 text-sm mt-1">{errors.confirm}</p>
+                                        )}
+                                    </Form.Group>
+
+                                </div>
+
+                                <Form.Group controlId="userType" className="mb-3">
+                                    <Form.Label className="text-sm text-gray-500">{translateText("user_type")}</Form.Label>
+                                    <Form.Select
+                                        name="userType"
+                                        value={formData.userType}
+                                        onChange={(e) => {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                userType: e.target.value,
+                                            }));
+                                            setErrors((prevErrors) => ({ ...prevErrors, userType: "" }));
+                                        }}
+                                        className="border-1 border-gray-300 rounded-md"
+                                    >
+                                        <option value="">Select User Type</option>
+                                        {usertype
+                                            .filter((g) => g.key !== "1")
+                                            .map((g) => (
+                                                <option key={g.key} value={g.key}>
+                                                    {g.label}
+                                                </option>
+                                            ))}
+                                    </Form.Select>
+                                    {errors.userType && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
+                                    )}
+                                </Form.Group>
+
+                                <button 
+                                disabled={loading}
+                                type="submit"
+                                className="btn btn-primary"
+                                
+                                >
+                                      {loading ? (
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
+                                    ) : (
+                                        translateText("submit")
+                                    )}
+                                    </button>
+
+                            </form>
                         </div>
-
-                        <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-                            <div className="mb-4 relative">
-                                <Input
-                                    label="Password"
-                                    labelPlacement="outside"
-                                    placeholder="Enter password"
-                                    variant="bordered"
-                                    type={show ? "text" : "password"}
-                                    value={password}
-                                    onChange={(e) => {
-                                        setPassword(e.target.value);
-                                        setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
-                                    }}
-                                />
-                                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-                            </div>
-                            <div className="mb-4 relative">
-                                <Input
-                                    label="Confirm Password"
-                                    placeholder="Confirm Password"
-                                    labelPlacement="outside"
-                                    variant="bordered"
-                                    type={show ? "text" : "password"}
-                                    value={confirm}
-                                    onChange={(e) => {
-                                        setConfirm(e.target.value);
-                                        setErrors((prevErrors) => ({ ...prevErrors, confirm: "" }));
-                                    }}
-                                />
-                                {errors.confirm && <p className="text-red-500 text-sm mt-1">{errors.confirm}</p>}
-                            </div>
-                        </div>
-
-                        <div className="mb-4">
-                            <Select
-                                className="max-w-full"
-                                label="User Type"
-                                placeholder="Select User Type"
-                                labelPlacement="outside"
-                                variant="bordered"
-                                name="userType"
-                                selectedKeys={new Set([formData.userType])}
-                                onSelectionChange={(keys) => {
-                                    const value = Array.from(keys)[0];
-                                    setFormData((prev) => ({
-                                        ...prev,
-                                        userType: value,
-                                    }));
-                                    setErrors((prevErrors) => ({ ...prevErrors, userType: "" }));
-                                }}
-                            >
-                                {usertype
-                                    .filter((g) => g.key !== "1") // Hides Doctor
-                                    .map((g) => (
-                                        <SelectItem key={g.key} value={g.key}>
-                                            {g.label}
-                                        </SelectItem>
-                                    ))}
-                            </Select>
-                            {errors.userType && <p className="text-red-500 text-sm">{errors.userType}</p>}
-                        </div>
-
-
-                        <button
-                            disabled={loading}
-                            type="submit"
-                            className="w-28 md:mt-4 mt-2 block mx-auto bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                        >
-                            {loading ? (
-                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-                            ) : (
-                                translateText("submit")
-                            )}
-                        </button>
-                    </form>
-                </div>
-            </div>
+                    </div>
+                </Card.Body>
+            </Card>
         </div>
     );
 }
