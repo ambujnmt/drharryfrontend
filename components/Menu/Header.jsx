@@ -11,6 +11,7 @@ import Tmodal from "../Tmodal/Tmodal"
 import { useUser } from "../../context/UserContext";
 import { useAdmin } from "../../context/AdminContext";
 import { useRouter } from "next/router";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export default function Header({ menuOpen, toggleMenu }) {
@@ -42,20 +43,20 @@ export default function Header({ menuOpen, toggleMenu }) {
   const isAdminLoggedIn = !!admin;
 
   return (
-    <div className="bg-[#3a81e6] text-white flex justify-between lg:justify-end items-center p-3 sticky top-0 z-50">
+    <div className="bg-[#5274f6] text-white flex justify-between lg:justify-end items-center p-3 sticky top-0 z-50">
       <button onClick={toggleMenu} className="text-white text-xl p-2 lg:hidden block ">
         {menuOpen ? <RxCross2 /> : <FaBars />}
       </button>
 
       <div className="flex  items-center space-x-4 text-2xl relative">
-      {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
-  <Link
-    href="/admin/passChange"
-    className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
-  >
-    Change Password
-  </Link>
-)}
+        {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
+          <Link
+            href="/admin/passChange"
+            className="text-white bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Change Password
+          </Link>
+        )}
 
 
         {user && (
@@ -98,8 +99,8 @@ export default function Header({ menuOpen, toggleMenu }) {
 
         {dropdownOpen && (
           <div className="absolute right-0 top-12 w-40 bg-white text-black shadow-lg rounded-md  z-50">
-            <ul className="text-sm">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">{translateText("settings")}</li>
+            <ul className="text-sm ">
+              <li className="p-2 hover:bg-gray-200 cursor-pointer ">{translateText("settings")}</li>
               <li className=" hover:bg-gray-200 hover:rounded-b-md cursor-pointer"><Button className="w-full bg-white flex justify-start hover:bg-gray-200" onPress={onOpen}>{translateText("logout")}</Button></li>
             </ul>
           </div>

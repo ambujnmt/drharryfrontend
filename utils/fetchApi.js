@@ -345,7 +345,6 @@ export const postPatientAssignment = async (payload) => {
   }
 };
 
-
 export const fetchAssignedPatients = async (userId) => {
   try {
     const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/patient-assignment-list', {
@@ -465,7 +464,6 @@ export async function fetchProfile(userId) {
   return result;
 }
 
-// utils/fetchApi.js
 
 export async function updateProfileApi(formData) {
   try {

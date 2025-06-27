@@ -43,7 +43,7 @@ export default function AddUserPage() {
           toggleMenu={() => setMenuOpen(!menuOpen)}
         />
 
-        <div className="flex-1 overflow-auto p-5 bg-gray-100">
+        <div className="flex-1 overflow-auto p-3 bg-gray-100">
           <PatientAssignment />
         </div>
 

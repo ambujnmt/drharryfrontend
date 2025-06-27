@@ -275,6 +275,27 @@ body .table-wrapper::-webkit-scrollbar {
   display: none;
 }
 
-.ulEdit{
-      padding-left: 0.5rem
+.labelfix{
+  margin-bottom: 0px;
 }
+ 
+.sidemenu-ul button span svg[role="presentation"] {
+    font-size: 18px;
+    float: right;
+    position: absolute;
+    right: -13px;
+    top: -9px;
+}
+ 
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+ 
+ 
+/* @media (max-width: 767px){
+  html, body{
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+} */

@@ -95,7 +95,7 @@ useEffect(() => {
     };
 
     return (
-        <div className="">
+        <div className="m-4">
             <PageTitle
                             breadCrumbItems={[
                                 { label: "Dashboard", path: "/dashboard" },

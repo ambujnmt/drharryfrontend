@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import { Input, Select, SelectItem, RadioGroup, Radio, Textarea } from "@heroui/react";
 import { LanguageContext } from "../../context/LanguageContext";
-
+import PageTitle from "../Breadcrumb/PageTitle";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Card, Form } from "react-bootstrap";
 
 export default function PatientEntry() {
 
@@ -12,12 +13,10 @@ export default function PatientEntry() {
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
-      if (Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length > 0) {
       validate();
     }
   }, [locale]);
-  
-
 
   const [formData, setFormData] = useState({
     name: "",
@@ -40,7 +39,7 @@ export default function PatientEntry() {
 
   });
   const [errors, setErrors] = useState({});
-  const [showSuccess, setShowSuccess] = useState(false); 
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const validate = () => {
     let newErrors = {};
@@ -106,8 +105,8 @@ export default function PatientEntry() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      setShowSuccess(true); 
-      setTimeout(() => setShowSuccess(false), 3000); 
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
 
       setFormData({
         name: "",
@@ -132,305 +131,338 @@ export default function PatientEntry() {
     }
   };
   return (
-    <div className="w-full bg-gray-100 md:p-6 p-0">
-      <div className="w-full space-y-5 bg-white shadow-lg rounded-lg p-4 ">
-        <div className="md:p-4">
-          <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold mb-4 text-center">{translateText("patient_entry_form")}</h2>
-          <form onSubmit={handleSubmit}>
-            <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-semibold my-4">{translateText("patient_information")}</h3>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="name"
-                  label={translateText("full_name")}
-                  labelPlacement="outside"
-                  placeholder={translateText("enter_name")}
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.name}
-                  onChange={handleChange}
-                  // isRequired={true}
-                />
-                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+    <div className="m-4">
+      <PageTitle
+        breadCrumbItems={[
+          { label: "Dashboard", path: "/dashboard" },
+          { label: "Add Patient", active: true },
+        ]}
+        title={translateText("patient_entry_form")}
+      />
+      <Card>
+        <Card.Body>
+          <div>
+            <form onSubmit={handleSubmit}>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-2">
+                  <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("full_name")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="name"
+                      placeholder={translateText("enter_name")}
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.name}
+                    />
+                    {errors.name && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+                <div>
+                  <Form.Group className="">
+                    <Form.Label className="text-sm text-gray-500">{translateText("date_of_birth")}</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="dob"
+                      value={formData.dob}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.dob}
+                    />
+                    {errors.dob && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
               </div>
-              <div className="mb-4">
-                <Input
-                  type="date"
-                  name="dob"
-                  label={translateText("date_of_birth")}
-                  variant="bordered"
-                  labelPlacement="outside"
-                  className=" focus:ring-blue-500"
-                  value={formData.dob}
-                  onChange={handleChange}
-                  //  isRequired={true}
-                />
-                {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Select
-                  className="max-w-full"
-                  label={translateText("gender")}
-                  placeholder={translateText("select_gender")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  name="gender"
-                  selectedKeys={new Set([formData.gender])} // Ensure selectedKeys is a Set
-                  onSelectionChange={(keys) =>
-                    handleChange({ target: { name: "gender", value: Array.from(keys)[0] || "" } })
-                  }
-                >
-                  {gender.map((g) => (
-                    <SelectItem key={g.key} value={g.key}>
-                      {g.label}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.gender && <p className="text-red-500 text-sm">{errors.gender}</p>}
-              </div>
-              <div className="mb-4">
-                <Input
-                  type="number"
-                  name="number"
-                  label={translateText("mobile_number")}
-                  placeholder={translateText("enter_number")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.number}
-                  onChange={handleChange}
-                />
-                {errors.number && <p className="text-red-500 text-sm">{errors.number}</p>}
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="email"
-                  label={translateText("email")}
-                  labelPlacement="outside"
-                  placeholder={translateText("enter_email")}
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.email}
-                  onChange={handleChange}
-                  //  isRequired={true}
-                />
-                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-              </div>
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="address"
-                  label={translateText("address")}
-                  placeholder={translateText("enter_address")}
-                  labelPlacement="outside"
-                  className=" focus:ring-blue-500"
-                  value={formData.address}
-                  onChange={handleChange}
-                  variant="bordered"
-                  //  isRequired={true}
-                />
-                {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
-              </div>
-            </div>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div>
+                  <Form.Group controlId="gender">
+                    <Form.Label className="text-sm text-gray-500">{translateText("gender")}</Form.Label>
+                    <Form.Select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={(e) => handleChange({ target: { name: "gender", value: e.target.value } })}
+                      isInvalid={!!errors.gender} 
+                    >
+                      <option className="text-sm text-gray-500" value="">{translateText("select_gender")}</option> 
+                      {gender.map((g) => (
+                        <option className="text-sm text-gray-500" key={g.key} value={g.key}>
+                          {g.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                    {errors.gender && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
 
-            <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-semibold my-4">{translateText("medical_details")}</h3>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <RadioGroup label={translateText("blood_group")} orientation="horizontal" name="bloodGroup" value={formData.bloodGroup} onChange={handleChange}>
-                  {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((group) => (
-                    <Radio key={group} value={group}>{group}</Radio>
-                  ))}
-                </RadioGroup>
-                {errors.bloodGroup && <p className="text-red-500 text-sm">{errors.bloodGroup}</p>}
+                </div>
+                <div className="mb-3">
+                  <Form.Group className="">
+                    <Form.Label className="text-sm text-gray-500">{translateText("mobile_number")}</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="number"
+                      placeholder={translateText("enter_number")}
+                      value={formData.number}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.number}
+                    />
+                    {errors.number && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
               </div>
-              <div className="mb-4">
-                <Select
-                  className="max-w-full"
-                  label={translateText("allergies")}
-                  placeholder={translateText("select")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  name="allergies"
-                  selectedKeys={new Set([formData.allergies])} // Ensure selectedKeys is a Set
-                  onSelectionChange={(keys) =>
-                    handleChange({ target: { name: "allergies", value: Array.from(keys)[0] || "" } })
-                  }
-                >
-                  <SelectItem key="Yes" value="Yes">
-                    {translateText("yes")}
-                  </SelectItem>
-                  <SelectItem key="No" value="No">
-                    {translateText("no")}
-                  </SelectItem>
-                </Select>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-3">
+                  <Form.Group className="">
+                    <Form.Label className="text-sm text-gray-500">{translateText("email")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="email"
+                      placeholder={translateText("enter_email")}
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.email}
+                    />
+                    {errors.email && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+                <div className="mb-3">
+                  <Form.Group className="">
+                    <Form.Label className="text-sm text-gray-500">{translateText("address")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="address"
+                      placeholder={translateText("enter_address")}
+                      value={formData.address}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.address}
+                    />
+                    {errors.address && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+              </div>
 
-                {formData.allergies === "Yes" && (
-                  <Textarea
-                    name="allergyDetails"
-                    placeholder={translateText("specify_allergies")}
-                    className="focus:border-blue-500 mt-2"
-                    value={formData.allergyDetails}
-                    variant="bordered"
-                    onChange={handleChange}
-                  />
-                )}
+              <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-semibold my-2.5">{translateText("medical_details")}</h3>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-3">
+                  <Form.Group controlId="bloodGroup">
+                    <Form.Label className="text-sm text-gray-500">{translateText("blood_group")}</Form.Label>
+                    <div className="d-flex flex-wrap gap-2 text-sm text-gray-500">
+                      {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((group) => (
+                        <Form.Check
+                          inline
+                          key={group}
+                          type="radio"
+                          label={group}
+                          name="bloodGroup"
+                          value={group}
+                          checked={formData.bloodGroup === group}
+                          onChange={handleChange}
+                          isInvalid={!!errors.bloodGroup}
+                        />
+                      ))}
+                    </div>
+                    {errors.bloodGroup && (
+                      <Form.Control.Feedback type="invalid" className="d-block">
+                      </Form.Control.Feedback>
+                    )}
+                  </Form.Group>
 
-                {errors.allergies && <p className="text-red-500 text-sm">{errors.allergies}</p>}
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="medications"
-                  label={translateText("current_medications")}
-                  placeholder={translateText("enter_medications")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.medications}
-                  onChange={handleChange}
-                />
-                {errors.medications && <p className="text-red-500 text-sm">{errors.medications}</p>}
-              </div>
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="history"
-                  label={translateText("past_medical_history")}
-                  placeholder={translateText("enter_history")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.history}
-                  onChange={handleChange}
-                />
-                {errors.history && <p className="text-red-500 text-sm">{errors.history}</p>}
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="doctorName"
-                  label={translateText("primary_doctor_name")}
-                  labelPlacement="outside"
-                  placeholder={translateText("enter_doctor_name")}
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.doctorName}
-                  onChange={handleChange}
-                />
-                {errors.doctorName && <p className="text-red-500 text-sm">{errors.doctorName}</p>}
-              </div>
-            </div>
+                </div>
+                <div className="mb-3">
+                  <Form.Group controlId="allergies">
+                    <Form.Label className="text-sm text-gray-500">{translateText("allergies")}</Form.Label>
+                    <Form.Select
+                      name="allergies"
+                      value={formData.allergies} 
+                      onChange={(e) => handleChange({ target: { name: "allergies", value: e.target.value } })}
+                      isInvalid={!!errors.allergies} 
+                    >
+                      <option className="text-sm text-gray-500" value="">Select</option> 
+                      <option className="text-sm text-gray-500" value="Yes">{translateText("yes")}</option> 
+                      <option className="text-sm text-gray-500" value="No">{translateText("no")}</option>
 
-            <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-semibold my-4">{translateText("emergencyContact")}</h3>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="emergencyContactName"
-                  label={translateText("name")}
-                  placeholder={translateText("enterEmergencyContactName")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.emergencyContactName}
-                  onChange={handleChange}
-                />
-                {errors.emergencyContactName && <p className="text-red-500 text-sm">{errors.emergencyContactName}</p>}
-              </div>
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="emergencyContactRelation"
-                  label={translateText("relationship")}
-                  placeholder={translateText("enterEmergencyContactRelation")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.emergencyContactRelation}
-                  onChange={handleChange}
-                />
-                {errors.emergencyContactRelation && <p className="text-red-500 text-sm">{errors.emergencyContactRelation}</p>}
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Input
-                  type="number"
-                  name="emergencyContactNumber"
-                  label={translateText("contactNumber")}
-                  labelPlacement="outside"
-                  placeholder={translateText("enterEmergencyContactNumber")}
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.emergencyContactNumber}
-                  onChange={handleChange}
-                />
-                {errors.emergencyContactNumber && <p className="text-red-500 text-sm">{errors.emergencyContactNumber}</p>}
-              </div>
-            </div>
+                    </Form.Select>
+                    {errors.allergies && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
 
-            <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-semibold my-4">{translateText("insuranceDetails")}</h3>
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-1">
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="insuranceProviderName"
-                  label={translateText("insuranceProvider")}
-                  placeholder={translateText("enterInsuranceProvider")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.insuranceProviderName}
-                  onChange={handleChange}
-                />
-                {errors.insuranceProviderName && <p className="text-red-500 text-sm">{errors.insuranceProviderName}</p>}
+                  {formData.allergies === "Yes" && (
+                    <Form.Group controlId="allergyDetails" className="mt-2">
+                      <Form.Label className="text-sm text-gray-500">{translateText("specify_allergies")}</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        name="allergyDetails"
+                        placeholder={translateText("specify_allergies")}
+                        value={formData.allergyDetails}
+                        onChange={handleChange}
+                        isInvalid={!!errors.allergies}
+                      />
+                      {errors.allergies && (
+                        <Form.Control.Feedback type="invalid">
+                          {errors.allergies}
+                        </Form.Control.Feedback>
+                      )}
+                    </Form.Group>
+                  )}
+                </div>
               </div>
-              <div className="mb-4">
-                <Input
-                  type="text"
-                  name="policyNumber"
-                  label={translateText("policyNumber")}
-                  placeholder={translateText("enterPolicyNumber")}
-                  labelPlacement="outside"
-                  variant="bordered"
-                  className=" focus:ring-blue-500"
-                  value={formData.policyNumber}
-                  onChange={handleChange}
-                  //  isRequired={true}
-                />
-                {errors.policyNumber && <p className="text-red-500 text-sm">{errors.policyNumber}</p>}
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-3">
+                    <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("current_medications")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="medications"
+                      placeholder={translateText("enter_medications")}
+                      value={formData.medications}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.medications}
+                    />
+                    {errors.medications && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+                <div className="mb-3">
+                  <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("past_medical_history")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="history"
+                      placeholder={translateText("enter_history")}
+                      value={formData.history}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.history}
+                    />
+                    {errors.history && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
               </div>
-            </div>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-3">
+                    <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("primary_doctor_name")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="doctorName"
+                      placeholder={translateText("enter_doctor_name")}
+                      value={formData.doctorName}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.doctorName}
+                    />
+                    {errors.doctorName && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+              </div>
 
-            <button
-              type="submit"
-              className="w-28 md:mt-4 mt-2 block mx-auto bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              {translateText("submit")}
-            </button>
+              <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-semibold my-2">{translateText("emergencyContact")}</h3>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-3">
+                   <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("name")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="emergencyContactName"
+                      placeholder={translateText("enterEmergencyContactName")}
+                      value={formData.emergencyContactName}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.emergencyContactName}
+                    />
+                    {errors.emergencyContactName && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+                <div className="mb-3">
+                   <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("relationship")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="emergencyContactRelation"
+                      placeholder={translateText("enterEmergencyContactRelation")}
+                      value={formData.emergencyContactRelation}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.emergencyContactRelation}
+                    />
+                    {errors.emergencyContactRelation && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+              </div>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-3">
+                   <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("contactNumber")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="emergencyContactNumber"
+                      placeholder={translateText("enterEmergencyContactNumber")}
+                      value={formData.emergencyContactNumber}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.emergencyContactNumber}
+                    />
+                    {errors.emergencyContactNumber && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+              </div>
 
-            {showSuccess && (
-              <div
-                className="bg-green-100 border my-5 text-center border-green-400 text-green-700 px-4 py-3 rounded relative"
-                role="alert"
+              <h3 className="text-sm md:text-base lg:text-lg xl:text-xl font-semibold my-2">{translateText("insuranceDetails")}</h3>
+              <div className="grid md:grid-cols-2 grid-cols-1 md:gap-4 gap-4">
+                <div className="mb-3">
+                  <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("insuranceProvider")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="insuranceProviderName"
+                      placeholder={translateText("enterInsuranceProvider")}
+                      value={formData.insuranceProviderName}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.insuranceProviderName}
+                    />
+                    {errors.insuranceProviderName && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+                <div className="mb-4">
+                     <Form.Group>
+                    <Form.Label className="text-sm text-gray-500">{translateText("policyNumber")}</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="policyNumber"
+                      placeholder={translateText("enterPolicyNumber")}
+                      value={formData.policyNumber}
+                      onChange={handleChange}
+                      className="border-1 border-gray-300 rounded-md"
+                      isInvalid={!!errors.policyNumber}
+                    />
+                    {errors.policyNumber && <Form.Control.Feedback type="invalid"></Form.Control.Feedback>}
+                  </Form.Group>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-28 md:mt-4 mt-2 block mx-auto bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700 transition"
               >
-                <strong className="font-bold">{translateText("successMessageTitle")} </strong>
-                <span className="block sm:inline">{translateText("successMessage")}</span>
-              </div>
-            )}
-          </form>
-        </div>
-      </div>
+                {translateText("submit")}
+              </button>
+
+              {showSuccess && (
+                <div
+                  className="bg-green-100 border my-5 text-center border-green-400 text-green-700 px-4 py-3 rounded relative"
+                  role="alert"
+                >
+                  <strong className="font-bold">{translateText("successMessageTitle")} </strong>
+                  <span className="block sm:inline">{translateText("successMessage")}</span>
+                </div>
+              )}
+            </form>
+          </div>
+        </Card.Body>
+      </Card>
     </div>
   );
 }
