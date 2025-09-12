@@ -196,33 +196,34 @@ useEffect(() => {
 
                                 </div>
 
-                                <Form.Group controlId="userType" className="mb-3">
-                                    <Form.Label className="text-sm text-gray-500">{translateText("user_type")}</Form.Label>
-                                    <Form.Select
-                                        name="userType"
-                                        value={formData.userType}
-                                        onChange={(e) => {
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                userType: e.target.value,
-                                            }));
-                                            setErrors((prevErrors) => ({ ...prevErrors, userType: "" }));
-                                        }}
-                                        className="border-1 border-gray-300 rounded-md"
-                                    >
-                                        <option value="">Select User Type</option>
-                                        {usertype
-                                            .filter((g) => g.key !== "1")
-                                            .map((g) => (
-                                                <option key={g.key} value={g.key}>
-                                                    {g.label}
-                                                </option>
-                                            ))}
-                                    </Form.Select>
-                                    {errors.userType && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
-                                    )}
-                                </Form.Group>
+                             <Form.Group controlId="userType" className="mb-3">
+  <Form.Label className="text-sm text-gray-500">
+    {translateText("user_type")}
+  </Form.Label>
+  <Form.Select
+    name="userType"
+    value={formData.userType}
+    onChange={(e) => {
+      setFormData((prev) => ({
+        ...prev,
+        userType: e.target.value,
+      }));
+      setErrors((prevErrors) => ({ ...prevErrors, userType: "" }));
+    }}
+    className="border-1 border-gray-300 rounded-md"
+  >
+    <option value="">Select User Type</option>
+    {usertype.map((g) => (
+      <option key={g.key} value={g.key}>
+        {g.label}
+      </option>
+    ))}
+  </Form.Select>
+  {errors.userType && (
+    <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
+  )}
+</Form.Group>
+
 
                                 <button 
                                 disabled={loading}

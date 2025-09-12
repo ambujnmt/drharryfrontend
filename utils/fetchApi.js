@@ -481,6 +481,113 @@ export async function updateProfileApi(formData) {
   }
 }
 
+export async function addClinic(apiData) {
+  try {
+    const formData = new FormData();
+    formData.append("clinic_name", apiData.clinic_name);
+    formData.append("email", apiData.email);
+    formData.append("phone", apiData.phone);
+    formData.append("location", apiData.location);
+    formData.append("timezone", apiData.timezone);
+    formData.append("latitude", apiData.latitude);
+    formData.append("longitude", apiData.longitude);
+    formData.append("description", apiData.description);
+
+    if (apiData.image) {
+      formData.append("image", apiData.image);
+    }
+
+    const res = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/add-clinic",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    return await res.json();
+  } catch (error) {
+    return { status: false, message: error.message };
+  }
+}
+
+export const fetchClinics = async () => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-auth/public/api/clinics",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}), // API expects POST even for list, so sending empty body
+      }
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching clinics:", error);
+    return null;
+  }
+};
+
+export const fetchClinicById = async (id) => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/get-clinic",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ clinic_id: id }),
+      }
+    );
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching clinic detail:", error);
+    return null;
+  }
+};
+
+export async function deleteClinic(clinicId) {
+  try {
+    const formData = new FormData();
+    formData.append("clinic_id", clinicId);
+
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-clinic",
+      {
+        method: "POST",
+        body: formData, // ✅ send as FormData
+      }
+    );
+
+    return await response.json();
+  } catch (error) {
+    console.error("Delete clinic error:", error);
+    return { status: false, message: "Something went wrong!" };
+  }
+}
+
+export async function updateClinic(formData) {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/update-clinic",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating clinic:", error);
+    return { status: false, message: "Something went wrong" };
+  }
+}
+
+
 
 
 

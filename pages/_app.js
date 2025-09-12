@@ -1,4 +1,4 @@
-import { HeroUIProvider } from "@heroui/system";
+import { HeroUIProvider } from "@heroui/react";
 import DefaultLayout from "@/layouts/default";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";

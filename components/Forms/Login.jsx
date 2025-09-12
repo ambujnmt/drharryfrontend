@@ -62,7 +62,6 @@ export default function LoginForm() {
   // }
 
   useEffect(() => {
-    // wait one tick to simulate loading context or read localStorage yourself
     setChecking(false);
   }, []);
 
@@ -84,7 +83,11 @@ export default function LoginForm() {
       try {
         const response = await loginUser(formData.email, formData.password);
 
-        setUser(response);
+        // setUser(response);
+        setUser({
+          ...response,          // keep all other user data
+          user_type: response.user_type  // explicitly ensure user_type is saved
+        });
         setUserEmail(formData.email);
 
         setFormData({ email: "", password: "" });

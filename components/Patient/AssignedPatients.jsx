@@ -52,7 +52,7 @@ export default function AssignedPatients() {
       Cell: ({ row }) => {
         const item = row.original;
         return (
-          <div className="flex gap-2 justify-center">
+          <div className="flex gap-2 justify-center items-center">
             <Link href="#">
               <FaPen className="text-primary" />
             </Link>

@@ -13,6 +13,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@heroui/react": "^2.4.8",
+    "@heroui/theme": "^2.4.22",
     "@mui/material": "^6.0.1",
     "@react-aria/visually-hidden": "3.8.12",
     "@react-oauth/google": "^0.12.1",

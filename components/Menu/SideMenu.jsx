@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function SideMenu({ isOpen, onClose }) {
   const { locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
-  const { admin, logoutAdmin } = useAdmin(); // Access admin data and logout function from AdminContext
+  const { admin, logoutAdmin } = useAdmin();
   const { user, setUser, setUserEmail } = useUser();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function SideMenu({ isOpen, onClose }) {
   const isAdminLoggedIn = !!admin;
 
   return (
-      <div
+    <div
       className={`
         fixed top-0 left-0 z-40 h-[100%] w-64 bg-[#5274F6] text-white flex flex-col transition-transform duration-300 
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
@@ -54,10 +54,22 @@ export default function SideMenu({ isOpen, onClose }) {
             </Link>
           </li>
 
-      {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
+          {/* Role display */}
+          {user && user.user_type && (
+            <li className="p-2 flex items-center rounded bg-[#2563eb] text-white">
+              {user.user_type === 1 && <span>Doctor</span>}
+              {user.user_type === 2 && <span>Social Worker</span>}
+              {user.user_type === 3 && <span>Patient</span>}
+              {user.user_type === 4 && <span>User</span>}
+            </li>
+          )}
+
+
+          {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
             <Accordion variant="light">
               <AccordionItem
                 key="6"
+                value="user"
                 classNames={{
                   item: "p-2 hover:bg-[#91b4e5] rounded",
                   title: "text-white ",
@@ -71,7 +83,7 @@ export default function SideMenu({ isOpen, onClose }) {
                   </span>
                 }
               >
-                  <ul className="space-y-1 text-[#e1e3e6] sidemenu-ul">
+                <ul className="space-y-1 text-[#e1e3e6] sidemenu-ul">
                   <li className="p-2 hover:bg-[#2563eb] rounded">
                     <Link href="/addUser" className="text-[#e1e3e6] text-[15px]">{translateText("addUser")}</Link>
                   </li>
@@ -85,7 +97,40 @@ export default function SideMenu({ isOpen, onClose }) {
             </Accordion>
           )}
 
-            {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
+
+          {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
+            <Accordion variant="light">
+              <AccordionItem
+                key="7"
+                value="clinic"
+                classNames={{
+                  item: "p-2 hover:bg-[#91b4e5] rounded",
+                  title: "text-white ",
+                  trigger: "py-[0.5rem]",
+                  indicator: "text-white"
+                }}
+                aria-label="Clinic"
+                title={
+                  <span className="flex items-center gap-2 text-[15px]">
+                    <FaUser /> {translateText("Clinic")}
+                  </span>
+                }
+              >
+                <ul className="space-y-1 text-[#e1e3e6] sidemenu-ul">
+                  <li className="p-2 hover:bg-[#2563eb] rounded">
+                    <Link href="/clinic/addClinic" className="text-[#e1e3e6] text-[15px]">{translateText("Add Clinic")}</Link>
+                  </li>
+                  <li className="p-2 hover:bg-[#2563eb] rounded">
+                    <Link href="/clinic/clinicManagement" className="text-[#e1e3e6] text-[15px]">
+                      {translateText("Clinic Managaement")}
+                    </Link>
+                  </li>
+                </ul>
+              </AccordionItem>
+            </Accordion>
+          )}
+
+          {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
             <Accordion variant="light">
               <AccordionItem
                 key="3"
