@@ -56,7 +56,7 @@ export default function SideMenu({ isOpen, onClose }) {
 
           {/* Role display */}
           {user && user.user_type && (
-            <li className="p-2 flex items-center rounded bg-white text-blue-400">
+            <li className="p-2 flex items-center rounded bg-white text-blue-800">
               {user.user_type === 1 && <span>Doctor</span>}
               {user.user_type === 2 && <span>Social Worker</span>}
               {user.user_type === 3 && <span>Patient</span>}
