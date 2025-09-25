@@ -8,6 +8,7 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { useAdmin } from "../../context/AdminContext";
 import { useUser } from "../../context/UserContext";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FaUserDoctor } from "react-icons/fa6";
 
 export default function SideMenu({ isOpen, onClose }) {
   const { locale, translateText } = useContext(LanguageContext);
@@ -56,9 +57,14 @@ export default function SideMenu({ isOpen, onClose }) {
 
           {/* Role display */}
           {user && user.user_type && (
-            <li className="p-2 flex items-center rounded bg-white text-blue-800">
+            <li className="p-2 flex items-center rounded  text-blue-800">
               {user.user_type === 1 && <span>Doctor</span>}
-              {user.user_type === 2 && <span>Social Worker</span>}
+              {user.user_type === 2 &&
+                <Link href="/socialWorker/assignedPatient" className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center">
+                  <MdOutlineSick />
+                  {translateText("Assigned Patient")}
+                </Link>
+              }
               {user.user_type === 3 && <span>Patient</span>}
               {user.user_type === 4 && <span>User</span>}
             </li>
@@ -152,6 +158,31 @@ export default function SideMenu({ isOpen, onClose }) {
                   <li className="p-2 hover:bg-[#2563eb] rounded"><Link href="/patient/patientAssignment" className="text-[#e1e3e6] text-[15px]">{translateText("Patient Assignment")}</Link></li>
                   <li className="p-2 hover:bg-[#2563eb] rounded"><Link href="/patient/assignedPatients" className="text-[#e1e3e6] text-[15px]">{translateText("Assigned Patient")}</Link></li>
                   <li className="p-2 hover:bg-[#2563eb] rounded"><Link href="/patient/patientScheduling" className="text-[#e1e3e6] text-[15px]">{translateText("Patient Scheduling")}</Link></li>
+                </ul>
+              </AccordionItem>
+            </Accordion>
+          )}
+
+             {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
+            <Accordion variant="light">
+              <AccordionItem
+                key="3"
+                classNames={{
+                  item: "p-2 hover:bg-[#2563eb] rounded",
+                  title: "text-white",
+                  trigger: "py-[0.5rem]",
+                  indicator: "text-white",
+                }}
+                aria-label="Doctor Management"
+                title={
+                  <span className="flex items-center gap-2 text-[15px]">
+                    <FaUserDoctor  className="text-xl" /> {translateText("Doctor Management")}
+                  </span>
+                }
+              >
+                <ul className="space-y-1 text-[#e1e3e6] sidemenu-ul">
+                  <li className="p-2 hover:bg-[#2563eb] rounded"><Link href="/doctorManagement/doctorList" className="text-[#e1e3e6] text-[15px]">{translateText("Doctor List")}</Link></li>
+                 
                 </ul>
               </AccordionItem>
             </Accordion>

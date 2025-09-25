@@ -11,8 +11,11 @@ import {
 } from "react-icons/fa";
 import { Card, Col, Row, Spinner, Badge } from "react-bootstrap";
 import PageTitle from "../../components/Breadcrumb/PageTitle";
-import { fetchClinicById } from "../../utils/fetchApi";
+import { fetchClinicById, fetchClinicSlots } from "../../utils/fetchApi";
 import "bootstrap/dist/css/bootstrap.min.css";
+import AddAppointment from "./AddAppointment";
+import Table from "../../components/Table/Table"; // ✅ your reusable Table
+import EditSlot from "./EditSlot";
 
 export default function ClinicDetail() {
   const router = useRouter();
@@ -20,6 +23,10 @@ export default function ClinicDetail() {
 
   const [clinic, setClinic] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // ✅ slots state
+  const [slots, setSlots] = useState([]);
+  const [slotsLoading, setSlotsLoading] = useState(true);
 
   useEffect(() => {
     if (!id) return;
@@ -34,15 +41,52 @@ export default function ClinicDetail() {
     getClinic();
   }, [id]);
 
+  // ✅ fetch clinic slots
+  useEffect(() => {
+    if (!id) return;
+
+    setSlotsLoading(true);
+    fetchClinicSlots(id).then((res) => {
+      if (res?.status && res?.data) {
+        setSlots(res.data);
+      } else {
+        setSlots([]);
+      }
+      setSlotsLoading(false);
+    });
+  }, [id]);
+
+  // ✅ slot columns
+  const slotColumns = [
+    { Header: "S.No.", accessor: "serial", Cell: ({ row }) => row.index + 1 },
+    { Header: "Day", accessor: "day_of_week" },
+    { Header: "Start Time", accessor: "start_time" },
+    { Header: "End Time", accessor: "end_time" },
+    { Header: "Duration (min)", accessor: "slot_duration_minutes" },
+    {
+      Header: "Actions",
+      accessor: "actions",
+      Cell: ({ row }) => (
+        <EditSlot
+          slot={row.original}
+          clinicId={id}
+          onSlotUpdated={(updatedSlot) => {
+            setSlots((prev) =>
+              prev.map((s) => (s.id === updatedSlot.id ? updatedSlot : s))
+            );
+          }}
+          onSlotDeleted={(slotId) => {
+            setSlots((prev) => prev.filter((s) => s.id !== slotId));
+          }}
+        />
+      ),
+    },
+  ];
+
   if (loading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: "400px" }}
-      >
-        <div className="text-center">
-          <Spinner animation="border" variant="primary" />
-        </div>
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "400px" }}>
+        <Spinner animation="border" variant="primary" />
       </div>
     );
   }
@@ -59,7 +103,7 @@ export default function ClinicDetail() {
   }
 
   return (
-    <div >
+    <div>
       {/* ✅ Page Title + Breadcrumb */}
       <PageTitle
         breadCrumbItems={[
@@ -71,7 +115,7 @@ export default function ClinicDetail() {
       />
 
       <Row className="g-4">
-        {/* Clinic Header Card */}
+        {/* Clinic Header */}
         <Col xl={4} lg={5}>
           <Card className="shadow-sm border-0 h-100 text-center p-4">
             <div className="mb-4">
@@ -83,31 +127,30 @@ export default function ClinicDetail() {
                   style={{ maxHeight: "200px", objectFit: "cover" }}
                 />
               ) : (
-                <FaUserMd
-                  className="text-primary"
-                  style={{ fontSize: "80px" }}
-                />
+                <FaUserMd className="text-primary" style={{ fontSize: "80px" }} />
               )}
             </div>
             <h3 className="mb-2">{clinic.clinic_name}</h3>
             <p className="text-muted">{clinic.email}</p>
-            <Badge
-              bg={clinic.status === 1 ? "success" : "danger"}
-              className="px-3 py-2"
-            >
+            <Badge bg={clinic.status === 1 ? "success" : "danger"} className="px-3 py-2">
               {clinic.status === 1 ? "Active" : "Inactive"}
             </Badge>
           </Card>
         </Col>
 
-        {/* Clinic Information Card */}
+        {/* Clinic Info */}
         <Col xl={8} lg={7}>
           <Card className="shadow-sm border-0 h-100">
-            <Card.Header className="bg-light border-0 py-3">
-              <h5 className="mb-0 text-primary d-flex align-items-center">
-                <FaUserMd className="me-2" /> Clinic Information
-              </h5>
-            </Card.Header>
+            <div className="flex justify-between bg-light py-1">
+              <Card.Header className="bg-light">
+                <h5 className="mb-0 text-primary d-flex align-items-center">
+                  <FaUserMd className="me-2" /> Clinic Information
+                </h5>
+              </Card.Header>
+              <Card.Header className="bg-light">
+                <AddAppointment clinicId={clinic.id} onSlotAdded={(newSlot) => setSlots((prev) => [...prev, newSlot])} />
+              </Card.Header>
+            </div>
             <Card.Body className="p-4">
               <Row className="g-4">
                 <Col md={6}>
@@ -115,14 +158,7 @@ export default function ClinicDetail() {
                     <FaEnvelope className="me-3 text-success mt-1" />
                     <div>
                       <label className="text-muted">Email</label>
-                      <div>
-                        <a
-                          href={`mailto:${clinic.email}`}
-                          className="text-decoration-none"
-                        >
-                          {clinic.email}
-                        </a>
-                      </div>
+                      <div>{clinic.email}</div>
                     </div>
                   </div>
                 </Col>
@@ -203,6 +239,46 @@ export default function ClinicDetail() {
           </Card>
         </Col>
       </Row>
+
+      {/* ✅ Slots Section (new card outside Additional Information) */}
+      <Row className="mt-4">
+        <Col>
+          <Card className="shadow-sm border-0">
+            <Card.Header className="bg-light border-0 py-3">
+              <h5 className="mb-0 text-primary d-flex align-items-center">
+                <FaClock className="me-2" /> Clinic Slots
+              </h5>
+            </Card.Header>
+            <Card.Body>
+              {slotsLoading ? (
+                <div className="text-center py-3">
+                  <Spinner animation="border" variant="primary" />
+                </div>
+              ) : slots.length ? (
+                <Table
+                  columns={slotColumns}
+                  data={slots}
+                  pageSize={5}
+                  sizePerPageList={[
+                    { text: "5", value: 5 },
+                    { text: "10", value: 10 },
+                    { text: "25", value: 25 },
+                    { text: "All", value: 1000 },
+                  ]}
+                  isSortable={true}
+                  pagination={true}
+                  isSearchable={true}
+                />
+              ) : (
+                <p className="text-muted text-center mb-0">
+                  No slots added.
+                </p>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
     </div>
   );
 }

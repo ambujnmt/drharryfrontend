@@ -587,6 +587,189 @@ export async function updateClinic(formData) {
   }
 }
 
+export const fetchAssignedPatientForSocialWorker = async (userId) => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/patient-assignment-list",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: userId }),
+      }
+    );
+
+    const result = await response.json();
+    console.log("📡 API raw result:", result);
+
+    if (result.status && result.data && Array.isArray(result.data.patients)) {
+      return result.data.patients.map((patient) => ({
+        ...patient,
+        status_value: patient.status === 1 ? "Active" : "Inactive",
+      }));
+    } else {
+      console.warn("⚠️ No patients found or invalid response");
+      return [];
+    }
+  } catch (error) {
+    console.error("❌ Error fetching assigned patients:", error);
+    return [];
+  }
+};
+
+export const fetchDoctors = async () => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/users-by-type",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_type: 1 }), // ✅ Only doctors
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching doctors:", error);
+    return null;
+  }
+};
+
+export async function fetchDoctorSlots(doctor_id) {
+  try {
+    const res = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-slot-list",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ doctor_id }),
+      }
+    );
+    return await res.json();
+  } catch (err) {
+    return { status: false, message: "Something went wrong." };
+  }
+}
+
+export async function addDoctorSlot(payload) {
+  try {
+    const res = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-add-slot",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    return await res.json();
+  } catch (err) {
+    return { status: false, message: "Something went wrong." };
+  }
+}
+
+export const updateDoctorSlot = async (payload) => {
+  try {
+    const res = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-update-slot",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+    return await res.json();
+  } catch (error) {
+    console.error("Error updating doctor slot:", error);
+    return { status: false, message: "Something went wrong." };
+  }
+};
+
+export const deleteDoctorSlot = async (slot_id) => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-delete-slot",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slot_id }),
+      }
+    );
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting slot:", error);
+    return { status: false, message: "Something went wrong" };
+  }
+};
+
+export const addClinicSlot = async (payload) => {
+  try {
+    const res = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-add-slot`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    return await res.json();
+  } catch (error) {
+    return { status: false, message: error.message};
+  }
+};
+
+export const fetchClinicSlots = async (clinic_id) => {
+  try {
+    const res = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-slot-list`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ clinic_id }),
+    });
+    return await res.json();
+  } catch (error) {
+    return { status: false, message: error.message};
+  }
+};
+
+export async function updateClinicSlot(payload) {
+  try {
+    const res = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-update-slot",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    return await res.json();
+  } catch (err) {
+    console.error("updateClinicSlot error:", err);
+    return { status: false, message: "Something went wrong" };
+  }
+}
+
+export async function deleteClinicSlot(slot_id) {
+  try {
+    const res = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-delete-slot",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slot_id }),
+      }
+    );
+    return await res.json();
+  } catch (err) {
+    console.error("deleteClinicSlot error:", err);
+    return { status: false, message: "Something went wrong" };
+  }
+}
 
 
 

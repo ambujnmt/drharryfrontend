@@ -292,10 +292,6 @@ body .table-wrapper::-webkit-scrollbar {
   width: 100%;
 }
  
- 
-/* @media (max-width: 767px){
-  html, body{
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-} */
+ .card-header {
+    border-bottom: none !important;
+}
