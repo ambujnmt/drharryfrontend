@@ -16,6 +16,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import AddAppointment from "./AddAppointment";
 import Table from "../../components/Table/Table"; // ✅ your reusable Table
 import EditSlot from "./EditSlot";
+import { Head } from "../../layouts/head";
 
 export default function ClinicDetail() {
   const router = useRouter();
@@ -104,7 +105,7 @@ export default function ClinicDetail() {
 
   return (
     <div>
-      {/* ✅ Page Title + Breadcrumb */}
+      <Head title="Clinic Detail" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

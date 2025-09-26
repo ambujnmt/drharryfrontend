@@ -8,6 +8,7 @@ import { fetchProfile, fetchDoctorSlots } from "../../utils/fetchApi";
 import AddAppointment from "./AddAppointment";
 import Table from "../Table/Table";
 import EditSlot from "./EditSlot";
+import { Head } from "../../layouts/head";
 
 export default function DoctorDetail() {
   const { translateText } = useContext(LanguageContext);
@@ -95,6 +96,7 @@ export default function DoctorDetail() {
 
   return (
     <div className="m-10">
+      <Head title="Doctor Detail" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

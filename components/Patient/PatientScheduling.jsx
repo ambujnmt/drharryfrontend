@@ -6,6 +6,7 @@ import PageTitle from "../Breadcrumb/PageTitle"
 import { LanguageContext } from "../../context/LanguageContext";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card} from "react-bootstrap";
+import { Head } from '../../layouts/head';
 
 export default function PatientScheduling() {
   const [usersByType, setUsersByType] = useState({ socialWorkers: [] });
@@ -71,7 +72,7 @@ export default function PatientScheduling() {
 
   return (
     <div className="m-4">
-
+       <Head title="Patient Scheduling" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

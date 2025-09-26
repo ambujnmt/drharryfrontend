@@ -5,6 +5,7 @@ import { Card, Form, InputGroup } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PageTitle from "../Breadcrumb/PageTitle";
+import { Head } from "../../layouts/head";
 
 export default function AddUser() {
     const { translateText, locale } = useContext(LanguageContext);
@@ -96,6 +97,7 @@ useEffect(() => {
 
     return (
         <div className="m-4">
+             <Head title="Add User" />
             <PageTitle
                             breadCrumbItems={[
                                 { label: "Dashboard", path: "/dashboard" },

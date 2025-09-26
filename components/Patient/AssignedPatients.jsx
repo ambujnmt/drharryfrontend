@@ -9,6 +9,7 @@ import Table from '../Table/Table';
 import PageTitle from '../Breadcrumb/PageTitle';
 import Tmodal from '../Tmodal/Tmodal';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Head } from '../../layouts/head';
 
 const sizePerPageList = [
   { text: "5", value: 5 },
@@ -134,6 +135,7 @@ export default function AssignedPatients() {
 
   return (
     <div className="m-4">
+       <Head title="Assigned Patient" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

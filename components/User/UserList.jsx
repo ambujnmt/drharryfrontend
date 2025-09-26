@@ -7,6 +7,7 @@ import { fetchUsers } from "../../utils/fetchApi";
 import { LanguageContext } from "../../context/LanguageContext";
 import { FaEye, FaPen } from "react-icons/fa";
 import { Link } from "@heroui/react";
+import { Head } from "../../layouts/head";
 
 const columns = [
     {
@@ -34,6 +35,18 @@ const columns = [
         Header: "Email",
         accessor: "email",
         sort: false,
+        Cell: ({ value }) => (
+            <span
+                style={{
+                    wordBreak: "break-word",   // ✅ breaks long words
+                    whiteSpace: "normal",      // ✅ allows wrapping
+                    maxWidth: "200px",         // ✅ adjust as per your table width
+                    display: "inline-block"
+                }}
+            >
+                {value}
+            </span>
+        ),
     },
     {
         Header: "User Type",
@@ -109,9 +122,10 @@ const Advanced = () => {
 
     return (
         <div className="m-10">
+             <Head title="User List" />
             <PageTitle
                 breadCrumbItems={[
-                    { label: "Dashboard" ,path: "/dashboard"},
+                    { label: "Dashboard", path: "/dashboard" },
                     { label: "User List", path: "/user/userList", active: true },
                 ]}
                 title={translateText("User List")} // Or just "Users"

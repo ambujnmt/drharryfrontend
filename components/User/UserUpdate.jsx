@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Form } from "react-bootstrap";
 import { useDropzone } from 'react-dropzone';
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { Head } from '../../layouts/head';
 
 export default function UserUpdate() {
     const router = useRouter();
@@ -180,6 +181,7 @@ export default function UserUpdate() {
 
     return (
         <div>
+             <Head title="User Update" />
             <PageTitle
                 breadCrumbItems={[
                     { label: "Dashboard", path: "/dashboard" },

@@ -4,6 +4,7 @@ import { LanguageContext } from "../../context/LanguageContext";
 import PageTitle from "../Breadcrumb/PageTitle";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Form } from "react-bootstrap";
+import { Head } from "../../layouts/head";
 
 export default function PatientEntry() {
 
@@ -132,6 +133,7 @@ export default function PatientEntry() {
   };
   return (
     <div className="m-4">
+       <Head title="Add Patient" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

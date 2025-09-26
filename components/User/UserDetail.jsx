@@ -7,6 +7,7 @@ import { Link } from '@heroui/react';
 import PageTitle from '../Breadcrumb/PageTitle';
 import { Card, Col, Row, Spinner, Badge } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Head } from '../../layouts/head';
 
 export default function UserDetail() {
     const router = useRouter();
@@ -88,7 +89,6 @@ export default function UserDetail() {
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
                 <div className="text-center">
                     <Spinner animation="border" variant="primary" />
-                    <p className="mt-2 text-muted">Loading user details...</p>
                 </div>
             </div>
         );
@@ -109,6 +109,7 @@ export default function UserDetail() {
 
     return (
         <div>
+             <Head title="User Detail" />
             <PageTitle
                 breadCrumbItems={[
                     { label: "Dashboard", path: "/dashboard" },

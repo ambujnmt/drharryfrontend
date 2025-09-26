@@ -8,6 +8,7 @@ import { LanguageContext } from "../../context/LanguageContext";
 import { FaEye, FaPen, FaTrash } from "react-icons/fa";
 import { Link, Button, useDisclosure } from "@heroui/react";
 import Tmodal from "../Tmodal/Tmodal";
+import { Head } from "../../layouts/head";
 
 export default function ClinicManagement() {
   const { translateText } = useContext(LanguageContext);
@@ -138,6 +139,7 @@ export default function ClinicManagement() {
 
   return (
     <div className="m-10">
+       <Head title="Clinic List" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

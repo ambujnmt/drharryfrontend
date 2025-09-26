@@ -7,6 +7,7 @@ import { fetchDoctors } from "../../utils/fetchApi";
 import { LanguageContext } from "../../context/LanguageContext";
 import { FaEye } from "react-icons/fa";
 import { Link } from "@heroui/react";
+import { Head } from "../../layouts/head";
 
 export default function DoctorList() {
   const { translateText } = useContext(LanguageContext);
@@ -87,6 +88,7 @@ export default function DoctorList() {
 
   return (
     <div className="m-10">
+      <Head title="Doctor List" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

@@ -4,6 +4,7 @@ import { LanguageContext } from "../../context/LanguageContext";
 import PageTitle from '../Breadcrumb/PageTitle';
 import { Card, Col, Row, Spinner, Badge } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Head } from '../../layouts/head';
 
 export default function PatientAssignment() {
   const [usersByType, setUsersByType] = useState({
@@ -142,6 +143,7 @@ export default function PatientAssignment() {
 
   return (
     <div className='m-4'>
+       <Head title="Patient Assignment" />
       <style jsx>{`
         
         .glass-card {

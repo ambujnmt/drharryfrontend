@@ -7,6 +7,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PageTitle from "../Breadcrumb/PageTitle";
 import { getLatLngFromAddress,getTimezone  } from "../../utils/googleApi";
+import { Head } from "../../layouts/head";
 
 export default function AddClinic() {
   const { translateText, locale } = useContext(LanguageContext);
@@ -131,6 +132,7 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="m-4">
+       <Head title="Add Clinic" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

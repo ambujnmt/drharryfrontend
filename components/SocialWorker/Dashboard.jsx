@@ -4,9 +4,9 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import { LanguageContext } from "../../context/LanguageContext";
 import { Head } from "../../layouts/head"
-import Statistics from "./Statistics";
+import Statistics from "../Dashboard/Statistics";
 import { Row, Col } from "react-bootstrap";
-import TopSellingProducts from "./TopSellingProducts"
+import TopSellingProducts from "../Dashboard/TopSellingProducts"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const barData = [
@@ -61,7 +61,7 @@ export default function Dashboard() {
   const [chartHeight, setChartHeight] = useState(300);
   return (
     <div className="w-full bg-gray-100 md:p-6 p-0">
-      <Head title="Admin Dashboard" />
+      <Head title="Dashboard" />
 <Statistics/>
    
 

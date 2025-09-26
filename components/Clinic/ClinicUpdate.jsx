@@ -11,6 +11,7 @@ import {
 } from "../../utils/fetchApi";
 import { getLatLngFromAddress, getTimezone } from "../../utils/googleApi"; // 👈 move your helpers here
 import { Spinner } from "@heroui/react";
+import { Head } from "../../layouts/head";
 
 export default function ClinicUpdate() {
   const router = useRouter();
@@ -123,6 +124,7 @@ export default function ClinicUpdate() {
 
   return (
     <div>
+       <Head title="Clinic Update" />
       <PageTitle
         breadCrumbItems={[
           { label: "Dashboard", path: "/dashboard" },

@@ -5,6 +5,7 @@ import PageTitle from "../Breadcrumb/PageTitle";
 import Table from "../Table/Table";
 import { useUser } from "../../context/UserContext";
 import { fetchAssignedPatientForSocialWorker } from "../../utils/fetchApi";
+import { Head } from "../../layouts/head";
 
 export default function AssignedPatient() {
   const { user } = useUser();
@@ -79,9 +80,10 @@ export default function AssignedPatient() {
 
   return (
     <div className="p-4">
+       <Head title="Assigned Patient" />
       <PageTitle
         breadCrumbItems={[
-          { label: "Dashboard", path: "/dashboard" },
+          { label: "Dashboard", path: "/socialWorker/dashboard" },
           { label: "Assigned Patients", active: true },
         ]}
         title="Assigned Patients"
