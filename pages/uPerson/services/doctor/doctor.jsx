@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import SideMenu from "../../components/Menu/SideMenu";
-import Header from "../../components/Menu/Header";
-import Footer from "../../components/Menu/Footer";
-import PrivateRoute from "../../components/PrivateRoute/PrivateRoute";
-import MedicineStatus from "../../components/UPerson/HeartAndBloodSupport/MedicineStatus";
+import SideMenu from "../../../../components/Menu/SideMenu";
+import Header from "../../../../components/Menu/Header";
+import Footer from "../../../../components/Menu/Footer";
+import PrivateRoute from "../../../../components/PrivateRoute/PrivateRoute";
+import Doctor from "../../../../components/UPerson/Services/Doctor/Doctor";
 
 export default function AddUserPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
@@ -42,8 +42,8 @@ export default function AddUserPage() {
           toggleMenu={() => setMenuOpen(!menuOpen)}
         />
 
-        <div className="flex-1 overflow-auto p-[30px] bg-gray-100">
-          <MedicineStatus />
+        <div className="flex-1 overflow-auto p-3 bg-gray-100">
+          <Doctor />
         </div>
 
         <Footer />

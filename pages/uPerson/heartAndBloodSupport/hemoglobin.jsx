@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import SideMenu from "../../components/Menu/SideMenu";
-import Header from "../../components/Menu/Header";
-import Footer from "../../components/Menu/Footer";
-import PrivateRoute from "../../components/PrivateRoute/PrivateRoute";
-import Hemoglobin from "../../components/UPerson/HeartAndBloodSupport/Hemoglobin";
+import SideMenu from "../../../components/Menu/SideMenu";
+import Header from "../../../components/Menu/Header";
+import Footer from "../../../components/Menu/Footer";
+import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
+import Hemoglobin from "../../../components/UPerson/HeartAndBloodSupport/Hemoglobin";
 
 export default function AddUserPage() {
   const [menuOpen, setMenuOpen] = useState(false); 

@@ -771,6 +771,96 @@ export async function deleteClinicSlot(slot_id) {
   }
 }
 
+export const fetchDoctorsByFilter = async ({ filter_type = "All", latitude = null, longitude = null }) => {
+  try {
+    const body = {
+      user_type: 1, // ✅ Doctors
+      filter_type,  // "All" or "Nearby"
+    };
+
+    if (filter_type === "Nearby" && latitude && longitude) {
+      body.latitude = latitude;
+      body.longitude = longitude;
+    }
+
+    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/users-by-type`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching doctors:", error);
+    return null;
+  }
+};
+
+export const fetchDoctorWeeklySlots = async (doctorId) => {
+  try {
+    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-slot-list`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ doctor_id: doctorId }),
+    });
+
+    const data = await response.json();
+    return data; // {status, data: [ { day_of_week, start_time, end_time... } ]}
+  } catch (error) {
+    console.error("Error fetching doctor weekly slots:", error);
+    return { status: false, data: [] };
+  }
+};
+
+export const fetchDoctorAvailableSlots = async (doctorId, date) => {
+  try {
+    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-all-slots`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        doctor_id: doctorId,
+        date: date, // format: YYYY-MM-DD
+      }),
+    });
+
+    const data = await response.json();
+    return data; // {status, data: [ { time, status } ]}
+  } catch (error) {
+    console.error("Error fetching doctor available slots:", error);
+    return { status: false, data: [] };
+  }
+};
+
+
+export const bookDoctorSlot = async ({ doctor_id, user_id, booking_date, start_time }) => {
+  try {
+    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/book-doctor-slot`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        doctor_id,
+        user_id,
+        booking_date,
+        start_time,
+      }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return { status: false, message: "Something went wrong. Please try again." };
+  }
+};
+
 
 
 

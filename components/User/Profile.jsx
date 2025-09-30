@@ -74,8 +74,8 @@ export default function Profile() {
                             <div>
                                 <span className="block text-sm text-gray-500 font-medium">Phone</span>
                                 <p className="text-lg text-gray-800">
+                                    {userData.country_code && ` ${userData.country_code}`}
                                     {userData.mobile ? userData.mobile : 'Not Available'}
-                                    {userData.country_code && ` (${userData.country_code})`}
                                 </p>
                             </div>
                             <div>
