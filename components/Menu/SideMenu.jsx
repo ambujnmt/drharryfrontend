@@ -48,60 +48,69 @@ export default function SideMenu({ isOpen, onClose }) {
       {/* Scrollable Menu Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         <ul className="space-y-2 px-2 py-2 sidemenu-ul">
-          {/* <li className="p-2 flex items-center rounded">
-            <Link href="/dashboard" className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center">
-              <MdDashboard />
-              {translateText("dashboard")}
-            </Link>
-          </li> */}
+    
 
           {/* Role display */}
           {user && user.user_type && (
             <li className="p-2 flex items-center rounded  text-blue-800">
-              {user.user_type === 1 && <span>Doctor</span>}
-            {user.user_type === 2 && (
-  <ul className="list-none m-0 p-0">
-    <li className="p-2 flex items-center rounded">
-      <Link
-        href="/socialWorker/dashboard"
-        className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center"
-      >
-        <MdDashboard />
-        {translateText("dashboard")}
-      </Link>
-    </li>
+              {user.user_type === 1 && (
+              <ul className="list-none m-0 p-0">
 
-    <li className="p-2 flex items-center rounded">
-      <Link
-        href="/socialWorker/assignedPatient"
-        className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center"
-      >
-        <MdOutlineSick />
-        {translateText("Assigned Patient")}
-      </Link>
-    </li>
-  </ul>
-)}
+                  <li className="p-2 flex items-center rounded">
+                    <Link
+                      href="/doctor/dashboard"
+                      className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center"
+                    >
+                      <MdDashboard />
+                      {translateText("dashboard")}
+                    </Link>
+                  </li>
+
+                </ul>)}
+              {user.user_type === 2 && (
+                <ul className="list-none m-0 p-0">
+
+                  <li className="p-2 flex items-center rounded">
+                    <Link
+                      href="/socialWorker/dashboard"
+                      className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center"
+                    >
+                      <MdDashboard />
+                      {translateText("dashboard")}
+                    </Link>
+                  </li>
+
+                  <li className="p-2 flex items-center rounded">
+                    <Link
+                      href="/socialWorker/assignedPatient"
+                      className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center"
+                    >
+                      <MdOutlineSick />
+                      {translateText("Assigned Patient")}
+                    </Link>
+                  </li>
+                </ul>
+              )}
 
 
               {user.user_type === 3 && <span>Patient</span>}
               {user.user_type === 4 && <span>
-                   <Link href="/uPerson/dashboard" className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center">
+                <Link href="/uPerson/dashboard" className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center">
                   <MdOutlineSick />
                   {translateText("Dashboard")}
                 </Link>
-                </span>}
+              </span>}
             </li>
           )}
 
 
-   {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
-          <li className="p-2 flex items-center rounded">
-            <Link href="/dashboard" className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center">
-              <MdDashboard />
-              {translateText("dashboard")}
-            </Link>
-          </li>
+          {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
+            <li className="p-2 flex items-center rounded">
+              <Link href="/dashboard" className="gap-1 text-[15px] text-white !hover:text-black font-medium p-1 flex items-center">
+                <MdDashboard />
+                {translateText("dashboard")}
+              </Link>
+            </li>
           )}
 
 

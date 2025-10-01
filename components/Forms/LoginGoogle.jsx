@@ -7,28 +7,22 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/r
 import { IoLanguage } from "react-icons/io5";
 import { useUser } from "../../context/UserContext";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useRouter } from "next/router";
 
 export default function LoginGoogle() {
   const [googleData, setGoogleData] = useState(null);
   const [responseData, setResponseData] = useState(null);
-  const [errorMessages, setErrorMessages] = useState([]); // Store dynamic errors as an array
-  const { setUser } = useUser(); // ✅ Get setUser
-  const { executeRecaptcha } = useGoogleReCaptcha(); // Access the reCAPTCHA function
+  const [errorMessages, setErrorMessages] = useState([]); 
+  const { setUser } = useUser(); 
+  const { executeRecaptcha } = useGoogleReCaptcha(); 
+  const router = useRouter();
 
   const handleLoginSuccess = (credentialResponse) => {
     try {
-      // Log the full credential response to understand the structure
-      // console.log("Google Login Response:", credentialResponse);
-
-      // Decode the JWT token from the credential
       const decoded = jwtDecode(credentialResponse.credential);
       setGoogleData(decoded);
-
-      // Log the decoded data
-      // console.log("Decoded Google Login Data:", decoded); 
     } catch (error) {
       setErrorMessages(["Google login failed. Please try again."]);
-      // console.error("Error during Google login:", error);
     }
   };
 
@@ -47,16 +41,15 @@ export default function LoginGoogle() {
             setErrorMessages(["reCAPTCHA not yet available. Please try again."]);
             return;
           }
-    
+
           const token = await executeRecaptcha("social_login");
-          console.log("reCAPTCHA token:", token); // Log reCAPTCHA token
-    
+          
           const data = {
             name: googleData.name,
             email: googleData.email,
             social_id: googleData.sub,
             provider: "Google",
-            recaptcha_token: token, // Include reCAPTCHA token
+            recaptcha_token: token,
           };
     
           const res = await axios.post(
@@ -64,18 +57,37 @@ export default function LoginGoogle() {
             data
           );
     
-          // console.log("Backend Response:", res.data);
-    
           if (res.data.status === false) {
             const backendErrors = res.data.data ? Object.values(res.data.data).flat() : [];
             setErrorMessages(backendErrors);
           } else {
-            setUser(res.data.data.user);
+            const userData = res.data.data.user;
+            setUser(userData);
             setResponseData(res.data);
-            
-            // console.log("User Data:", res.data.data.user);
-            
-            window.location.href = "/dashboard";
+
+            // ✅ Role-based redirect
+     // ✅ Role-based redirect
+if (userData.is_admin) {
+  router.replace("/dashboard"); // only admin
+} else {
+  switch (userData.user_type) {
+    case 1:
+      router.replace("/doctor/dashboard");
+      break;
+    case 2:
+      router.replace("/socialWorker/dashboard");
+      break;
+    case 3:
+      router.replace("/patient/dashboard");
+      break;
+    case 4:
+      router.replace("/uPerson/dashboard");
+      break;
+    default:
+      router.replace("/"); // fallback if unknown user_type
+  }
+}
+
           }
     
         } catch (error) {
@@ -122,7 +134,7 @@ export default function LoginGoogle() {
           />
 
           {errorMessages.length > 0 && (
-            <div className="mt-4 p-2 border rounded text-lg text-white">
+            <div className="mt-4 p-2 border rounded text-red-600 text-sm bg-red-50">
               <ul>
                 {errorMessages.map((msg, index) => (
                   <li key={index}>{msg}</li>
@@ -130,13 +142,6 @@ export default function LoginGoogle() {
               </ul>
             </div>
           )}
-
-          {/* {responseData && (
-            <div className="mt-4 p-2 border rounded text-sm text-green-700">
-              <h3 className="font-semibold">Backend Response:</h3>
-              <pre>{JSON.stringify(responseData, null, 2)}</pre>
-            </div>
-          )} */}
         </div>
       </div>
     </div>

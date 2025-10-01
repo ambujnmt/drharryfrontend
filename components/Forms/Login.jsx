@@ -51,63 +51,69 @@ export default function LoginForm() {
   const [successMessage, setSuccessMessage] = useState("");
 
   const { user, setUser, setUserEmail } = useUser();
-  //   useEffect(() => {
-  //     if (user) {
-  //     }
-  //   }, [user]);
-
-  //  if (user) {
-  //   router.push("/dashboard");
-  //   return null; // Prevent login form from rendering
-  // }
-
   useEffect(() => {
     setChecking(false);
   }, []);
 
   if (checking) {
-    return null; // or spinner
-  }
-
-  if (admin || user) {
-    router.replace("/dashboard");
     return null;
   }
 
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (validate()) {
+    setLoading(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validate()) {
-      setLoading(true); // Show loader
+    try {
+      const response = await loginUser(formData.email, formData.password);
 
-      try {
-        const response = await loginUser(formData.email, formData.password);
+      // Save user info
+      setUser({
+        ...response,
+        user_type: response.user_type,
+        is_admin: response.is_admin // assuming backend sends this
+      });
+      setUserEmail(formData.email);
 
-        // setUser(response);
-        setUser({
-          ...response,          // keep all other user data
-          user_type: response.user_type  // explicitly ensure user_type is saved
-        });
-        setUserEmail(formData.email);
+      setFormData({ email: "", password: "" });
+      setErrors({});
 
-        setFormData({ email: "", password: "" });
-        setErrors({});
+      // Show success message
+      const translatedMessage = locale === "ita" ? response.message_italian : response.message;
+      setSuccessMessage(translatedMessage);
 
-        const translatedMessage = locale === "ita" ? response.message_italian : response.message;
-        setSuccessMessage(translatedMessage);
+      // ✅ Redirect based on role after 2s
+      setTimeout(() => {
+        if (response.is_admin) {
+          router.replace("/dashboard"); // Only admin goes here
+        } else {
+          switch (response.user_type) {
+            case 1:
+              router.replace("/doctor/dashboard");
+              break;
+            case 2:
+              router.replace("/socialWorker/dashboard");
+              break;
+            case 3:
+              router.replace("/patient/dashboard");
+              break;
+            case 4:
+              router.replace("/uPerson/dashboard");
+              break;
+            default:
+              router.replace("/"); // fallback for unknown user_type
+          }
+        }
+      }, 2000);
 
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 2000);
-
-      } catch (err) {
-        const errorMessage = locale === "ita" ? err.message_italian : err.message;
-        setErrors({ api: errorMessage });
-      } finally {
-        setLoading(false); // Hide loader
-      }
+    } catch (err) {
+      const errorMessage = locale === "ita" ? err.message_italian : err.message;
+      setErrors({ api: errorMessage });
+    } finally {
+      setLoading(false);
     }
-  };
+  }
+};
 
 
   return (

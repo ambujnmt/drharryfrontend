@@ -69,10 +69,10 @@ export default function AdminLogin() {
         return null; // or spinner
     }
 
-    if (admin || user) {
-        router.replace("/dashboard");
-        return null;
-    }
+    // if (admin || user) {
+    //     router.replace("/dashboard");
+    //     return null;
+    // }
 
 
     const handleSubmit = async (e) => {

@@ -1,21 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from '../components/Forms/Login';
 import { useRouter } from 'next/router';
 import { useUser } from '../context/UserContext';
+import { useAdmin } from '../context/AdminContext';
 
 export default function LoginPage() {
-  const { user } = useUser(); 
+  const { user } = useUser();
+  const { admin } = useAdmin();
   const router = useRouter();
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     if (user) {
-      router.replace('/dashboard');
+      // Redirect based on user_type
+      switch (user.user_type) {
+        case 1:
+          router.replace("/doctor/dashboard");
+          break;
+        case 2:
+          router.replace("/socialWorker/dashboard");
+          break;
+        case 3:
+          router.replace("/patient/dashboard");
+          break;
+        case 4:
+          router.replace("/uPerson/dashboard");
+          break;
+        default:
+          setChecking(false); // unknown user_type, show login
+      }
+    } else if (admin) {
+      // Only admin goes to /dashboard
+      router.replace("/dashboard");
+    } else {
+      setChecking(false); // not logged in, show login
     }
-  }, [user]);
+  }, [user, admin]);
 
-  return (
-    <div>
-      {!user && <Login />}
-    </div>
-  );
+  if (checking) return null; // prevents flicker
+
+  return <Login />;
 }

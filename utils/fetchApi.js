@@ -838,7 +838,6 @@ export const fetchDoctorAvailableSlots = async (doctorId, date) => {
   }
 };
 
-
 export const bookDoctorSlot = async ({ doctor_id, user_id, booking_date, start_time }) => {
   try {
     const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/book-doctor-slot`, {
@@ -861,7 +860,86 @@ export const bookDoctorSlot = async ({ doctor_id, user_id, booking_date, start_t
   }
 };
 
+export async function fetchDoctorBookings(doctorId) {
+  const response = await fetch(
+    "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-booking-list",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ doctor_id: doctorId }),
+    }
+  );
 
+  if (!response.ok) throw new Error("Failed to fetch bookings");
+  const result = await response.json();
+  return result.data || [];
+}
+
+export const fetchBookingById = async (booking_id) => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-booking-details",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ booking_id }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data?.status) {
+      return data.data; 
+    } else {
+      console.error("Booking API returned error:", data.message);
+      return null;
+    }
+  } catch (err) {
+    console.error("Error fetching booking by ID:", err);
+    return null;
+  }
+};
+
+export const confirmDoctorBooking = async (booking_id) => {
+  try {
+    const res = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/confirm-doctor-booking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ booking_id }),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error confirming booking:", error);
+    return { status: false, message: "Something went wrong." };
+  }
+};
+
+export const cancelDoctorBooking = async (booking_id) => {
+  try {
+    const res = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/cancel-doctor-booking",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ booking_id }),
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error cancelling booking:", error);
+    return { status: false, message: "Something went wrong." };
+  }
+};
 
 
 const fetchGoogleToken = async (token) => {

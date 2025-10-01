@@ -12,7 +12,7 @@ import { useUser } from "../../context/UserContext";
 import { useAdmin } from "../../context/AdminContext";
 import { useRouter } from "next/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { fetchProfile, fetchDoctorBookings } from "../../utils/fetchApi";
 
 export default function Header({ menuOpen, toggleMenu }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -22,23 +22,54 @@ export default function Header({ menuOpen, toggleMenu }) {
   const [logoutMessage, setLogoutMessage] = useState("");
   const [clientLocale, setClientLocale] = useState("");
   const router = useRouter();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { admin, logoutAdmin } = useAdmin(); // Access admin data and logout function from AdminContext
   const { user, setUser, setUserEmail } = useUser();
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     setClientLocale(locale.toUpperCase());
   }, [locale]);
 
-  const notifications = [
-    { id: 1, heading: "New Message", description: "New message from John", isNew: true },
-    { id: 2, heading: "Report Approved", description: "Your report has been approved", isNew: true },
-    { id: 3, heading: "Meeting Scheduled", description: "Meeting scheduled for Monday", isNew: false },
-    { id: 4, heading: "New Comment", description: "New comment on your post", isNew: false },
-  ];
+ useEffect(() => {
+  const loadDoctorBookings = async () => {
+    if (user?.user_type === 1) { // Doctor
+      try {
+        const bookings = await fetchDoctorBookings(user.user_id);
 
-  const newNotificationCount = notifications.filter(n => n.isNew).length;
+        // Filter only pending bookings
+        const pendingBookings = bookings.filter(b => b.status === "pending");
+
+        const mapped = await Promise.all(
+          pendingBookings.map(async (b) => {
+            const profile = await fetchProfile(b.user_id);
+            return {
+              id: b.id,
+              heading: "New Booking",
+              description: `${profile?.data?.name} booked a slot on ${b.booking_date}`,
+              details: b,
+              isNew: true, // all pending are considered new
+            };
+          })
+        );
+
+        setNotifications(mapped);
+      } catch (err) {
+        console.error("Error fetching doctor bookings:", err);
+      }
+    } else if (user?.user_type === 2) {
+      setNotifications([{ id: 1, heading: "Social Worker Info", description: "Your cases updates will appear here.", isNew: false }]);
+    } else if (user?.user_type === 3) {
+      setNotifications([{ id: 2, heading: "Patient Info", description: "Your appointment updates will appear here.", isNew: false }]);
+    } else if (user?.user_type === 4) {
+      setNotifications([{ id: 3, heading: "User Info", description: "Updates for you will appear here.", isNew: false }]);
+    }
+  };
+
+  if (user) loadDoctorBookings();
+}, [user]);
+
+  const newNotificationCount = notifications.filter((n) => n.isNew).length;
 
   const isAdminLoggedIn = !!admin;
 
@@ -68,7 +99,7 @@ export default function Header({ menuOpen, toggleMenu }) {
 
 
         <div className="relative" onClick={() => setNotificationOpen(!notificationOpen)}>
-          <IoMdNotifications />
+          <IoMdNotifications className="cursor-pointer" />
           {newNotificationCount > 0 && (
             <span className="absolute -top-2 -right-1 bg-red-500 text-white text-xs px-1 rounded-full animate-pulse">
               {newNotificationCount}
@@ -76,19 +107,26 @@ export default function Header({ menuOpen, toggleMenu }) {
           )}
 
           {notificationOpen && (
-            <div className="absolute -right-20 top-9 mt-2 w-64 bg-white text-black shadow-lg rounded-md border">
-              <div className="p-2 font-semibold border-b ">{translateText("notifications")}</div>
+            <div className="absolute -right-20 top-9 mt-2 w-72 bg-white text-black shadow-lg rounded-md border z-50">
+              <div className="p-2 font-semibold border-b">{translateText("notifications")}</div>
               <div className="max-h-60 overflow-y-auto">
-                {notifications.map((n) => (
-                  <div key={n.id} className={`p-3 text-sm ${n.isNew ? "bg-gray-100" : ""} hover:bg-gray-200`}>
-                    <div className="font-medium text-base">{n.heading}</div>
-                    <div className="text-gray-600 text-xs">{n.description}</div>
-                  </div>
-                ))}
+                {notifications.length === 0 ? (
+                  <div className="p-3 text-gray-500 text-sm">No notifications</div>
+                ) : (
+                  notifications.map((n) => (
+                    <Link
+                      key={n.id}
+                      href={`/doctor/notification/${n?.details?.id}`} // 👈 use booking ID from details
+                      className={`block p-3 text-sm cursor-pointer ${n.isNew ? "bg-gray-100" : ""
+                        } hover:bg-gray-200`}
+                    >
+                      <div className="font-medium text-base">{n.heading}</div>
+                      <div className="text-gray-600 text-xs">{n.description}</div>
+                    </Link>
+
+                  ))
+                )}
               </div>
-              <Link href="#" className="text-center block p-2 bg-[#3a81e6] text-white font-semibold rounded-b-md">
-                {translateText("view_more")}
-              </Link>
             </div>
           )}
         </div>
