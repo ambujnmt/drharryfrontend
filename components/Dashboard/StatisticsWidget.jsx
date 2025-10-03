@@ -53,7 +53,7 @@ const StatisticsWidget = (props) => {
                         </div>
                     </Col>
                 </Row>
-                <div className="mt-3">
+                {/* <div className="mt-3">
                     <h6 className="text-uppercase text-xs">
                         Target <span className="float-end text-xs">{props.progress}%</span>
                     </h6>
@@ -77,7 +77,7 @@ const StatisticsWidget = (props) => {
                         />
                     </ProgressBar>
                 
-                </div>
+                </div> */}
             </Card.Body>
         </Card>
     );

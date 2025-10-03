@@ -7,6 +7,7 @@ import { fetchBookingById, fetchProfile, confirmDoctorBooking, cancelDoctorBooki
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Head } from "../../layouts/head";
 import Tmodal from "../Tmodal/Tmodal";
+import dayjs from "dayjs";
 
 export default function NotificationDetail() {
     const router = useRouter();
@@ -42,6 +43,16 @@ export default function NotificationDetail() {
 
         loadData();
     }, [id]);
+
+    const isCancelable = () => {
+    if (!booking) return false;
+    if (booking.status !== "confirmed") return true; 
+
+    const bookingDateTime = dayjs(`${booking.booking_date} ${booking.start_time}`);
+    const now = dayjs();
+    
+    return bookingDateTime.diff(now, "hour") >= 3;
+};
 
     const handleModalConfirm = async () => {
         setConfirmLoading(true);
@@ -205,17 +216,18 @@ export default function NotificationDetail() {
             {/* Action Buttons */}
             <Row className="mt-4">
                 <Col className="text-center space-x-3">
-                    <Button
-                        variant="danger"
-                        onClick={() => {
-                            setModalMessage("");
-                            setModalAction("cancel"); // track modal action
-                            setIsModalOpen(true);
-                        }}
-                        disabled={booking.status === "cancelled"}
-                    >
-                        {booking.status === "cancelled" ? "Cancelled" : "Cancel"}
-                    </Button>
+                 <Button
+    variant="danger"
+    onClick={() => {
+        setModalMessage("");
+        setModalAction("cancel");
+        setIsModalOpen(true);
+    }}
+    disabled={!isCancelable()}
+>
+    {booking.status === "cancelled" ? "Cancelled" : "Cancel"}
+</Button>
+
 
                     <Button
                         variant="success"
