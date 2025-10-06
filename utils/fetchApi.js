@@ -941,6 +941,55 @@ export const cancelDoctorBooking = async (booking_id) => {
   }
 };
 
+export async function fetchUserBookings(userId) {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-booking-list",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: userId }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.status && data.data) {
+      return data.data;
+    } else {
+      console.error("No user bookings found:", data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching user bookings:", error);
+    return [];
+  }
+}
+
+export const changeDoctorBookingStatus = async (booking_id, status) => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/change-status-doctor-booking",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ booking_id, status }),
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    return { status: false, message: "Something went wrong" };
+  }
+};
+
+
 
 const fetchGoogleToken = async (token) => {
   try {

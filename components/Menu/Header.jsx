@@ -12,7 +12,7 @@ import { useUser } from "../../context/UserContext";
 import { useAdmin } from "../../context/AdminContext";
 import { useRouter } from "next/router";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { fetchProfile, fetchDoctorBookings } from "../../utils/fetchApi";
+import { fetchProfile, fetchDoctorBookings,fetchUserBookings  } from "../../utils/fetchApi";
 
 export default function Header({ menuOpen, toggleMenu }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -31,14 +31,22 @@ export default function Header({ menuOpen, toggleMenu }) {
     setClientLocale(locale.toUpperCase());
   }, [locale]);
 
- useEffect(() => {
-  const loadDoctorBookings = async () => {
-    if (user?.user_type === 1) { // Doctor
-      try {
+useEffect(() => {
+  const loadUserOrDoctorNotifications = async () => {
+    try {
+      // Doctor panel notifications
+      if (user?.user_type === 1) {
         const bookings = await fetchDoctorBookings(user.user_id);
+        const today = new Date();
 
-        // Filter only pending bookings
-        const pendingBookings = bookings.filter(b => b.status === "pending");
+        // Show only upcoming pending bookings
+        const pendingBookings = bookings.filter((b) => {
+          const bookingDate = new Date(b.booking_date);
+          return (
+            b.status === "pending" &&
+            bookingDate >= today.setHours(0, 0, 0, 0)
+          );
+        });
 
         const mapped = await Promise.all(
           pendingBookings.map(async (b) => {
@@ -48,26 +56,67 @@ export default function Header({ menuOpen, toggleMenu }) {
               heading: "New Booking",
               description: `${profile?.data?.name} booked a slot on ${b.booking_date}`,
               details: b,
-              isNew: true, // all pending are considered new
+              isNew: true,
             };
           })
         );
 
         setNotifications(mapped);
-      } catch (err) {
-        console.error("Error fetching doctor bookings:", err);
       }
-    } else if (user?.user_type === 2) {
-      setNotifications([{ id: 1, heading: "Social Worker Info", description: "Your cases updates will appear here.", isNew: false }]);
-    } else if (user?.user_type === 3) {
-      setNotifications([{ id: 2, heading: "Patient Info", description: "Your appointment updates will appear here.", isNew: false }]);
-    } else if (user?.user_type === 4) {
-      setNotifications([{ id: 3, heading: "User Info", description: "Updates for you will appear here.", isNew: false }]);
+
+      // 👇 User panel notifications
+     else if (user?.user_type === 4) {
+  const bookings = await fetchUserBookings(user.user_id); // ✅ new API for users
+
+  const mapped = await Promise.all(
+    bookings.map(async (b) => {
+      const doctorProfile = await fetchProfile(b.doctor_id);
+
+      let heading = "";
+      let description = "";
+
+      if (b.status === "confirmed") {
+        heading = "Booking Confirmed";
+        description = `Your booking with Dr. ${doctorProfile?.data?.name} on ${b.booking_date} has been confirmed.`;
+      } else if (b.status === "cancelled") {
+        heading = "Booking Cancelled";
+        description = `Your booking with Dr. ${doctorProfile?.data?.name} on ${b.booking_date} was cancelled.`;
+      } else {
+        return null;
+      }
+
+      return {
+        id: b.id,
+        heading,
+        description,
+        details: b,
+        isNew: true,
+      };
+    })
+  );
+
+  setNotifications(mapped.filter(Boolean));
+}
+
+
+      // Other user types
+      else if (user?.user_type === 2) {
+        setNotifications([
+          { id: 1, heading: "Social Worker Info", description: "Your cases updates will appear here.", isNew: false },
+        ]);
+      } else if (user?.user_type === 3) {
+        setNotifications([
+          { id: 2, heading: "Patient Info", description: "Your appointment updates will appear here.", isNew: false },
+        ]);
+      }
+    } catch (err) {
+      console.error("Error fetching notifications:", err);
     }
   };
 
-  if (user) loadDoctorBookings();
+  if (user) loadUserOrDoctorNotifications();
 }, [user]);
+
 
   const newNotificationCount = notifications.filter((n) => n.isNew).length;
 
@@ -114,15 +163,20 @@ export default function Header({ menuOpen, toggleMenu }) {
                   <div className="p-3 text-gray-500 text-sm">No notifications</div>
                 ) : (
                   notifications.map((n) => (
-                    <Link
-                      key={n.id}
-                      href={`/doctor/notification/${n?.details?.id}`} // 👈 use booking ID from details
-                      className={`block p-3 text-sm cursor-pointer ${n.isNew ? "bg-gray-100" : ""
-                        } hover:bg-gray-200`}
-                    >
-                      <div className="font-medium text-base">{n.heading}</div>
-                      <div className="text-gray-600 text-xs">{n.description}</div>
-                    </Link>
+                 <Link
+  key={n.id}
+  href={
+    user?.user_type === 1
+      ? `/doctor/notification/${n?.details?.id}`
+      : `/uPerson/notification/${n?.details?.id}`
+  }
+  className={`block p-3 text-sm cursor-pointer ${
+    n.isNew ? "bg-gray-100" : ""
+  } hover:bg-gray-200`}
+>
+  <div className="font-medium text-base">{n.heading}</div>
+  <div className="text-gray-600 text-xs">{n.description}</div>
+</Link>
 
                   ))
                 )}

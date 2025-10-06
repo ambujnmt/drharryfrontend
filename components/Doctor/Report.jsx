@@ -47,70 +47,76 @@ export default function Report() {
       accessor: "end_time",
       sort: false,
     },
-    {
-      Header: "Status",
-      accessor: "status",
-      sort: false,
-      Cell: ({ row }) => (
-        <span
-          className={`badge ${
-            row.original.status?.toLowerCase() === "cancelled"
-              ? "bg-danger"
-              : "bg-secondary"
-          } text-white`}
-        >
-          {row.original.status}
-        </span>
-      ),
-    },
+   {
+  Header: "Status",
+  accessor: "status",
+  sort: false,
+  Cell: ({ row }) => (
+    <span
+      className={`badge ${
+        row.original.status?.toLowerCase() === "cancelled"
+          ? "bg-danger"
+          : row.original.status?.toLowerCase() === "completed"
+          ? "bg-success"  // New color for completed
+          : "bg-secondary"
+      } text-white`}
+    >
+      {row.original.status}
+    </span>
+  ),
+}
+
   ];
 
-  useEffect(() => {
-    if (!user || !user.user_id) return;
+useEffect(() => {
+  if (!user || !user.user_id) return;
 
-    const getBookings = async () => {
-      setLoading(true);
-      try {
-        const response = await fetchDoctorBookings(user.user_id);
+  const getBookings = async () => {
+    setLoading(true);
+    try {
+      const response = await fetchDoctorBookings(user.user_id);
 
-        if (Array.isArray(response)) {
-          // Only cancelled (later you can add completed here)
-          const cancelledBookings = response.filter(
-            (b) => b.status?.toLowerCase() === "cancelled"
-          );
+      if (Array.isArray(response)) {
+        // Include both cancelled and completed bookings
+        const filteredBookings = response.filter(
+          (b) =>
+            b.status?.toLowerCase() === "cancelled" ||
+            b.status?.toLowerCase() === "completed"
+        );
 
-          // Fetch patient profiles
-          const withPatientProfiles = await Promise.all(
-            cancelledBookings.map(async (b) => {
-              try {
-                const profile = await fetchProfile(b.user_id);
-                const p = profile?.data || {};
-                return {
-                  ...b,
-                  patient_name: p.name,
-                  email: p.email,
-                };
-              } catch {
-                return {
-                  ...b,
-                  patient_name: "N/A",
-                  email: "N/A",
-                };
-              }
-            })
-          );
+        // Fetch patient profiles
+        const withPatientProfiles = await Promise.all(
+          filteredBookings.map(async (b) => {
+            try {
+              const profile = await fetchProfile(b.user_id);
+              const p = profile?.data || {};
+              return {
+                ...b,
+                patient_name: p.name,
+                email: p.email,
+              };
+            } catch {
+              return {
+                ...b,
+                patient_name: "N/A",
+                email: "N/A",
+              };
+            }
+          })
+        );
 
-          setBookings(withPatientProfiles);
-        }
-      } catch (err) {
-        console.error("Error fetching bookings", err);
-      } finally {
-        setLoading(false);
+        setBookings(withPatientProfiles);
       }
-    };
+    } catch (err) {
+      console.error("Error fetching bookings", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    getBookings();
-  }, [user]);
+  getBookings();
+}, [user]);
+
 
   const sizePerPageList = [
     { text: "5", value: 5 },
