@@ -3,12 +3,14 @@ import CountUp from "react-countup";
 
 const StatisticsWidget = (props) => {
     // Manually define rgba colors with opacity (0.15)
-    const variantColors = {
-        blue: "rgba(74, 129, 212, 1)",
-        success: "rgba(26, 188, 156, 1)",
-        warning: "rgba(247, 184, 75, 1)",
-        info: "rgba(67, 191, 229, 1)",
-    };
+  const variantColors = {
+  primary: "rgba(74, 129, 212, 1)",  // ✅ added this
+  blue: "rgba(74, 129, 212, 1)",
+  success: "rgba(26, 188, 156, 1)",
+  warning: "rgba(247, 184, 75, 1)",
+  info: "rgba(67, 191, 229, 1)",
+};
+
 
     // Solid colors for progress bar
     const progressColors = {

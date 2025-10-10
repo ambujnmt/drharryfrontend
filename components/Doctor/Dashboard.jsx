@@ -3,10 +3,9 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pi
 import { LanguageContext } from "../../context/LanguageContext";
 import { Head } from "../../layouts/head";
 import { Row, Col } from "react-bootstrap";
-import TopSellingProducts from "../Dashboard/TopSellingProducts";
 import StatisticsWidget from "../Dashboard/StatisticsWidget";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FiAperture, FiShoppingCart, FiBarChart2, FiCpu } from "react-icons/fi";
+import {FiBarChart2, FiCpu } from "react-icons/fi";
 import { fetchDoctorBookings } from "../../utils/fetchApi";
 import { useUser } from "../../context/UserContext";
 import { MdToday, MdUpcoming } from "react-icons/md";
@@ -207,14 +206,7 @@ const getPieData = () => {
 
       </div>
 
-      {/* Table */}
-      {/* <div className="mt-8">
-        <Row>
-          <Col xl={12}>
-            <TopSellingProducts />
-          </Col>
-        </Row>
-      </div> */}
+
     </div>
   );
 }

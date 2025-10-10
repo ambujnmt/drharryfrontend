@@ -989,6 +989,62 @@ export const changeDoctorBookingStatus = async (booking_id, status) => {
   }
 };
 
+export const fetchNotificationsByYear = async (userId, year) => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/notification-list",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          year: year,
+        }),
+      }
+    );
+
+    const result = await response.json();
+    if (result.status && Array.isArray(result.data)) {
+      return result.data;
+    } else {
+      console.error("Unexpected API response:", result);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    return [];
+  }
+};
+
+// 📁 utils/fetchApi.js
+
+export const fetchPatientAssignments = async () => {
+  try {
+    const response = await fetch(
+      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/all-patient-assignment-list",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}), 
+      }
+    );
+
+    const result = await response.json();
+    if (result?.status && Array.isArray(result.data)) {
+      return result.data;
+    } else {
+      console.error("Unexpected API response:", result);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching patient assignments:", error);
+    return [];
+  }
+};
 
 
 const fetchGoogleToken = async (token) => {
