@@ -136,140 +136,165 @@ export default function UpdateProfile() {
 
 
     return (
-        <div className="mx-auto p-6 bg-white shadow-md rounded-lg mt-10 ">
-            <h1 className="text-2xl font-bold mb-4">Update Profile</h1>
-            {responseMsg && (
-                <p className={`mt-4 text-center font-semibold ${responseMsg.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-                    {responseMsg.text}
-                </p>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {previewImg && (
-                    <div>
-                        <img src={previewImg} alt="Profile Preview" className="w-32 h-32 object-cover rounded-full" />
-                    </div>
-                )}
-                <div>
-                    <label className="block font-medium">Profile Image</label>
-                    <input type="file" accept="image/*" onChange={handleFileChange} />
-                </div>
+    <div className="mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+        <h1 className="text-2xl font-bold mb-4">Update Profile</h1>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <Input
-                            label="Name"
-                            labelPlacement="outside"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            type='text'
-                            variant="bordered"
-                        />
-                        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-                    </div>
-                    <div>
-                        <Input
-                            variant="bordered"
-                            label="Email"
-                            labelPlacement="outside"
-                            name="email"
-                            type='text'
-                            value={formData.email}
-                            onChange={handleChange}
-                            disabled
-                        />
-                    </div>
-                </div>
+        {responseMsg && (
+            <p
+                className={`mt-4 text-center font-semibold ${
+                    responseMsg.type === 'success' ? 'text-green-600' : 'text-red-600'
+                }`}
+            >
+                {responseMsg.text}
+            </p>
+        )}
 
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <Input
-                            type='text'
-                            label="User Type"
-                            labelPlacement="outside"
-                            name="user_type_value"
-                            value={formData.user_type_value}
-                            onChange={handleChange}
-                            variant="bordered"
-                            disabled
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            type='number'
-                            variant="bordered"
-                            label="Mobile"
-                            labelPlacement="outside"
-                            name="mobile"
-                            value={formData.mobile}
-                            onChange={handleChange}
-                        />
-                        {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
-                    </div>
-                </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
 
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block mb-1.5">Gender</label>
-                        <select
-                            name="gender"
-                            value={formData.gender}
-                            onChange={handleChange}
-                            className="w-full border-2 border-gray-200 px-2 py-1.5 rounded-xl"
-                        >
-                            <option value="">Select</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                        {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
-                    </div>
-                    <div>
-                        <Input
-                            variant="bordered"
-                            label="Birthday"
-                            labelPlacement="outside"
-                            name="birthday"
-                            value={formData.birthday}
-                            onChange={handleChange}
-                            type="date"
-                        />
-                        {errors.birthday && <p className="text-red-500 text-sm mt-1">{errors.birthday}</p>}
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block">Address</label>
-                    <textarea
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        type='text'
-                        className="w-full border-2 border-gray-200 px-2 py-1.5 rounded-xl"
+            {/* Profile Image */}
+            {previewImg && (
+                <div className="flex justify-center">
+                    <img
+                        src={previewImg}
+                        alt="Profile Preview"
+                        className="w-32 h-32 object-cover rounded-full"
                     />
-                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                </div>
+            )}
+            <div>
+                <label className="block font-medium mb-2">Profile Image</label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="block w-full"
+                />
+            </div>
+
+            {/* Name & Email */}
+            <div className="grid grid-cols-2 gap-6">
+                <div>
+                    <label className="block font-medium mb-2">Name</label>
+                    <Input
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        type="text"
+                        variant="bordered"
+                        className="w-full"
+                    />
+                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                 </div>
 
-                <div className="flex justify-center gap-4">
-                    <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
-                        disabled={loading}
-                    >
-                        {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
-                            : 'Update'}
-                    </button>
+                <div>
+                    <label className="block font-medium mb-2">Email</label>
+                    <Input
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        type="text"
+                        variant="bordered"
+                        className="w-full"
+                        disabled
+                    />
+                </div>
+            </div>
 
-                    <button
-                        type="button"
-                        onClick={() => router.push(`/user/profile/${id}`)}
-                        className="bg-gray-400 text-white px-4 py-2 rounded-xl hover:bg-gray-500"
-                    >
-                        Cancel
-                    </button>
+            {/* User Type & Mobile */}
+            <div className="grid grid-cols-2 gap-6">
+                <div>
+                    <label className="block font-medium mb-2">User Type</label>
+                    <Input
+                        name="user_type_value"
+                        value={formData.user_type_value}
+                        onChange={handleChange}
+                        type="text"
+                        variant="bordered"
+                        className="w-full"
+                        disabled
+                    />
                 </div>
 
+                <div>
+                    <label className="block font-medium mb-2">Mobile</label>
+                    <Input
+                        name="mobile"
+                        value={formData.mobile}
+                        onChange={handleChange}
+                        type="number"
+                        variant="bordered"
+                        className="w-full"
+                    />
+                    {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
+                </div>
+            </div>
 
-            </form>
-        </div>
-    );
+            {/* Gender & Birthday */}
+            <div className="grid grid-cols-2 gap-6">
+                <div>
+                    <label className="block font-medium mb-2">Gender</label>
+                    <select
+                        name="gender"
+                        value={formData.gender}
+                        onChange={handleChange}
+                        className="w-full border-2 border-gray-200 px-2 py-1.5 rounded-xl"
+                    >
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
+                </div>
+
+                <div>
+                    <label className="block font-medium mb-2">Birthday</label>
+                    <Input
+                        name="birthday"
+                        value={formData.birthday}
+                        onChange={handleChange}
+                        type="date"
+                        variant="bordered"
+                        className="w-full"
+                    />
+                    {errors.birthday && <p className="text-red-500 text-sm mt-1">{errors.birthday}</p>}
+                </div>
+            </div>
+
+            {/* Address */}
+            <div>
+                <label className="block font-medium mb-2">Address</label>
+                <textarea
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full border-2 border-gray-200 px-2 py-1.5 rounded-xl"
+                />
+                {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+            </div>
+
+            {/* Buttons */}
+            <div className="flex justify-center gap-4">
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700"
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+                    ) : (
+                        'Update'
+                    )}
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => router.push(`/user/profile/${id}`)}
+                    className="bg-gray-400 text-white px-4 py-2 rounded-xl hover:bg-gray-500"
+                >
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+);
 }

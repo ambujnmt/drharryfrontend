@@ -1,9 +1,8 @@
 import { useStoreLogin } from "../store/login";
-// const baseUrl = "https://abc.in";
-// const v3BaseUrl = "";
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const createNewPasswordApi = async (email, password) => {
-  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/create-new-password";
+  const url = `${baseUrl}wellilab-api-gateway/public/api/create-new-password`;
 
   try {
     const response = await fetch(url, {
@@ -38,7 +37,7 @@ export const createNewPasswordApi = async (email, password) => {
 
 
 export const verifyResendOtpApi = async (email, otp) => {
-  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/verify-otp";
+  const url = `${baseUrl}wellilab-api-gateway/public/api/verify-otp`;
 
   try {
     const response = await fetch(url, {
@@ -76,7 +75,7 @@ export const verifyResendOtpApi = async (email, otp) => {
 
 
 export const resendOtpApi = async (email) => {
-  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/resend-otp";  
+  const url = `${baseUrl}wellilab-api-gateway/public/api/resend-otp`;  
 
   try {
     const response = await fetch(url, {
@@ -110,7 +109,7 @@ export const resendOtpApi = async (email) => {
 };
 
 export const verifyOtp = async ({ email, otp }) => {
-  const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/verify-otp`, {
+  const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/verify-otp`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -124,7 +123,7 @@ export const verifyOtp = async ({ email, otp }) => {
 };
 
 export const registerUser = async (name, email, password, c_password) => {
-  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/register";
+  const url = `${baseUrl}wellilab-api-gateway/public/api/register`;
 
   try {
     // Basic validations
@@ -166,7 +165,7 @@ export const registerUser = async (name, email, password, c_password) => {
 };
 
 export const loginUser = async (email, password) => {
-  const url = "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/login";
+  const url = `${baseUrl}wellilab-api-gateway/public/api/login`;
 
   try {
     const response = await fetch(url, {
@@ -193,7 +192,7 @@ export const loginUser = async (email, password) => {
 
 
 export const adminLogin = async (email, password) => {
-  const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/admin-login", {
+  const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/admin-login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -214,7 +213,7 @@ export const adminLogin = async (email, password) => {
 
 export const changeAdminPassword = async ({ admin_id, old_password, new_password }) => {
   try {
-    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/admin/create-new-password", {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/admin/create-new-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -248,7 +247,7 @@ export const changeAdminPassword = async ({ admin_id, old_password, new_password
 // user-list
 export async function fetchUsers() {
   try {
-    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/users");
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/users`);
     const data = await response.json();
     return data;
   } catch (error) {
@@ -260,7 +259,7 @@ export async function fetchUsers() {
 // add user
 export const addUser = async (data) => {
   try {
-    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/add-user", {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/add-user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -286,7 +285,7 @@ export const addUser = async (data) => {
 // update-user
 export async function updateUser(id, data) {
   try {
-    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/update-user/${id}`, {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/update-user/${id}`, {
       method: 'POST',
       body: data, // send FormData directly
     });
@@ -301,7 +300,7 @@ export async function updateUser(id, data) {
 
 export const changeUserStatus = async (userId, status) => {
   try {
-    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/change-user-status`, {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/change-user-status`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -321,7 +320,7 @@ export const changeUserStatus = async (userId, status) => {
 };
 
 export const postPatientAssignment = async (payload) => {
-  const url = 'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/save-patient-assignment';
+  const url = `${baseUrl}wellilab-api-gateway/public/api/save-patient-assignment`;
 
   try {
     const response = await fetch(url, {
@@ -347,7 +346,7 @@ export const postPatientAssignment = async (payload) => {
 
 export const fetchAssignedPatients = async (userId) => {
   try {
-    const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/patient-assignment-list', {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/patient-assignment-list`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -380,7 +379,7 @@ export const fetchAssignedPatients = async (userId) => {
 export const fetchSocialWorkersWithPatients = async () => {
   try {
     const response = await fetch(
-      'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/socialworkers-patients'
+      `${baseUrl}wellilab-api-gateway/public/api/socialworkers-patients`
     );
     const data = await response.json();
     return data;
@@ -390,11 +389,10 @@ export const fetchSocialWorkersWithPatients = async () => {
   }
 };
 
-
 export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, schedule_time }) => {
   try {
     const response = await fetch(
-      'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/save-schedular-data',
+      `${baseUrl}wellilab-api-gateway/public/api/save-schedular-data`,
       {
         method: 'POST',
         headers: {
@@ -424,7 +422,7 @@ export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, sch
     }
 
     try {
-      const response = await fetch('https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-assign-schedular', {
+      const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/delete-assign-schedular`, {
         method: 'POST',
         body: formData
       });
@@ -446,7 +444,7 @@ export const saveSchedulerData = async ({ user_id, patient_id, schedule_day, sch
 
 export async function fetchProfile(userId) {
   const response = await fetch(
-    'https://nmtdevserver.com/well/wellilab-api-gateway/public/api/get-user',
+    `${baseUrl}wellilab-api-gateway/public/api/get-user`,
     {
       method: 'POST',
       headers: {
@@ -464,10 +462,9 @@ export async function fetchProfile(userId) {
   return result;
 }
 
-
 export async function updateProfileApi(formData) {
   try {
-    const response = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/update-profile", {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/update-profile`, {
       method: "POST",
       body: formData,
     });
@@ -498,7 +495,7 @@ export async function addClinic(apiData) {
     }
 
     const res = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/add-clinic",
+      `${baseUrl}wellilab-api-gateway/public/api/add-clinic`,
       {
         method: "POST",
         body: formData,
@@ -514,7 +511,7 @@ export async function addClinic(apiData) {
 export const fetchClinics = async () => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-auth/public/api/clinics",
+      `${baseUrl}wellilab-auth/public/api/clinics`,
       {
         method: "POST",
         headers: {
@@ -534,7 +531,7 @@ export const fetchClinics = async () => {
 export const fetchClinicById = async (id) => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/get-clinic",
+      `${baseUrl}wellilab-api-gateway/public/api/get-clinic`,
       {
         method: "POST",
         headers: {
@@ -557,7 +554,7 @@ export async function deleteClinic(clinicId) {
     formData.append("clinic_id", clinicId);
 
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/delete-clinic",
+      `${baseUrl}wellilab-api-gateway/public/api/delete-clinic`,
       {
         method: "POST",
         body: formData, // ✅ send as FormData
@@ -574,7 +571,7 @@ export async function deleteClinic(clinicId) {
 export async function updateClinic(formData) {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/update-clinic",
+      `${baseUrl}wellilab-api-gateway/public/api/update-clinic`,
       {
         method: "POST",
         body: formData,
@@ -590,7 +587,7 @@ export async function updateClinic(formData) {
 export const fetchAssignedPatientForSocialWorker = async (userId) => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/patient-assignment-list",
+      `${baseUrl}wellilab-api-gateway/public/api/patient-assignment-list`,
       {
         method: "POST",
         headers: {
@@ -621,7 +618,7 @@ export const fetchAssignedPatientForSocialWorker = async (userId) => {
 export const fetchDoctors = async () => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/users-by-type",
+      `${baseUrl}wellilab-api-gateway/public/api/users-by-type`,
       {
         method: "POST",
         headers: {
@@ -642,7 +639,7 @@ export const fetchDoctors = async () => {
 export async function fetchDoctorSlots(doctor_id) {
   try {
     const res = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-slot-list",
+      `${baseUrl}wellilab-api-gateway/public/api/doctor-slot-list`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -658,7 +655,7 @@ export async function fetchDoctorSlots(doctor_id) {
 export async function addDoctorSlot(payload) {
   try {
     const res = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-add-slot",
+      `${baseUrl}wellilab-api-gateway/public/api/doctor-add-slot`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -674,7 +671,7 @@ export async function addDoctorSlot(payload) {
 export const updateDoctorSlot = async (payload) => {
   try {
     const res = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-update-slot",
+      `${baseUrl}wellilab-api-gateway/public/api/doctor-update-slot`,
       {
         method: "POST",
         headers: {
@@ -693,7 +690,7 @@ export const updateDoctorSlot = async (payload) => {
 export const deleteDoctorSlot = async (slot_id) => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-delete-slot",
+      `${baseUrl}wellilab-api-gateway/public/api/doctor-delete-slot`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -709,7 +706,7 @@ export const deleteDoctorSlot = async (slot_id) => {
 
 export const addClinicSlot = async (payload) => {
   try {
-    const res = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-add-slot`, {
+    const res = await fetch(`${baseUrl}wellilab-api-gateway/public/api/clinic-add-slot`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -724,7 +721,7 @@ export const addClinicSlot = async (payload) => {
 
 export const fetchClinicSlots = async (clinic_id) => {
   try {
-    const res = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-slot-list`, {
+    const res = await fetch(`${baseUrl}wellilab-api-gateway/public/api/clinic-slot-list`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -740,7 +737,7 @@ export const fetchClinicSlots = async (clinic_id) => {
 export async function updateClinicSlot(payload) {
   try {
     const res = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-update-slot",
+      `${baseUrl}wellilab-api-gateway/public/api/clinic-update-slot`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -757,7 +754,7 @@ export async function updateClinicSlot(payload) {
 export async function deleteClinicSlot(slot_id) {
   try {
     const res = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/clinic-delete-slot",
+      `${baseUrl}wellilab-api-gateway/public/api/clinic-delete-slot`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -774,8 +771,8 @@ export async function deleteClinicSlot(slot_id) {
 export const fetchDoctorsByFilter = async ({ filter_type = "All", latitude = null, longitude = null }) => {
   try {
     const body = {
-      user_type: 1, // ✅ Doctors
-      filter_type,  // "All" or "Nearby"
+      user_type: 1, 
+      filter_type,  
     };
 
     if (filter_type === "Nearby" && latitude && longitude) {
@@ -783,7 +780,7 @@ export const fetchDoctorsByFilter = async ({ filter_type = "All", latitude = nul
       body.longitude = longitude;
     }
 
-    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/users-by-type`, {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/users-by-type`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -801,7 +798,7 @@ export const fetchDoctorsByFilter = async ({ filter_type = "All", latitude = nul
 
 export const fetchDoctorWeeklySlots = async (doctorId) => {
   try {
-    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-slot-list`, {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/doctor-slot-list`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -819,7 +816,7 @@ export const fetchDoctorWeeklySlots = async (doctorId) => {
 
 export const fetchDoctorAvailableSlots = async (doctorId, date) => {
   try {
-    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-all-slots`, {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/doctor-all-slots`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -840,7 +837,7 @@ export const fetchDoctorAvailableSlots = async (doctorId, date) => {
 
 export const bookDoctorSlot = async ({ doctor_id, user_id, booking_date, start_time }) => {
   try {
-    const response = await fetch(`https://nmtdevserver.com/well/wellilab-api-gateway/public/api/book-doctor-slot`, {
+    const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/book-doctor-slot`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -862,7 +859,7 @@ export const bookDoctorSlot = async ({ doctor_id, user_id, booking_date, start_t
 
 export async function fetchDoctorBookings(doctorId) {
   const response = await fetch(
-    "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-booking-list",
+    `${baseUrl}wellilab-api-gateway/public/api/doctor-booking-list`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -878,7 +875,7 @@ export async function fetchDoctorBookings(doctorId) {
 export const fetchBookingById = async (booking_id) => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-booking-details",
+      `${baseUrl}wellilab-api-gateway/public/api/doctor-booking-details`,
       {
         method: "POST",
         headers: {
@@ -904,7 +901,7 @@ export const fetchBookingById = async (booking_id) => {
 
 export const confirmDoctorBooking = async (booking_id) => {
   try {
-    const res = await fetch("https://nmtdevserver.com/well/wellilab-api-gateway/public/api/confirm-doctor-booking", {
+    const res = await fetch(`${baseUrl}wellilab-api-gateway/public/api/confirm-doctor-booking`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -923,7 +920,7 @@ export const confirmDoctorBooking = async (booking_id) => {
 export const cancelDoctorBooking = async (booking_id) => {
   try {
     const res = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/cancel-doctor-booking",
+      `${baseUrl}wellilab-api-gateway/public/api/cancel-doctor-booking`,
       {
         method: "POST",
         headers: {
@@ -944,7 +941,7 @@ export const cancelDoctorBooking = async (booking_id) => {
 export async function fetchUserBookings(userId) {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/doctor-booking-list",
+      `${baseUrl}wellilab-api-gateway/public/api/doctor-booking-list`,
       {
         method: "POST",
         headers: {
@@ -971,7 +968,7 @@ export async function fetchUserBookings(userId) {
 export const changeDoctorBookingStatus = async (booking_id, status) => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/change-status-doctor-booking",
+      `${baseUrl}wellilab-api-gateway/public/api/change-status-doctor-booking`,
       {
         method: "POST",
         headers: {
@@ -992,7 +989,7 @@ export const changeDoctorBookingStatus = async (booking_id, status) => {
 export const fetchNotificationsByYear = async (userId, year) => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/notification-list",
+      `${baseUrl}wellilab-api-gateway/public/api/notification-list`,
       {
         method: "POST",
         headers: {
@@ -1018,12 +1015,10 @@ export const fetchNotificationsByYear = async (userId, year) => {
   }
 };
 
-// 📁 utils/fetchApi.js
-
 export const fetchPatientAssignments = async () => {
   try {
     const response = await fetch(
-      "https://nmtdevserver.com/well/wellilab-api-gateway/public/api/all-patient-assignment-list",
+      `${baseUrl}wellilab-api-gateway/public/api/all-patient-assignment-list`,
       {
         method: "POST",
         headers: {
@@ -1046,260 +1041,3 @@ export const fetchPatientAssignments = async () => {
   }
 };
 
-
-const fetchGoogleToken = async (token) => {
-  try {
-    const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`;
-    console.log('Fetching token info from:', url);
-
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Google Token Fetch Failed:', errorText);
-      throw new Error('Invalid token');
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching Google token info:', error.message);
-    return null;
-  }
-};
-
-export { fetchGoogleToken };
-
-
-
-const fetchWithToken = async (url, data = {}, options = {}) => {
-  try {
-    const authToken = useStoreLogin.getState().authToken;
-
-    if (!authToken) {
-      window.location.href = "/login";
-      return { error: "No auth token, redirecting to login." };
-    }
-
-    // Set up the headers
-    const headers = {
-      ...options.headers,
-      token: authToken,
-      apihost: baseUrl,
-    };
-
-    // Set up the fetch options
-    const fetchOptions = {
-      ...options,
-      headers,
-      method: options.method || "GET",
-    };
-    let newUrl;
-
-    // If the method is POST, PUT, or DELETE, include the data in the body as JSON
-    if (
-      fetchOptions.method === "POST" ||
-      fetchOptions.method === "PUT" ||
-      fetchOptions.method === "DELETE"
-    ) {
-      fetchOptions.body = data;
-      if (!url.includes("/file/upload")) {
-        fetchOptions.body = JSON.stringify(fetchOptions.body);
-      }
-      newUrl = url.startsWith("http") ? url : `${v3BaseUrl}${url}`;
-    } else {
-      // For GET or other methods, construct the URL with query parameters
-      newUrl = url.startsWith("http") ? url : `${v3BaseUrl}${url}`;
-      const queryString = new URLSearchParams(data).toString();
-      newUrl = `${newUrl}?${queryString}`;
-    }
-
-    let response = await fetch(newUrl, fetchOptions);
-
-    if (!response.ok) {
-      if (response.status === 403) {
-        try {
-          await useStoreLogin.getState().getNewAuthToken();
-        } catch (error) {
-          window.location.href = "/login";
-          return { error: "Error fetching new auth token." };
-        }
-        return await fetchWithToken(url, data, options); // Retry with new token
-      } else {
-        const errorData = await response.json();
-        return {
-          error: `HTTP error! status: ${response.status}`,
-          details: errorData,
-        };
-      }
-    }
-
-    return await response.json(); 
-  } catch (error) {
-    return { error}
-  }
-};
-
-export const fetchWithOutToken = async (url, data = {}, options = {}) => {
-  try {
-    const headers = {
-      ...options.headers,
-      apihost: baseUrl,
-    };
-
-    const fetchOptions = {
-      ...options,
-      headers,
-      method: options.method || "GET",
-    };
-
-    // If the method is POST, PUT, or DELETE, include the data in the body as JSON
-    if (
-      fetchOptions.method === "POST" ||
-      fetchOptions.method === "PUT" ||
-      fetchOptions.method === "DELETE"
-    ) {
-      fetchOptions.body = JSON.stringify(data);
-      url = url.startsWith("http") ? url : `${v3BaseUrl}${url}`;
-    } else {
-      // For GET or other methods, construct the URL with query parameters
-      url = url.startsWith("http") ? url : `${v3BaseUrl}${url}`;
-      const queryString = new URLSearchParams(data).toString();
-      url = `${url}?${queryString}`;
-    }
-
-    const response = await fetch(url, fetchOptions);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        error: `HTTP error! status: ${response.status}`,
-        details: errorData,
-      };
-    }
-    return await response.json(); // Return the response in JSON format
-  } catch (error) {
-    return { error };
-    // return { error: "Fetch failed.", details: error.message };
-  }
-};
-
-export const fetchWithToken_old = async (url, data = {}, options = {}) => {
-  try {
-    const authToken = useStoreLogin.getState().authToken;
-
-    if (!authToken) {
-      window.location.href = "/login";
-      return { error: "No auth token, redirecting to login." };
-    }
-
-    // Set up the headers
-    const headers = {
-      ...options.headers,
-      token: authToken,
-    };
-
-    // Set up the fetch options
-    const fetchOptions = {
-      ...options,
-      headers,
-      method: options.method || "GET",
-    };
-    let newUrl;
-
-    // If the method is POST, PUT, or DELETE, include the data in the body as JSON
-    if (
-      fetchOptions.method === "POST" ||
-      fetchOptions.method === "PUT" ||
-      fetchOptions.method === "DELETE"
-    ) {
-      fetchOptions.body = data;
-      if (!url.includes("/file/upload")) {
-        fetchOptions.body = JSON.stringify(fetchOptions.body);
-      }
-      newUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
-    } else {
-      // For GET or other methods, construct the URL with query parameters
-      newUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
-      const queryString = new URLSearchParams(data).toString();
-      newUrl = `${newUrl}?${queryString}`;
-    }
-
-    let response = await fetch(newUrl, fetchOptions);
-
-    if (!response.ok) {
-      if (response.status === 403) {
-        try {
-          await useStoreLogin.getState().getNewAuthToken();
-        } catch (error) {
-          window.location.href = "/login";
-          return { error: "Error fetching new auth token." };
-        }
-        return await fetchWithToken(url, data, options); // Retry with new token
-      } else {
-        const errorData = await response.json();
-        return {
-          error: `HTTP error! status: ${response.status}`,
-          details: errorData,
-        };
-      }
-    }
-
-    return await response.json(); // Return the response in JSON format
-  } catch (error) {
-    return {error}
-    // return { error: "Fetch failed.", details: error.message };
-  }
-};
-
-export const fetchWithOutToken_old = async (url, data = {}, options = {}) => {
-  try {
-    // Set up the headers
-    const headers = {
-      ...options.headers,
-    };
-
-    // Set up the fetch options
-    const fetchOptions = {
-      ...options,
-      headers,
-      method: options.method || "GET",
-    };
-
-    // If the method is POST, PUT, or DELETE, include the data in the body as JSON
-    if (
-      fetchOptions.method === "POST" ||
-      fetchOptions.method === "PUT" ||
-      fetchOptions.method === "DELETE"
-    ) {
-      if (!url.includes("/file/upload")) {
-        fetchOptions.body = JSON.stringify(data);
-      } else {
-        fetchOptions.body = data;
-      }
-      url = url.startsWith("http") ? url : `${baseUrl}${url}`;
-    } else {
-      
-      // For GET or other methods, construct the URL with query parameters
-      url = url.startsWith("http") ? url : `${baseUrl}${url}`;
-      const queryString = new URLSearchParams(data).toString();
-      
-      url = `${url}?${queryString}`;
-    }
-
-    const response = await fetch(url, fetchOptions);
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        error: `HTTP error! status: ${response.status}`,
-        details: errorData,
-      };
-    }
-    return await response.json(); 
-  } catch (error) {
-    return {error}
-  }
-};
-
-export default fetchWithToken;

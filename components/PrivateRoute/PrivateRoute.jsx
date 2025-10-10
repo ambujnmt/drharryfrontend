@@ -34,8 +34,9 @@ const PrivateRoute = ({ children }) => {
         "/profile/*",
         "/settings",
         "/settings/*",
-        "/user/profile/*"  // Dynamic user profile routes
+        "/user/*"
       ];
+
 
       // Check if current path is a shared route
       const isSharedRoute = sharedRoutes.some(pattern => matchesPattern(path, pattern));
