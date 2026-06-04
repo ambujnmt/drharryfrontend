@@ -4,7 +4,7 @@ import React from "react";
 export default function Faculty() {
   const faculty = [
     {
-      image: "/assets/images/doctor1.png",
+      image: "/assets/Images/doctor1.png",
       name: "Dr. Sarah Mitchell",
       role: "Founder & Clinical Director",
       description:
@@ -12,7 +12,7 @@ export default function Faculty() {
       large: false,
     },
     {
-      image: "/assets/images/doctor2.png",
+      image: "/assets/Images/doctor2.png",
       name: "Dr. James Chen",
       role: "Founder & Clinical Director",
       description:
@@ -20,7 +20,7 @@ export default function Faculty() {
       large: true,
     },
     {
-      image: "/assets/images/doctor1.png",
+      image: "/assets/Images/doctor1.png",
       name: "Dr. Sarah Mitchell",
       role: "Founder & Clinical Director",
       description:
@@ -28,7 +28,7 @@ export default function Faculty() {
       large: false,
     },
     {
-      image: "/assets/images/doctor2.png",
+      image: "/assets/Images/doctor2.png",
       name: "Dr. James Chen",
       role: "Founder & Clinical Director",
       description:

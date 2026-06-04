@@ -22,7 +22,7 @@ export default function EducationalPrograms() {
                         {/* Card 1 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
                             <img
-                            src="/assets/images/SmileDesign-Veneers.png"
+                            src="/assets/Images/SmileDesign-Veneers.png"
                             alt="Smile Design & Veneers"
                             className="w-full h-[200px] object-cover rounded-t-[12px]"
                             />
@@ -39,23 +39,23 @@ export default function EducationalPrograms() {
  
                                 <ul className="mt-4">
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Facial Analysis
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Smile design
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Photography
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Veneer prep
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Temporization
                                     </li>
                                 </ul>
@@ -72,7 +72,7 @@ export default function EducationalPrograms() {
                         {/* Card 2 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
                             <img
-                            src="/assets/images/Crown-Preparation-Mastery.png"
+                            src="/assets/Images/Crown-Preparation-Mastery.png"
                             alt="Crown Preparation Mastery"
                             className="w-full h-[200px] object-cover rounded-t-[12px]"
                             />
@@ -121,7 +121,7 @@ export default function EducationalPrograms() {
                         {/* Card 3 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
                             <img
-                            src="/assets/images/Digital-Dentistry.png"
+                            src="/assets/Images/Digital-Dentistry.png"
                             alt="Digital Dentistry"
                             className="w-full h-[200px] object-cover rounded-t-[12px]"
                             />
@@ -138,23 +138,23 @@ export default function EducationalPrograms() {
  
                                 <ul className="mt-4">
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     IOS scanning
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Photogrammetry
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Exocad
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Smile design software
                                     </li>
                                     <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                    <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                    <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                     Digital workflows
                                     </li>
                                 </ul>
@@ -171,7 +171,7 @@ export default function EducationalPrograms() {
                         {/* Card 4 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
                         <img
-                            src="/assets/images/Full-Arch-Rehabilitation.png"
+                            src="/assets/Images/Full-Arch-Rehabilitation.png"
                             alt="Full Arch Rehabilitation"
                             className="w-full h-[200px] object-cover rounded-t-[12px]"
                         />
@@ -188,27 +188,27 @@ export default function EducationalPrograms() {
  
                             <ul className="mt-4">
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 All-on-X
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Surgery
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Prosthetics
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Immediate load
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 FP1/FP3 workflows
                             </li>
                             </ul>
@@ -225,7 +225,7 @@ export default function EducationalPrograms() {
                         {/* Card 5 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
                         <img
-                            src="/assets/images/Functional-Occlusion.png"
+                            src="/assets/Images/Functional-Occlusion.png"
                             alt="Functional Occlusion / VDO"
                             className="w-full h-[200px] object-cover rounded-t-[12px]"
                         />
@@ -242,27 +242,27 @@ export default function EducationalPrograms() {
  
                             <ul className="mt-4">
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Full mouth rehab
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Kois-inspired concepts
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Vertical dimension
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Function-first treatment planning
                             </li>
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)] mt-2">
-                                <img src="/assets/images/check-icon.png" alt="image" className="w-[18px] mr-2" />
+                                <img src="/assets/Images/check-icon.png" alt="image" className="w-[18px] mr-2" />
                                 Facial Analysis
                             </li>
                             </ul>

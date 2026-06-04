@@ -24,7 +24,7 @@ export default function EnrollmentProcess() {
                     {/* Card 1 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] p-[15px]">
                             <img
-                            src="/assets/images/user-icon1.png"
+                            src="/assets/Images/user-icon1.png"
                             alt="Apply for Course"
                             className="w-[60px] h-auto mb-[15px]"
                             />
@@ -42,7 +42,7 @@ export default function EnrollmentProcess() {
                         {/* Card 2 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] p-[15px]">
                             <img
-                            src="/assets/images/user-icon1.png"
+                            src="/assets/Images/user-icon1.png"
                             alt="Seat Reservation"
                             className="w-[60px] h-auto mb-[15px]"
                             />
@@ -60,7 +60,7 @@ export default function EnrollmentProcess() {
                         {/* Card 3 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] p-[15px]">
                             <img
-                            src="/assets/images/user-icon1.png"
+                            src="/assets/Images/user-icon1.png"
                             alt="Payment Processing"
                             className="w-[60px] h-auto mb-[15px]"
                             />
@@ -78,7 +78,7 @@ export default function EnrollmentProcess() {
                         {/* Card 4 */}
                         <div className="rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] p-[15px]">
                             <img
-                            src="/assets/images/user-icon1.png"
+                            src="/assets/Images/user-icon1.png"
                             alt="Confirmation & Access"
                             className="w-[60px] h-auto mb-[15px]"
                             />
