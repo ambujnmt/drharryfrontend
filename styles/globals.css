@@ -18,6 +18,8 @@
   }
 }
 
+
+
 /* Inner-Content-Block Start*/
 
 #inner-content-block .innerDataContent h1 {
@@ -294,4 +296,32 @@ body .table-wrapper::-webkit-scrollbar {
  
  .card-header {
     border-bottom: none !important;
+}
+
+
+/* harry css */
+h1, h2, h3, h4, h5{
+  font-family: "Cormorant Garamond", serif;;
+}
+ 
+h6, p{
+  font-family:"Inter", sans-serif ;
+}
+ 
+a{
+  font-family:"Inter", sans-serif ;
+}
+ 
+:root{
+  --primary-color: #c8a96a;
+  --secondary-color: #0a2342;
+  --light-gold: #f1e9d9;
+  --light-gold2: #F5F2EC;
+  --text-color1: #0a2342;
+  --text-color2: #2b405c;
+  --text-color3: #2B2B2B;
+}
+
+.hover\:opacity-hover:hover {
+    opacity: unset !important;
 }

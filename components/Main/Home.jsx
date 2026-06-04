@@ -1,18 +1,16 @@
 import React from 'react'
-import Slider from './Slider'
-import HomeHeader from "../Menu/HomeHeader"
+import Header from "../Menu/Header"
 import Body from "./Body"
-import HomeFooter from "../Menu/HomeFooter"
+import Footer from "../Menu/Footer"
 
 
 export default function Home() {
   return (
     <section className='homePage'>
-        <HomeHeader/>
-        <Slider/>
-       <Body/>
-         <HomeFooter/>
-       
+      <Header />
+      <Body />
+      <Footer />
+
     </section>
   )
 }

@@ -1,25 +1,34 @@
 import React from 'react'
-import About from "./About"
-import Discovery from "./Discovery"
-import WellBeing from './WellBeing';
-import Reviews from './Reviews';
+import Hero from './HomeSections/Hero';
+import About from './HomeSections/About';
+import ClinicLibrary from './HomeSections/ClinicLibrary';
+import Faculty from './HomeSections/Faculty';
+import EducationalPrograms from './HomeSections/EducationalPrograms';
+import WhyChoose from './HomeSections/WhyChoose';
+import ChoosePlan from './HomeSections/ChoosePlan';
+import VideoSection from './HomeSections/VideoSec';
+import EnrollmentProcess from './HomeSections/EnrollmentProcess';
+import RegisterForm from './HomeSections/RegisterForm';
+import Testimonials from './HomeSections/Testimonials';
 
 export default function Body() {
 
 
   return (
     <div
-    style={{
-      backgroundImage: "url('https://nmtdevserver.com/welli/flowerbg.png')",
-      backgroundSize: "cover",
-      backgroundRepeat: "no-repeat",
 
-    }}
-  >
-    <About/>
-    <Discovery/>
-    <WellBeing/>
-    <Reviews/>
+    >
+      <Hero />
+      <About />
+      <EducationalPrograms />
+      <WhyChoose />
+      <ClinicLibrary />
+      <Faculty />
+      <EnrollmentProcess/>
+      <RegisterForm/>
+      <ChoosePlan />
+      <VideoSection />
+      <Testimonials/>
     </div>
   );
 }
