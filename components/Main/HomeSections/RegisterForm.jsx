@@ -24,7 +24,7 @@ export default function RegisterForm() {
                             <ul className="mt-5 space-y-4">
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)]">
                                 <img
-                                src="/assets/images/check-icon.png"
+                                src="/assets/Images/check-icon.png"
                                 alt=""
                                 className="w-[18px] mr-2"
                                 />
@@ -33,7 +33,7 @@ export default function RegisterForm() {
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)]">
                                 <img
-                                src="/assets/images/check-icon.png"
+                                src="/assets/Images/check-icon.png"
                                 alt=""
                                 className="w-[18px] mr-2"
                                 />
@@ -42,7 +42,7 @@ export default function RegisterForm() {
  
                             <li className="flex items-center text-[18px] text-[var(--secondary-color)]">
                                 <img
-                                src="/assets/images/check-icon.png"
+                                src="/assets/Images/check-icon.png"
                                 alt=""
                                 className="w-[18px] mr-2"
                                 />
@@ -86,7 +86,7 @@ export default function RegisterForm() {
                                     <div className="flex flex-col md:flex-row bg-white mt-4 p-4 border-2 border-[var(--primary-color)] rounded-[15px]">
                                    
                                     <img
-                                        src="/assets/images/register-img.png"
+                                        src="/assets/Images/register-img.png"
                                         alt=""
                                         className="w-full md:w-[133px] h-[122px] object-cover rounded-[10px] md:mr-[30px]"
                                     />
@@ -104,7 +104,7 @@ export default function RegisterForm() {
                                         {[1, 2, 3].map((item) => (
                                             <div key={item} className="flex items-center">
                                             <img
-                                                src="/assets/images/star-icon.png"
+                                                src="/assets/Images/star-icon.png"
                                                 alt=""
                                                 className="w-[30px] mr-2"
                                             />
@@ -152,7 +152,7 @@ export default function RegisterForm() {
  
                                     <div className="flex items-center border border-[#0a23429e] rounded-[10px] p-4 mt-3">
                                         <img
-                                        src="/assets/images/user-icon2.png"
+                                        src="/assets/Images/user-icon2.png"
                                         alt=""
                                         className="w-[65px] mr-5"
                                         />

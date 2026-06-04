@@ -68,7 +68,7 @@ export default function WhyChoose() {
                         {/* Right Image */}
                         <div>
                             <img
-                                src="/assets/images/Why-Dentists-Choose-AAI.png"
+                                src="/assets/Images/Why-Dentists-Choose-AAI.png"
                                 alt="Why Dentists Choose AAI"
                                 className="w-full h-auto"
                             />

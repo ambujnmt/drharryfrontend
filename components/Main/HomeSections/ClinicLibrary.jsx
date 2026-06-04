@@ -13,42 +13,42 @@ const CASES = {
   AllCases: [
     {
       title: "Full Smile Makeover",
-      img: "/assets/images/Implant-Supported-Bridge.png",
+      img: "/assets/Images/Implant-Supported-Bridge.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Anterior Aesthetic Crowns",
-      img: "/assets/images/Anterior-Aesthetic-Crowns.png",
+      img: "/assets/Images/Anterior-Aesthetic-Crowns.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Minimal Prep Veneers",
-      img: "/assets/images/Minimal-Prep-Veneers.png",
+      img: "/assets/Images/Minimal-Prep-Veneers.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Complex Smile Rehabilitation",
-      img: "/assets/images/Complex-Smile-Rehabilitation.png",
+      img: "/assets/Images/Complex-Smile-Rehabilitation.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Digital Smile Design Case",
-      img: "/assets/images/Digital-Smile-Design-Case.png",
+      img: "/assets/Images/Digital-Smile-Design-Case.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Implant-Supported Bridge",
-      img: "/assets/images/Implant-Supported-Bridge.png",
+      img: "/assets/Images/Implant-Supported-Bridge.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
@@ -57,21 +57,21 @@ const CASES = {
   Veneers: [
     {
       title: "Complex Smile Rehabilitation",
-      img: "/assets/images/Complex-Smile-Rehabilitation.png",
+      img: "/assets/Images/Complex-Smile-Rehabilitation.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Digital Smile Design Case",
-      img: "/assets/images/Digital-Smile-Design-Case.png",
+      img: "/assets/Images/Digital-Smile-Design-Case.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Implant-Supported Bridge",
-      img: "/assets/images/Implant-Supported-Bridge.png",
+      img: "/assets/Images/Implant-Supported-Bridge.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
@@ -80,14 +80,14 @@ const CASES = {
   SmileDesign: [
     {
       title: "Digital Smile Design Case",
-      img: "/assets/images/Digital-Smile-Design-Case.png",
+      img: "/assets/Images/Digital-Smile-Design-Case.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Implant-Supported Bridge",
-      img: "/assets/images/Implant-Supported-Bridge.png",
+      img: "/assets/Images/Implant-Supported-Bridge.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
@@ -96,21 +96,21 @@ const CASES = {
   CrownPreparation: [
     {
       title: "Complex Smile Rehabilitation",
-      img: "/assets/images/Complex-Smile-Rehabilitation.png",
+      img: "/assets/Images/Complex-Smile-Rehabilitation.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Digital Smile Design Case",
-      img: "/assets/images/Digital-Smile-Design-Case.png",
+      img: "/assets/Images/Digital-Smile-Design-Case.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Implant-Supported Bridge",
-      img: "/assets/images/Implant-Supported-Bridge.png",
+      img: "/assets/Images/Implant-Supported-Bridge.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
@@ -119,14 +119,14 @@ const CASES = {
   FullMouth: [
     {
       title: "Digital Smile Design Case",
-      img: "/assets/images/Digital-Smile-Design-Case.png",
+      img: "/assets/Images/Digital-Smile-Design-Case.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Implant-Supported Bridge",
-      img: "/assets/images/Implant-Supported-Bridge.png",
+      img: "/assets/Images/Implant-Supported-Bridge.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
@@ -135,14 +135,14 @@ const CASES = {
   AllOnX: [
     {
       title: "Implant-Supported Bridge",
-      img: "/assets/images/Implant-Supported-Bridge.png",
+      img: "/assets/Images/Implant-Supported-Bridge.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
     },
     {
       title: "Digital Smile Design Case",
-      img: "/assets/images/Digital-Smile-Design-Case.png",
+      img: "/assets/Images/Digital-Smile-Design-Case.png",
       desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
       doctor: "Dr. James Chen",
       weeks: 6,
