@@ -68,7 +68,7 @@ const Table = props => {
         columns: props["columns"],
         data: props["data"],
         initialState: {
-            pageSize: props["pageSize"] || 10
+            pageSize: props["pageSize"] || 5
         }
     }, otherProps.hasOwnProperty("useGlobalFilter") && otherProps["useGlobalFilter"], otherProps.hasOwnProperty("useSortBy") && otherProps["useSortBy"], otherProps.hasOwnProperty("useExpanded") && otherProps["useExpanded"], otherProps.hasOwnProperty("usePagination") && otherProps["usePagination"], otherProps.hasOwnProperty("useRowSelect") && otherProps["useRowSelect"], hooks => {
         isSelectable && hooks.visibleColumns.push(columns => [

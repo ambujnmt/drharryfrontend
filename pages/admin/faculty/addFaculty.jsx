@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import Dashboard from "../components/Dashboard/Dashboard";
-import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
-import Header from "../components/Admin/Menu/Header";
-import AdminSideMenu from "../components/Admin/Menu/SideMenu";
-import Footer from "../components/Admin/Menu/Footer";
+import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
+import Header from "../../../components/Admin/Menu/Header";
+import AdminSideMenu from "../../../components/Admin/Menu/SideMenu";
+import Footer from "../../../components/Admin/Menu/Footer";
+import AddFaculty from "../../../components/Admin/Faculty/AddFaculty";
 
 export default function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
 
   return (
-    <PrivateRoute>
+
 
     <div className="flex">
       {menuOpen && (
@@ -45,12 +45,12 @@ export default function DashboardPage() {
         />
 
         <div className="flex-1 overflow-auto  bg-gray-100">
-          <Dashboard />
+          <AddFaculty />
         </div>
 
         <Footer />
       </div>
     </div>
-    </PrivateRoute>
+  
   );
 }

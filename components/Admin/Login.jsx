@@ -1,45 +1,40 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
-import { LanguageContext } from "../../context/LanguageContext";
 import { adminLogin } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
-import { IoLanguage } from "react-icons/io5";
 import { useAdmin } from "../../context/AdminContext";
 import { useUser } from "../../context/UserContext";
 import { Head } from "../../layouts/head"
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function AdminLogin() {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({});
     const router = useRouter();
-    const { switchLanguage, locale, translateText } = useContext(LanguageContext);
-    const [clientLocale, setClientLocale] = useState("");
+const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const { user } = useUser(); // get user context
     const [checking, setChecking] = useState(true);
     const [isLoadingUser, setIsLoadingUser] = useState(true);
 
 
-    useEffect(() => {
-        setClientLocale(locale.toUpperCase());
-    }, [locale]);
-
     const validate = () => {
         let newErrors = {};
 
         if (!formData.email) {
-            newErrors.email = "Required";
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-            newErrors.email = translateText("invalidEmail");
+            newErrors.email = "Email is required";
+        } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
+        ) {
+            newErrors.email = "Please enter a valid email address";
         }
 
         if (!formData.password) {
-            newErrors.password = "Required";
+            newErrors.password = "Password is required";
         } else if (formData.password.length < 6) {
-            newErrors.password = translateText("passwordMinLength");
+            newErrors.password = "Password must be at least 6 characters";
         }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -80,23 +75,29 @@ export default function AdminLogin() {
         if (validate()) {
             setLoading(true);
             try {
-                const response = await adminLogin(formData.email, formData.password);
+                const response = await adminLogin(
+                    formData.email,
+                    formData.password
+                );
 
-                loginAdmin(response.data, formData.email); // store admin info dynamically
-                console.log("Logged in admin:", response.data);  // ✅ Check this shows correct data
+                loginAdmin(response.data, formData.email);
 
-                setFormData({ email: "", password: "" });
+                setFormData({
+                    email: "",
+                    password: "",
+                });
+
                 setErrors({});
 
-                const translatedMessage = locale === "ita" ? response.message_italian : response.message;
-                setSuccessMessage(translatedMessage);
+                setSuccessMessage(response.message);
 
                 setTimeout(() => {
                     router.push("/dashboard");
                 }, 2000);
             } catch (err) {
-                const errorMessage = locale === "ita" ? err.message_italian : err.message;
-                setErrors({ api: errorMessage });
+                setErrors({
+                    api: err.message,
+                });
             } finally {
                 setLoading(false);
             }
@@ -104,93 +105,187 @@ export default function AdminLogin() {
     };
 
     return (
-
-        <div
-            className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
-        >
+        <>
             <Head title="Admin Login" />
-            <div className="absolute top-2 right-2">
-                <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
-                                <IoLanguage />
+
+            <div
+                className="min-h-screen flex bg-cover bg-center"
+                style={{
+                    backgroundImage:
+                        "url('https://nmtdevserver.com/welli/blurflower.png')",
+                }}
+            >
+                {/* Left Side */}
+                <div className="hidden lg:flex lg:w-1/2 relative bg-[var(--secondary-color)]">
+                    <div className="absolute inset-0 bg-black/30"></div>
+
+                    <div className="relative z-10 flex flex-col justify-center px-16 text-white">
+                        <h1 className="text-6xl font-semibold mb-6">
+                            Welcome Back
+                        </h1>
+
+                        <h6 className="text-lg text-gray-200 leading-8 max-w-lg">
+                            Access your administration dashboard and manage your
+                            platform with confidence. Secure, elegant and built
+                            for professionals.
+                        </h6>
+
+                        <div className="mt-10 w-24 h-1 bg-[var(--primary-color)]"></div>
+                    </div>
+                </div>
+
+                {/* Right Side */}
+                <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
+
+
+                    {/* Login Card */}
+                    <div
+                        className="
+            w-full
+            max-w-md
+            bg-white/95
+            backdrop-blur-md
+            rounded-3xl
+            shadow-2xl
+            p-8 md:p-10
+          "
+                    >
+                        <div className="text-center mb-8">
+                            <h2 className="text-4xl text-[var(--secondary-color)] mb-2">
+                                Admin Login
+                            </h2>
+
+                            <h6 className="text-gray-500">
+                                Sign in to continue
+                            </h6>
+                        </div>
+
+                        {successMessage && (
+                            <div className="mb-5  rounded-lg ">
+                                <p className="text-green-700 text-center font-medium">
+                                    {successMessage}
+                                </p>
+                            </div>
+                        )}
+
+                        {errors.api && (
+                            <div className="mb-5 rounded-lg ">
+                                <p className="text-red-600 text-center">
+                                    {errors.api}
+                                </p>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="space-y-6">
+
+                            {/* Email */}
+                            <div>
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    variant="underlined"
+                                    label={
+                                        <span className="text-[#000] ">
+                                            Email
+                                            <span className="text-red-500 ml-1">*</span>
+                                        </span>
+                                    }
+                                    classNames={{
+                                        label: "text-[var(--text-color2)] h-[50px]",
+                                        input: "text-[var(--secondary-color)] font-medium",
+
+                                    }}
+                                />
+
+                                {errors.email && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {errors.email}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Password */}
+                            <div>
+                              <Input
+  type={showPassword ? "text" : "password"}
+  name="password"
+  value={formData.password}
+  onChange={handleChange}
+  variant="underlined"
+  label={
+    <span className="text-[#000]">
+      Password
+      <span className="text-red-500 ml-1">*</span>
+    </span>
+  }
+  endContent={
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="text-gray-500 hover:text-[var(--primary-color)] transition-colors"
+    >
+      {showPassword ? (
+        <FaEyeSlash size={18} />
+      ) : (
+        <FaEye size={18} />
+      )}
+    </button>
+  }
+  classNames={{
+    label: "text-[var(--text-color2)] h-[50px]",
+    input: "text-[var(--secondary-color)] font-medium",
+  }}
+/>
+
+                                {errors.password && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {errors.password}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Login Button */}
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="
+                w-full
+                py-3
+                rounded-full
+                bg-[var(--primary-color)]
+                text-white
+                font-semibold
+                transition-all
+                duration-300
+                hover:shadow-lg
+                hover:-translate-y-1
+                disabled:opacity-70
+                hover:bg-[var(--secondary-color)]
+              "
+                            >
+                                {loading ? (
+                                    <div className="flex justify-center">
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    </div>
+                                ) : (
+                                    "Login"
+                                )}
                             </button>
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label="Static Actions">
-                            <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-                            <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+
+                        </form>
+
+                        <div className="mt-8 text-center">
+                            <div className="w-16 h-[2px] bg-[var(--primary-color)] mx-auto"></div>
+
+                            <p className="mt-4 text-sm text-gray-500">
+                                Admin Portal
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
-
-                <div className="w-full md:w-1/2  flex flex-col justify-center">
-                    <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">{translateText("login")}</h2>
-                    {successMessage && (
-                        <p className="text-yellow-500 font-semibold text-lg text-center my-4">
-                            {successMessage}
-                        </p>
-                    )}
-                    {errors.api && <p className="text-white text-sm mb-4">{errors.api}</p>}
-
-                    <form onSubmit={handleSubmit}>
-                        <div className=" w-full  gap-2">
-                            <Input
-                                label={
-                                    <span className="text-white">
-                                        {translateText("email")} <span className="text-gray-300">*</span>
-                                    </span>
-                                }
-                                type="email"
-                                name="email"
-                                variant="underlined"
-                                classNames={{
-                                    label: "text-white",
-                                    input: "text-white"
-                                }}
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
-                            {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
-                        </div>
-                        <div >
-                            <Input
-                                label={
-                                    <span className="text-white">
-                                        {translateText("password")} <span className="text-gray-300">*</span>
-                                    </span>
-                                }
-                                variant="underlined"
-                                type="password"
-                                name="password"
-                                onChange={handleChange}
-                                value={formData.password}
-                                classNames={{
-                                    label: "text-white",
-                                    input: "text-white"
-                                }}
-                            />
-                            {errors.password && <p className="text-gray-300 text-sm mt-1">{errors.password}</p>}
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B] "
-                        >
-                            {loading ? (
-                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            ) : (
-                                translateText("login")
-                            )}
-                        </button>
-
-                    </form>
-                </div>
-            </div>
-        </div>
+        </>
     );
 }

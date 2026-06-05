@@ -60,104 +60,166 @@ const Pagination = ({
     setVisiblePages(visiblePages);
   }, [pageCount, getVisiblePages]);
   const [visiblePages, setVisiblePages] = useState(getVisiblePages(null, pageCount));
-  const activePage = pageIndex + 1;
-  return <>
-      <div className="d-lg-flex align-items-center text-center pb-1">
-        {sizePerPageList.length > 0 && <div className="d-inline-block me-3">
-            <label className="me-1">Display :</label>
-            <select value={tableProps.state.pageSize} onChange={e => {
-          tableProps.setPageSize(Number(e.target.value));
-        }} className="form-select d-inline-block w-auto">
-              {(sizePerPageList || []).map((pageSize, index) => {
-            return <option key={index} value={pageSize.value}>
-                    {pageSize.text}
-                  </option>;
-          })}
+const activePage = pageIndex + 1;
+
+return (
+  <>
+    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mt-6 bg-white p-4 rounded-xl shadow-sm border border-[var(--light-gold)]">
+
+      {/* Left Side */}
+      <div className="flex flex-wrap items-center gap-4">
+
+        {sizePerPageList.length > 0 && (
+          <div className="flex items-center gap-2">
+            <label
+              className="text-[14px] font-medium"
+              style={{ color: "var(--secondary-color)" }}
+            >
+              Show
+            </label>
+
+            <select
+              value={tableProps.state.pageSize}
+              onChange={(e) => {
+                tableProps.setPageSize(Number(e.target.value));
+              }}
+              className="border rounded-lg px-3 py-2 text-sm focus:outline-none"
+              style={{
+                borderColor: "var(--primary-color)",
+                color: "var(--secondary-color)",
+              }}
+            >
+              {sizePerPageList.map((pageSize, index) => (
+                <option key={index} value={pageSize.value}>
+                  {pageSize.text}
+                </option>
+              ))}
             </select>
-          </div>}
-
-        <span className="me-3">
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {tableProps.pageOptions.length}
-          </strong>{" "}
-        </span>
-
-        <span className="d-inline-block align-items-center text-sm-start text-center my-sm-0 my-2">
-          <label className="form-label">Go to page : </label>
-          <input type="number" value={pageIndex + 1} min="1" onChange={e => {
-          const page = e.target.value ? Number(e.target.value) - 1 : 0;
-          tableProps.gotoPage(page);
-          setPageIndex(tableProps.state.pageIndex);
-        }} className="form-control w-25 ms-1 d-inline-block" />
-        </span>
-
-        <ul className="pagination pagination-rounded d-inline-flex ms-auto align-item-center mb-0">
-  {/* Previous Button */}
- <li
-  key="prevpage"
-  className={classNames("page-item", "paginate_button", "previous", {
-    disabled: activePage === 1,
-  })}
->
-  <button
-    type="button"
-    className="page-link d-flex align-items-center justify-content-center"
-    style={{ padding: "0.375rem 0.75rem", height: "38px", width: "38px" }}
-    onClick={() => activePage > 1 && changePage(activePage - 1)}
-  >
-    <FaAngleLeft size={14} />
-  </button>
-</li>
-
-  {/* Page Numbers */}
-  {(visiblePages || []).map((page, index, array) => {
-    const showEllipsis = index > 0 && array[index - 1] + 1 < page;
-    return (
-      <React.Fragment key={page}>
-        {showEllipsis && (
-          <li className="page-item disabled d-none d-xl-inline-block">
-            <span className="page-link">...</span>
-          </li>
+          </div>
         )}
-        <li
-          className={classNames("page-item", "d-none", "d-xl-inline-block", {
-            active: activePage === page,
-          })}
+
+        <div
+          className="text-sm font-medium"
+          style={{ color: "var(--secondary-color)" }}
         >
-          <button
-            type="button"
-            className="page-link"
-            onClick={() => changePage(page)}
+          Page <strong>{pageIndex + 1}</strong> of{" "}
+          <strong>{tableProps.pageOptions.length}</strong>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <label
+            className="text-sm"
+            style={{ color: "var(--secondary-color)" }}
           >
-            {page}
-          </button>
-        </li>
-      </React.Fragment>
-    );
-  })}
+            Go To
+          </label>
 
-  {/* Next Button */}
-  <li
-    key="nextpage"
-    className={classNames("page-item", "paginate_button", "next", {
-      disabled: activePage === tableProps.pageCount,
-    })}
-  >
-    <button
-      type="button"
-        style={{ padding: "0.375rem 0.75rem", height: "38px", width: "38px" }}
-          className="page-link d-flex align-items-center justify-content-center"
-      onClick={() =>
-        activePage < tableProps.pageCount && changePage(activePage + 1)
-      }
-    >
-     <FaAngleRight/>
-    </button>
-  </li>
-</ul>
+          <input
+            type="number"
+            value={pageIndex + 1}
+            min="1"
+            onChange={(e) => {
+              const page = e.target.value
+                ? Number(e.target.value) - 1
+                : 0;
 
+              tableProps.gotoPage(page);
+              setPageIndex(tableProps.state.pageIndex);
+            }}
+            className="w-16 border rounded-lg text-center py-2"
+            style={{
+              borderColor: "var(--primary-color)",
+              color: "var(--secondary-color)",
+            }}
+          />
+        </div>
       </div>
-    </>;
+
+      {/* Pagination */}
+      <div>
+        <ul className="flex items-center gap-2 m-0 p-0 list-none">
+
+          {/* Previous */}
+          <li>
+            <button
+              type="button"
+              disabled={activePage === 1}
+              onClick={() =>
+                activePage > 1 && changePage(activePage - 1)
+              }
+              className="w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-300 disabled:opacity-40"
+              style={{
+                borderColor: "var(--primary-color)",
+                color: "var(--secondary-color)",
+              }}
+            >
+              <FaAngleLeft />
+            </button>
+          </li>
+
+          {/* Pages */}
+          {(visiblePages || []).map((page, index, array) => {
+            const showEllipsis =
+              index > 0 && array[index - 1] + 1 < page;
+
+            return (
+              <React.Fragment key={page}>
+                {showEllipsis && (
+                  <li>
+                    <span className="px-2 text-gray-500">...</span>
+                  </li>
+                )}
+
+                <li className="hidden xl:block">
+                  <button
+                    type="button"
+                    onClick={() => changePage(page)}
+                    className="w-10 h-10 rounded-lg font-medium transition-all duration-300"
+                    style={{
+                      backgroundColor:
+                        activePage === page
+                          ? "var(--primary-color)"
+                          : "#fff",
+                      color:
+                        activePage === page
+                          ? "#fff"
+                          : "var(--secondary-color)",
+                      border:
+                        activePage === page
+                          ? "none"
+                          : "1px solid var(--light-gold)",
+                    }}
+                  >
+                    {page}
+                  </button>
+                </li>
+              </React.Fragment>
+            );
+          })}
+
+          {/* Next */}
+          <li>
+            <button
+              type="button"
+              disabled={activePage === tableProps.pageCount}
+              onClick={() =>
+                activePage < tableProps.pageCount &&
+                changePage(activePage + 1)
+              }
+              className="w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-300 disabled:opacity-40"
+              style={{
+                borderColor: "var(--primary-color)",
+                color: "var(--secondary-color)",
+              }}
+            >
+              <FaAngleRight />
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </>
+);
+
 };
 export default Pagination;
