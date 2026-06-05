@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -12,235 +12,200 @@ import {
   Legend,
   CartesianGrid,
 } from "recharts";
-import { LanguageContext } from "../../context/LanguageContext";
-import { Head } from "../../layouts/head";
-import { Row, Col } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { fetchUsers, fetchPatientAssignments } from "../../utils/fetchApi";
-import StatisticsWidget from "./StatisticsWidget";
-import { FaRegUser } from "react-icons/fa";
-import { FaUserDoctor } from "react-icons/fa6";
-import { MdOutlineSick } from "react-icons/md";
-import { Link } from "@heroui/react";
-import { FiUsers } from "react-icons/fi";
 
-const COLORS = ["#FBA518", "#27667B", "#3A7D44", "#4ECDC4", "#FF6B6B"];
+import {
+  FaUserInjured,
+  FaCalendarCheck,
+  FaTooth,
+  FaDollarSign,
+} from "react-icons/fa";
+
+import { MdMedicalServices } from "react-icons/md";
+import { BsClockHistory } from "react-icons/bs";
+import { Head } from "../../layouts/head";
+
+const COLORS = [
+  "#c8a96a",
+  "#0a2342",
+  "#d9c08a",
+  "#2b405c",
+  "#e7d7b2",
+];
 
 export default function Dashboard() {
-  const { locale } = useContext(LanguageContext);
-  const [clientLocale, setClientLocale] = useState("");
-  const [radius, setRadius] = useState(100);
-  const [chartHeight, setChartHeight] = useState(300);
-  const [userCounts, setUserCounts] = useState({
-    totalUsers: 0,
-    doctors: 0,
-    socialWorkers: 0,
-    patients: 0,
-    users: 0,
-  });
-  const [barData, setBarData] = useState([]);
+const stats = [
+  {
+    title: "Total Students",
+    value: "1,248",
+    icon: <FaUserInjured />,
+    bg: "bg-[#0a2342]",
+  },
+  {
+    title: "Active Courses",
+    value: "48",
+    icon: <FaCalendarCheck />,
+    bg: "bg-[#c8a96a]",
+  },
+  {
+    title: "Faculty Members",
+    value: "12",
+    icon: <FaTooth />,
+    bg: "bg-[#2b405c]",
+  },
+  {
+    title: "Certifications Issued",
+    value: "867",
+    icon: <MdMedicalServices />,
+    bg: "bg-[#d3b77a]",
+  }
+];
 
-  useEffect(() => {
-    setClientLocale(locale.toUpperCase());
-  }, [locale]);
+const courseEnrollmentData = [
+  { month: "Jan", enrollments: 45 },
+  { month: "Feb", enrollments: 52 },
+  { month: "Mar", enrollments: 68 },
+  { month: "Apr", enrollments: 59 },
+  { month: "May", enrollments: 76 },
+  { month: "Jun", enrollments: 82 },
+];
 
-  // 📊 Responsive chart sizes
-  useEffect(() => {
-    const updateSize = () => {
-      const width = window.innerWidth;
-      if (width < 600) {
-        setRadius(50);
-        setChartHeight(200);
-      } else if (width < 900) {
-        setRadius(80);
-        setChartHeight(250);
-      } else {
-        setRadius(100);
-        setChartHeight(300);
-      }
-    };
-    window.addEventListener("resize", updateSize);
-    updateSize();
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
-
-  // 🧩 Fetch user data
-  useEffect(() => {
-    const loadUsers = async () => {
-      const result = await fetchUsers();
-      if (result?.status && Array.isArray(result.data)) {
-        const users = result.data;
-        const totalUsers = users.length;
-        const doctors = users.filter((u) => u.user_type === 1).length;
-        const socialWorkers = users.filter((u) => u.user_type === 2).length;
-        const patients = users.filter((u) => u.user_type === 3).length;
-        const normalUsers = users.filter((u) => u.user_type === 4).length;
-
-        setUserCounts({ totalUsers, doctors, socialWorkers, patients, users: normalUsers });
-      }
-    };
-    loadUsers();
-  }, []);
-
-  // 📅 Fetch schedule data for Bar Chart
-  useEffect(() => {
-    const loadSchedules = async () => {
-      const data = await fetchPatientAssignments();
-      if (Array.isArray(data)) {
-        const dayCounts = {
-          Mon: 0,
-          Tues: 0,
-          Wed: 0,
-          Thur: 0,
-          Fri: 0,
-          Sat: 0,
-          Sun: 0,
-          Every: 0,
-        };
-
-        const dayMap = {
-          Monday: "Mon",
-          Tuesday: "Tues",
-          Wednesday: "Wed",
-          Thursday: "Thur",
-          Friday: "Fri",
-          Saturday: "Sat",
-          Sunday: "Sun",
-          Everyday: "Every",
-        };
-
-        data.forEach((item) => {
-          if (Array.isArray(item.schedule_day)) {
-            item.schedule_day.forEach((day) => {
-              const shortKey = dayMap[day];
-              if (shortKey && dayCounts[shortKey] !== undefined) {
-                dayCounts[shortKey] += 1;
-              }
-            });
-          }
-        });
-
-        const formatted = Object.keys(dayCounts).map((day) => ({
-          name: day,
-          schedules: dayCounts[day],
-        }));
-
-        setBarData(formatted);
-      }
-    };
-
-    loadSchedules();
-  }, []);
-
-  // 🍰 Dynamic Pie Data from userCounts
-  const pieData = [
-    { name: "Doctors", value: userCounts.doctors },
-    { name: "Social Workers", value: userCounts.socialWorkers },
-    { name: "Patients", value: userCounts.patients },
-    { name: "UPerson", value: userCounts.users },
-    { name: "Total Users", value: userCounts.totalUsers },
-  ];
-
+  const treatmentData = [
+  { name: "Smile Design", value: 35 },
+  { name: "Implantology", value: 25 },
+  { name: "Digital Dentistry", value: 20 },
+  { name: "Veneers", value: 12 },
+  { name: "Others", value: 8 },
+];
   return (
-    <div className="w-full bg-gray-100 md:p-6 p-0">
-      <Head title="Admin Dashboard" />
+    <div className="min-h-screen bg-[#F5F2EC] p-6">
+      <Head title="Dental Clinic Dashboard" />
 
-      {/* 📦 User Statistics */}
-      <Row className="g-3 justify-content-center">
-        <Col xs={6} md={4} lg={3} xl>
-          <Link href="/user/userList" className="w-100 d-block text-decoration-none">
-            <StatisticsWidget
-              variant="primary"
-              description="Doctors"
-              stats={userCounts.doctors}
-              icon={<FaUserDoctor />}
-            />
-          </Link>
-        </Col>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl  text-[#0a2342] font-semibold">
+          Dental Clinic Dashboard
+        </h1>
 
-        <Col xs={6} md={4} lg={3} xl>
-          <Link href="/user/userList" className="w-100 d-block text-decoration-none">
-            <StatisticsWidget
-              variant="success"
-              description="Social Workers"
-              stats={userCounts.socialWorkers}
-              icon={<FaRegUser />}
-            />
-          </Link>
-        </Col>
+        <p className="text-[#2B2B2B] text-[16px] font-[Inter]">
+          Welcome back. Here's an overview of your clinic performance.
+        </p>
+      </div>
 
-        <Col xs={6} md={4} lg={3} xl>
-          <Link href="/user/userList" className="w-100 d-block text-decoration-none">
-            <StatisticsWidget
-              variant="warning"
-              description="Patients"
-              stats={userCounts.patients}
-              icon={<MdOutlineSick />}
-            />
-          </Link>
-        </Col>
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+        {stats.map((item, index) => (
+          <div
+            key={index}
+            className="bg-white rounded-[15px] px-3 py-3 shadow-lg border border-[#eee]"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[#2B2B2B] text-[15px] font-[Inter]">
+                  {item.title}
+                </p>
 
-        <Col xs={6} md={4} lg={3} xl>
-          <Link href="/user/userList" className="w-100 d-block text-decoration-none">
-            <StatisticsWidget
-              variant="info"
-              description="UPerson"
-              stats={userCounts.users}
-              icon={<FiUsers />}
-            />
-          </Link>
-        </Col>
+                <h3 className="text-[30px] text-[#0a2342] font-semibold mt-2">
+                  {item.value}
+                </h3>
+              </div>
 
-        <Col xs={6} md={4} lg={3} xl>
-          <Link href="/user/userList" className="w-100 d-block text-decoration-none">
-            <StatisticsWidget
-              variant="blue"
-              description="Total Users"
-              stats={userCounts.totalUsers}
-              icon={<FaRegUser />}
-            />
-          </Link>
-        </Col>
-      </Row>
+              <div
+                className={`${item.bg} w-[60px] h-[60px] rounded-full flex items-center justify-center text-white text-[20px]`}
+              >
+                {item.icon}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-      {/* 🧭 GRAPHS */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-        {/* Bar Chart */}
-        <div className="bg-white border-1 border-gray-300 rounded-lg md:p-6 p-3">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">Schedules by Day</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={barData}>
+      {/* Charts */}
+      <div className="grid lg:grid-cols-2 gap-8 mt-10">
+        {/* Appointments Chart */}
+        <div className="bg-white rounded-[15px] p-6 shadow-lg">
+          <h3 className="text-2xl font-[Cormorant_Garamond] text-[#0a2342] mb-5">
+            Monthly Enrollments
+          </h3>
+
+          <ResponsiveContainer width="100%" height={350}>
+            <BarChart data={courseEnrollmentData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="schedules" fill="#FFA725" barSize={40} radius={[6, 6, 0, 0]} />
+
+              <Bar
+                dataKey="enrollments"
+                fill="#c8a96a"
+                radius={[8, 8, 0, 0]}
+                barSize={45}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Pie Chart */}
-        <div className="bg-white border-1 border-gray-300 rounded-lg md:p-6 p-3">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">User Distribution</h3>
-          <ResponsiveContainer width="100%" height={chartHeight}>
+        {/* Treatments Chart */}
+        <div className="bg-white rounded-[15px] p-6 shadow-lg">
+          <h3 className="text-2xl font-[Cormorant_Garamond] text-[#0a2342] mb-5">
+            Course Distribution
+          </h3>
+
+          <ResponsiveContainer width="100%" height={350}>
             <PieChart>
               <Pie
-                data={pieData}
+                data={treatmentData}
                 cx="50%"
                 cy="50%"
-                outerRadius={radius}
+                outerRadius={120}
                 dataKey="value"
                 label
               >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                {treatmentData.map((entry, index) => (
+                  <Cell
+                    key={index}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
+
               <Tooltip />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
         </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="bg-white rounded-[15px] p-6 shadow-lg mt-10">
+        <h3 className="text-3xl font-[Cormorant_Garamond] text-[#0a2342] mb-5">
+          Recent Activity
+        </h3>
+
+       <div className="space-y-4">
+  <div className="border-b pb-3">
+    <p className="font-[Inter] text-[#2B2B2B]">
+      25 students enrolled in Smile Design Mastery.
+    </p>
+  </div>
+
+  <div className="border-b pb-3">
+    <p className="font-[Inter] text-[#2B2B2B]">
+      New faculty member added to Implantology Department.
+    </p>
+  </div>
+
+  <div className="border-b pb-3">
+    <p className="font-[Inter] text-[#2B2B2B]">
+      Advanced Veneers Workshop registration opened.
+    </p>
+  </div>
+
+  <div>
+    <p className="font-[Inter] text-[#2B2B2B]">
+      40 certificates issued this month.
+    </p>
+  </div>
+</div>
       </div>
     </div>
   );

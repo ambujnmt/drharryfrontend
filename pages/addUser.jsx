@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import SideMenu from "../components/Menu/SideMenu";
-import Header from "../components/Menu/Header";
-import Footer from "../components/Menu/Footer";
+import Header from "../components/Admin/Menu/Header";
+import SideMenu from "../components/Admin/Menu/SideMenu";
+import Footer from "../components/Admin/Menu/Footer";
 import AddUser from "../components/Forms/AddUser";
 import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
 
