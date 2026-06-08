@@ -1,6 +1,13 @@
-import { Link } from "@heroui/react";
+import {
+  Link,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+} from "@heroui/react";
+import { FaBars, FaTimes, FaChevronDown, FaUser } from "react-icons/fa";
 import React, { useState } from "react";
-import { FaBars, FaTimes, FaChevronDown } from "react-icons/fa";
  
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +22,7 @@ export default function Header() {
             <div className="flex items-center min-w-[185px]">
               <Link href="/">
                 <img
-                  src="/assets/Images/harry-logo.png"
+                  src="/assets/Images/header-logo.png"
                   alt="Logo"
                   className="h-auto max-w-[185px]"
                 />
@@ -37,7 +44,7 @@ export default function Header() {
  
                   <li className="mx-[15px] relative group">
                     <Link
-                      href="#"
+                      href="/web/courses"
                       className="text-[18px] leading-[100%] font-normal hover:text-[var(--primary-color)] text-[#000]"
                     >
                       Courses
@@ -93,6 +100,30 @@ export default function Header() {
                       Apply Now
                     </Link>
                   </li>
+
+                  <li className="ml-3">
+  <Dropdown placement="bottom-end">
+    <DropdownTrigger>
+      <Button
+        isIconOnly
+        radius="full"
+        className="w-11 h-11 min-w-11 bg-[var(--primary-color)] text-white hover:bg-[var(--secondary-color)]"
+      >
+        <FaUser size={16} />
+      </Button>
+    </DropdownTrigger>
+
+    <DropdownMenu aria-label="User Actions">
+      <DropdownItem key="login" href="/login">
+        Login
+      </DropdownItem>
+
+      <DropdownItem key="register" href="/signUp">
+        Register
+      </DropdownItem>
+    </DropdownMenu>
+  </Dropdown>
+</li>
                 </ul>
               </nav>
             </div>
@@ -138,4 +169,3 @@ export default function Header() {
     </header>
   );
 }
- 

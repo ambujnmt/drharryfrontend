@@ -18,14 +18,9 @@ export default function SignupForm() {
 
   const [errors, setErrors] = useState({});
   const router = useRouter();
-  const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const [loading, setloading] = useState(false);
 
-  const [clientLocale, setClientLocale] = useState("");
-
-  useEffect(() => {
-    setClientLocale(locale.toUpperCase());
-  }, [locale]);
+ 
 
   const validate = () => {
     let newErrors = {};
@@ -73,8 +68,7 @@ export default function SignupForm() {
       const { name, email, password, c_password } = formData;
       const response = await registerUser(name, email, password, c_password);
 
-      const successMsg = locale === "ita" ? response?.message_italian : response?.message;
-      setSuccessMessage(successMsg);
+       setSuccessMessage(response.message);
 
       setUserEmail(email);
 
@@ -101,138 +95,241 @@ export default function SignupForm() {
   };
 
 
+
   return (
     <div
-      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
+      className="flex items-center justify-center bg-cover bg-center px-4 py-4 relative"
+
     >
-      <div className="absolute top-2 right-2">
-        <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-          <Dropdown>
-            <DropdownTrigger>
-              <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
-                <IoLanguage />
-              </button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Static Actions">
-              <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-              <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+
+
+      <div className="w-full max-w-6xl  bg-white rounded-[35px] shadow-2xl  grid lg:grid-cols-2">
+
+        {/* Left */}
+
+        {/* Left Image Section */}
+
+        <div className="hidden lg:block relative h-full">
+
+          <img
+            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80"
+            alt="Students"
+            className="w-full h-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-black/35"></div>
+
+          <div className="absolute inset-0 flex flex-col justify-end p-12">
+
+            <img
+              src="/assets/Images/footer-logo.png"
+              className="h-16 w-fit mb-8"
+              alt=""
+            />
+
+            <span className="inline-block w-fit px-4 py-2 rounded-full bg-white/20 backdrop-blur text-white mb-5">
+              Join Thousands of Learners
+            </span>
+
+            <h2 className="text-white text-5xl font-bold leading-tight mb-4">
+              Start Your
+              <br />
+              Learning
+              <br />
+              Journey
+            </h2>
+
+            <p className="text-white/90 text-lg leading-8 max-w-md">
+              Create your account and access expert courses,
+              faculty guidance, events and a personalized
+              learning experience.
+            </p>
+
+          </div>
+
         </div>
-      </div>
-      <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
 
-        <div className="w-full md:w-1/2  flex flex-col justify-center">
-          <p className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center text-white">{translateText("register")}</p>
+
+        {/* Right */}
+
+        <div className="flex flex-col justify-center px-8 lg:px-10 py-8">
+
+          <span className="inline-block w-fit px-4 py-1 rounded-full bg-[var(--primary-color)]/10 text-[var(--primary-color)] text-sm font-semibold mb-4">
+            Student Registration
+          </span>
+
+          <h2 className="text-3xl font-bold text-[var(--secondary-color)] mb-2">
+            Create Account
+          </h2>
+
+          <p className="text-gray-500 mb-6">
+            Fill in your details to get started.
+          </p>
+
           {successMessage && (
-            <p className="text-white my-3 text-lg">{successMessage}</p>
+            <p className="text-green-600 text-center mb-3">
+              {successMessage}
+            </p>
           )}
+
           {errors.api && errors.api !== "Validation Error." && (
-            <p className="text-white my-3 text-lg">{errors.api}</p>
+            <p className="text-red-500 text-center mb-3">
+              {errors.api}
+            </p>
           )}
 
+          <form onSubmit={handleSubmit} className="space-y-4">
 
-
-          <form onSubmit={handleSubmit} className="flex flex-col">
-            <div className=" w-full  gap-2">
+            <div>
               <Input
-                label={
-                  <span className="text-white">
-                    {translateText("name")} <span className="text-gray-300">*</span>
-                  </span>
-                }
-                type="name"
                 name="name"
-                variant="underlined"
-                classNames={{
-                  label: "text-white",
-                }}
                 value={formData.name}
                 onChange={handleChange}
-              />
-
-              {errors.name && <p className="text-gray-300 mt-1 text-sm">{errors.name}</p>}
-            </div>
-            <div className=" w-full  gap-2">
-              <Input
+                variant="underlined"
                 label={
-                  <span className="text-white">
-                    {translateText("email")} <span className="text-gray-300">*</span>
+                  <span className="text-[#000] ">
+                    Name
+                    <span className="text-red-500 ml-1">*</span>
                   </span>
                 }
+                classNames={{
+                  label: "text-[var(--text-color2)] h-[50px]",
+                  input: "text-[var(--secondary-color)] font-medium",
+
+                }}
+              />
+
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.name}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <Input
                 type="email"
                 name="email"
-                variant="underlined"
-                classNames={{
-                  label: "text-white",
-                  input: "text-white"
-                }}
                 value={formData.email}
                 onChange={handleChange}
-                isInvalid={!!errors.email}
+                variant="underlined"
+                label={
+                  <span className="text-[#000] ">
+                    Email
+                    <span className="text-red-500 ml-1">*</span>
+                  </span>
+                }
+                classNames={{
+                  label: "text-[var(--text-color2)] h-[50px]",
+                  input: "text-[var(--secondary-color)] font-medium",
+
+                }}
               />
 
-              {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email}
+                </p>
+              )}
             </div>
+
             <div className="grid grid-cols-2 gap-4">
-              <div >
-                <Input
-                  label={
-                  <span className="text-white">
-                    {translateText("password")} <span className="text-gray-300">*</span>
-                  </span>
-                }
-                  variant="underlined"
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  value={formData.password}
-                  classNames={{
-                    label: "text-white",
-                    input: "text-white"
-                  }}
-                />
-                {errors.password && <p className="text-gray-300 text-sm mt-1">{errors.password}</p>}
-              </div>
+
               <div>
                 <Input
-                  label={
-                  <span className="text-white">
-                    {translateText("c_password")} <span className="text-gray-300">*</span>
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  variant="underlined"
+                label={
+                  <span className="text-[#000] ">
+                    Password
+                    <span className="text-red-500 ml-1">*</span>
                   </span>
                 }
-                  classNames={{
-                    label: "text-white text-[13px]",
-                    input: "text-white"
-                  }}
-                  variant="underlined"
+                classNames={{
+                  label: "text-[var(--text-color2)] h-[50px]",
+                  input: "text-[var(--secondary-color)] font-medium",
+
+                }}
+                />
+
+                {errors.password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Input
                   type="password"
                   name="c_password"
-                  onChange={handleChange}
                   value={formData.c_password}
+                  onChange={handleChange}
+                   variant="underlined"
+                label={
+                  <span className="text-[#000] ">
+                   Confirm Password
+                    <span className="text-red-500 ml-1">*</span>
+                  </span>
+                }
+                classNames={{
+                  label: "text-[var(--text-color2)] h-[50px]",
+                  input: "text-[var(--secondary-color)] font-medium",
+
+                }}
                 />
-                {errors.c_password && <p className="text-gray-300 text-sm mt-1">{errors.c_password}</p>}
+
+                {errors.c_password && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.c_password}
+                  </p>
+                )}
               </div>
+
             </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="relative flex items-center justify-center font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-3 xl:my-3 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
+              className="w-full h-12 rounded-full bg-[var(--primary-color)] text-white font-semibold hover:bg-[var(--secondary-color)] transition"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex justify-center">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
               ) : (
-                translateText("register")
+                "Register"
               )}
             </button>
 
-            <button className="font-bold text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-1 xl:my-3 text-center rounded-[600px] border-1 border-white py-2">
-              <Link className="text-white" href="/login">{translateText("login")}</Link>
-            </button>
+            <Link
+              href="/login"
+              className="w-full h-12 rounded-full border-2 border-[var(--primary-color)] text-[var(--primary-color)] flex items-center justify-center font-semibold hover:bg-[var(--primary-color)] hover:text-white transition"
+            >
+              Login
+            </Link>
+
           </form>
+
+          <div className="mt-6 text-center">
+
+            <div className="w-16 h-[2px] bg-[var(--primary-color)] mx-auto"></div>
+
+            <p className="mt-4 text-sm text-gray-400">
+              Institute Learning Platform
+            </p>
+
+          </div>
+
         </div>
+
       </div>
+
     </div>
   );
+
+
 }

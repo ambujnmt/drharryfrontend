@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
-import { LanguageContext } from "../../context/LanguageContext";
 import { loginUser } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
@@ -14,16 +12,12 @@ export default function LoginForm() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const router = useRouter();
-  const { switchLanguage, locale, translateText } = useContext(LanguageContext);
-  const [clientLocale, setClientLocale] = useState("");
   const [loading, setLoading] = useState(false);
   const { admin, loginAdmin } = useAdmin();
   const [checking, setChecking] = useState(true);
 
 
-  useEffect(() => {
-    setClientLocale(locale.toUpperCase());
-  }, [locale]);
+
 
   const validate = () => {
     let newErrors = {};
@@ -31,13 +25,13 @@ export default function LoginForm() {
     if (!formData.email) {
       newErrors.email = "Required";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-      newErrors.email = translateText("invalidEmail");
+      newErrors.email = "Email is not a valid email.";
     }
 
     if (!formData.password) {
       newErrors.password = "Required";
     } else if (formData.password.length < 6) {
-      newErrors.password = translateText("passwordMinLength");
+      newErrors.password = "The password mut be atleast 10 characters.";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -59,177 +53,233 @@ export default function LoginForm() {
     return null;
   }
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (validate()) {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (validate()) {
+      setLoading(true);
 
-    try {
-      const response = await loginUser(formData.email, formData.password);
+      try {
+        const response = await loginUser(formData.email, formData.password);
 
-      // Save user info
-      setUser({
-        ...response,
-        user_type: response.user_type,
-        is_admin: response.is_admin // assuming backend sends this
-      });
-      setUserEmail(formData.email);
+        // Save user info
+        setUser({
+          ...response,
+          user_type: response.user_type,
+          is_admin: response.is_admin // assuming backend sends this
+        });
+        setUserEmail(formData.email);
 
-      setFormData({ email: "", password: "" });
-      setErrors({});
+        setFormData({ email: "", password: "" });
+        setErrors({});
 
-      // Show success message
-      const translatedMessage = locale === "ita" ? response.message_italian : response.message;
-      setSuccessMessage(translatedMessage);
+        // Show success message
+        setSuccessMessage(response.message);
 
-      // ✅ Redirect based on role after 2s
-      setTimeout(() => {
-        if (response.is_admin) {
-          router.replace("/dashboard"); // Only admin goes here
-        } else {
-          switch (response.user_type) {
-            case 1:
-              router.replace("/doctor/dashboard");
-              break;
-            case 2:
-              router.replace("/socialWorker/dashboard");
-              break;
-            case 3:
-              router.replace("/patient/dashboard");
-              break;
-            case 4:
-              router.replace("/uPerson/dashboard");
-              break;
-            default:
-              router.replace("/"); // fallback for unknown user_type
+        // ✅ Redirect based on role after 2s
+        setTimeout(() => {
+          if (response.is_admin) {
+            router.replace("/dashboard"); // Only admin goes here
+          } else {
+            switch (response.user_type) {
+              case 1:
+                router.replace("/doctor/dashboard");
+                break;
+              case 2:
+                router.replace("/socialWorker/dashboard");
+                break;
+              case 3:
+                router.replace("/patient/dashboard");
+                break;
+              case 4:
+                router.replace("/uPerson/dashboard");
+                break;
+              default:
+                router.replace("/"); // fallback for unknown user_type
+            }
           }
-        }
-      }, 2000);
+        }, 2000);
 
-    } catch (err) {
-      const errorMessage = locale === "ita" ? err.message_italian : err.message;
-      setErrors({ api: errorMessage });
-    } finally {
-      setLoading(false);
+      } catch (err) {
+        const errorMessage = locale === "ita" ? err.message_italian : err.message;
+        setErrors({ api: errorMessage });
+      } finally {
+        setLoading(false);
+      }
     }
-  }
-};
+  };
 
 
   return (
     <div
-      className="relative w-screen h-screen overflow-hidden bg-cover bg-center flex items-center justify-center"
-      style={{ backgroundImage: "url('https://nmtdevserver.com/welli/blurflower.png')" }}
-    >
-      <div className="absolute top-2 right-2">
-        <div className="relative flex items-center space-x-4 text-2xl cursor-pointer">
-          <Dropdown>
-            <DropdownTrigger>
-              <button variant="bordered" color="primary" className="text-blue-600 border-2 border-[#5274F6] bg-white">
-                <IoLanguage />
-              </button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Static Actions">
-              <DropdownItem key="en" onClick={() => switchLanguage("en")}>English</DropdownItem>
-              <DropdownItem key="ita" onClick={() => switchLanguage("ita")}>Italian</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      </div>
-      <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl  md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
+      className="h-screen overflow-hidden flex items-center justify-center bg-cover bg-center px-4 py-2 relative"
 
-        <div className="w-full md:w-1/2  flex flex-col justify-center">
-          <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">{translateText("login")}</h2>
+    >
+
+
+      <div className="w-full max-w-5xl h-[88vh] bg-white rounded-[30px] shadow-2xl overflow-hidden grid lg:grid-cols-2">
+
+        {/* Left Side */}
+
+        <div className="flex flex-col justify-center px-8 lg:px-8 py-4">
+
+          <span className="inline-block w-fit px-4 py-1 rounded-full bg-[var(--primary-color)]/10 text-[var(--primary-color)] text-sm font-semibold mb-4">
+            Student Portal
+          </span>
+
+          <h2 className="text-3xl lg:text-4xl font-bold text-[var(--secondary-color)] mb-2">
+            Welcome Back
+          </h2>
+
+          <p className="text-gray-500 mb-6">
+            Login to continue your learning journey.
+          </p>
+
           {successMessage && (
-            <p className="text-yellow-500 font-semibold text-lg text-center my-4">
+            <p className="text-green-600 text-center mb-3">
               {successMessage}
             </p>
           )}
-          {errors.api && <p className="text-white text-sm mb-4">{errors.api}</p>}
-          {/* {user && (
-            <div className="text-green-700 bg-green-50 border border-green-200 rounded-md p-4 my-4 text-sm">
-              <p><strong>Name:</strong> {user.name}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Mobile:</strong> {user.mobile}</p>
-              <p><strong>User Type:</strong> {user.user_type_value}</p>
-              <p><strong>Gender:</strong> {user.gender}</p>
-              <p><strong>Address:</strong> {user.address}</p>
-              <p><strong>Token:</strong> {user.token}</p>
-              <p><strong>Status:</strong> {user.status}</p>
-              <p><strong>Created At:</strong> {new Date(user.created_at).toLocaleString()}</p>
-              <p><strong>Updated At:</strong> {new Date(user.updated_at).toLocaleString()}</p>
-            </div>
-          )} */}
-          {/* {loading && (
-            <div className="flex justify-center items-center my-4">
-              <div className="w-8 h-8 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
-            </div>
-          )} */}
-          <form onSubmit={handleSubmit}>
-            <div className=" w-full  gap-2">
+
+          {errors.api && (
+            <p className="text-red-500 text-center mb-3">
+              {errors.api}
+            </p>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            <div>
               <Input
-                label={
-                  <span className="text-white">
-                    {translateText("email")} <span className="text-gray-300">*</span>
-                  </span>
-                }
                 type="email"
                 name="email"
-                variant="underlined"
-                classNames={{
-                  label: "text-white",
-                  input: "text-white"
-                }}
                 value={formData.email}
                 onChange={handleChange}
-              />
-              {errors.email && <p className="text-gray-300 mt-1 text-sm">{errors.email}</p>}
-            </div>
-            <div >
-              <Input
+                variant="underlined"
                 label={
-                  <span className="text-white">
-                    {translateText("password")} <span className="text-gray-300">*</span>
+                  <span className="text-[#000] ">
+                    Email
+                    <span className="text-red-500 ml-1">*</span>
                   </span>
                 }
-                variant="underlined"
-                type="password"
-                name="password"
-                onChange={handleChange}
-                value={formData.password}
                 classNames={{
-                  label: "text-white",
-                  input: "text-white"
+                  label: "text-[var(--text-color2)] h-[50px]",
+                  input: "text-[var(--secondary-color)] font-medium",
+
                 }}
               />
-              {errors.password && <p className="text-gray-300 text-sm mt-1">{errors.password}</p>}
+
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email}
+                </p>
+              )}
             </div>
-            <p className="text-start text-sm  mt-2 mb-16">
-              <Link className="text-white" href="/forgottenPassword">
-                {translateText("password_forgot")}
+
+            <div>
+              <Input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                variant="underlined"
+                label={
+                  <span className="text-[#000]">
+                    Password
+                    <span className="text-red-500 ml-1">*</span>
+                  </span>
+                }
+                classNames={{
+                  label: "text-[var(--text-color2)] h-[50px]",
+                  input: "text-[var(--secondary-color)] font-medium",
+                }}
+              />
+
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password}
+                </p>
+              )}
+            </div>
+
+            <div className="text-right">
+              <Link
+                href="/forgottenPassword"
+                className="text-sm text-[var(--primary-color)]"
+              >
+                Forgot Password?
               </Link>
-            </p>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B] "
+              className="w-full h-12 rounded-full bg-[var(--primary-color)] text-white font-semibold hover:bg-[var(--secondary-color)] transition duration-300"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex justify-center">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
               ) : (
-                translateText("login")
+                "Login"
               )}
             </button>
-            <div
 
-              className="font-bold w-full text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center  uppercase rounded-[600px] border-1 border-white py-2"
+            <Link
+              href="/signUp"
+              className="w-full h-12 rounded-full border-2 border-[var(--primary-color)] text-[var(--primary-color)] flex items-center justify-center font-semibold  hover:border-2 hover:border-[var(--secondary-color)] hover:text-[var(--secondary-color)] transition"
             >
-              <Link className="text-white" href="/signupWith">{translateText("register")}
-              </Link>
-            </div>
+              Register
+            </Link>
           </form>
         </div>
+
+        {/* Right Side */}
+
+
+<div className="hidden lg:block relative h-full">
+
+  <img
+    src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg"
+    alt="Student Login"
+    className="w-full h-full object-cover"
+  />
+
+  {/* Overlay */}
+
+  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+
+  {/* Content */}
+
+  <div className="absolute bottom-0 left-0 p-10 text-white">
+
+    <img
+      src="/assets/Images/footer-logo.png"
+      className="h-14 mb-6"
+      alt="Logo"
+    />
+
+    <h2 className="text-4xl font-bold mb-3 leading-tight">
+      Welcome to
+      <br />
+      Your Learning
+      <br />
+      Portal
+    </h2>
+
+    <p className="text-white/90 text-lg max-w-md leading-8">
+      Continue your educational journey with expert guidance,
+      interactive courses and personalized learning resources.
+    </p>
+
+  </div>
+
+</div>
+
+
       </div>
     </div>
   );
+
+
+
 }

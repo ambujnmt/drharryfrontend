@@ -110,10 +110,7 @@ const [showPassword, setShowPassword] = useState(false);
 
             <div
                 className="min-h-screen flex bg-cover bg-center"
-                style={{
-                    backgroundImage:
-                        "url('https://nmtdevserver.com/welli/blurflower.png')",
-                }}
+          
             >
                 {/* Left Side */}
                 <div className="hidden lg:flex lg:w-1/2 relative bg-[var(--secondary-color)]">
