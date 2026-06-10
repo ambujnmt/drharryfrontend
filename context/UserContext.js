@@ -1,31 +1,52 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [userEmail, setUserEmail] = useState("");
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // new loading flag
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = Cookies.get("user");
+
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-    setLoading(false); // finished checking localStorage
+
+    setLoading(false);
   }, []);
 
-  useEffect(() => {
-    if (user) localStorage.setItem("user", JSON.stringify(user));
-    else localStorage.removeItem("user");
-  }, [user]);
+  const login = (userData, token) => {
+    Cookies.set("user", JSON.stringify(userData), {
+      expires: 7,
+    });
+
+    Cookies.set("token", token, {
+      expires: 7,
+    });
+
+    setUser(userData);
+  };
+
+  const logout = () => {
+    Cookies.remove("user");
+    Cookies.remove("token");
+    setUser(null);
+  };
 
   return (
-    <UserContext.Provider value={{ userEmail, setUserEmail, user, setUser, loading }}>
+    <UserContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        loading,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
 };
-
 
 export const useUser = () => useContext(UserContext);

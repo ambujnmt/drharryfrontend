@@ -5,7 +5,6 @@ import { loginUser } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
 import { useUser } from "../../context/UserContext";
-import { useAdmin } from "../../context/AdminContext";
 
 
 export default function LoginForm() {
@@ -13,9 +12,7 @@ export default function LoginForm() {
   const [errors, setErrors] = useState({});
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { admin, loginAdmin } = useAdmin();
   const [checking, setChecking] = useState(true);
-
 
 
 
@@ -44,7 +41,7 @@ export default function LoginForm() {
   };
   const [successMessage, setSuccessMessage] = useState("");
 
-  const { user, setUser, setUserEmail } = useUser();
+  const { user, login } = useUser();
   useEffect(() => {
     setChecking(false);
   }, []);
@@ -53,60 +50,44 @@ export default function LoginForm() {
     return null;
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validate()) {
-      setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-      try {
-        const response = await loginUser(formData.email, formData.password);
+  if (!validate()) return;
 
-        // Save user info
-        setUser({
-          ...response,
-          user_type: response.user_type,
-          is_admin: response.is_admin // assuming backend sends this
-        });
-        setUserEmail(formData.email);
+  setLoading(true);
 
-        setFormData({ email: "", password: "" });
-        setErrors({});
+  try {
+    const response = await loginUser(
+      formData.email,
+      formData.password
+    );
 
-        // Show success message
-        setSuccessMessage(response.message);
+    login(response.user, response.token);
 
-        // ✅ Redirect based on role after 2s
-        setTimeout(() => {
-          if (response.is_admin) {
-            router.replace("/dashboard"); // Only admin goes here
-          } else {
-            switch (response.user_type) {
-              case 1:
-                router.replace("/doctor/dashboard");
-                break;
-              case 2:
-                router.replace("/socialWorker/dashboard");
-                break;
-              case 3:
-                router.replace("/patient/dashboard");
-                break;
-              case 4:
-                router.replace("/uPerson/dashboard");
-                break;
-              default:
-                router.replace("/"); // fallback for unknown user_type
-            }
-          }
-        }, 2000);
+    setSuccessMessage(response.message);
 
-      } catch (err) {
-        const errorMessage = locale === "ita" ? err.message_italian : err.message;
-        setErrors({ api: errorMessage });
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+    setFormData({
+      email: "",
+      password: "",
+    });
+
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
+
+  } catch (err) {
+    setErrors({
+      api: err.message,
+    });
+
+    setTimeout(() => {
+      setErrors({});
+    }, 3000);
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   return (
@@ -203,7 +184,8 @@ export default function LoginForm() {
 
             <div className="text-right">
               <Link
-                href="/forgottenPassword"
+                // href="/forgottenPassword"
+                href="#"
                 className="text-sm text-[var(--primary-color)]"
               >
                 Forgot Password?

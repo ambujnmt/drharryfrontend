@@ -11,7 +11,7 @@ export default function AdminLogin() {
     const [formData, setFormData] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({});
     const router = useRouter();
-const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const { user } = useUser(); // get user context
     const [checking, setChecking] = useState(true);
@@ -72,35 +72,36 @@ const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validate()) {
-            setLoading(true);
-            try {
-                const response = await adminLogin(
-                    formData.email,
-                    formData.password
-                );
 
-                loginAdmin(response.data, formData.email);
+        if (!validate()) return;
 
-                setFormData({
-                    email: "",
-                    password: "",
-                });
+        setLoading(true);
 
+        try {
+            const response = await adminLogin(
+                formData.email,
+                formData.password
+            );
+
+            loginAdmin(response.user, response.token);
+
+            setSuccessMessage(response.message);
+            setErrors({});
+
+            setTimeout(() => {
+                router.push("/dashboard");
+            }, 2000);
+
+        } catch (err) {
+            setErrors({
+                api: err.message,
+            });
+
+            setTimeout(() => {
                 setErrors({});
-
-                setSuccessMessage(response.message);
-
-                setTimeout(() => {
-                    router.push("/dashboard");
-                }, 2000);
-            } catch (err) {
-                setErrors({
-                    api: err.message,
-                });
-            } finally {
-                setLoading(false);
-            }
+            }, 3000);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -110,7 +111,7 @@ const [showPassword, setShowPassword] = useState(false);
 
             <div
                 className="min-h-screen flex bg-cover bg-center"
-          
+
             >
                 {/* Left Side */}
                 <div className="hidden lg:flex lg:w-1/2 relative bg-[var(--secondary-color)]">
@@ -205,36 +206,36 @@ const [showPassword, setShowPassword] = useState(false);
 
                             {/* Password */}
                             <div>
-                              <Input
-  type={showPassword ? "text" : "password"}
-  name="password"
-  value={formData.password}
-  onChange={handleChange}
-  variant="underlined"
-  label={
-    <span className="text-[#000]">
-      Password
-      <span className="text-red-500 ml-1">*</span>
-    </span>
-  }
-  endContent={
-    <button
-      type="button"
-      onClick={() => setShowPassword(!showPassword)}
-      className="text-gray-500 hover:text-[var(--primary-color)] transition-colors"
-    >
-      {showPassword ? (
-        <FaEyeSlash size={18} />
-      ) : (
-        <FaEye size={18} />
-      )}
-    </button>
-  }
-  classNames={{
-    label: "text-[var(--text-color2)] h-[50px]",
-    input: "text-[var(--secondary-color)] font-medium",
-  }}
-/>
+                                <Input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    variant="underlined"
+                                    label={
+                                        <span className="text-[#000]">
+                                            Password
+                                            <span className="text-red-500 ml-1">*</span>
+                                        </span>
+                                    }
+                                    endContent={
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="text-gray-500 hover:text-[var(--primary-color)] transition-colors"
+                                        >
+                                            {showPassword ? (
+                                                <FaEyeSlash size={18} />
+                                            ) : (
+                                                <FaEye size={18} />
+                                            )}
+                                        </button>
+                                    }
+                                    classNames={{
+                                        label: "text-[var(--text-color2)] h-[50px]",
+                                        input: "text-[var(--secondary-color)] font-medium",
+                                    }}
+                                />
 
                                 {errors.password && (
                                     <p className="text-red-500 text-sm mt-1">

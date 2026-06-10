@@ -1,6 +1,95 @@
 import { useStoreLogin } from "../store/login";
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+export const registerUser = async (name, email, password) => {
+  const response = await fetch(`${baseUrl}auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      password,
+    }),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.status) {
+    const error = new Error();
+
+    error.message =
+      result.message ||
+      Object.values(result.errors || {})
+        .flat()
+        .join(", ");
+
+    error.errors = result.errors;
+
+    throw error;
+  }
+
+  return result;
+};
+
+// Login
+export const loginUser = async (email, password) => {
+  try {
+    const response = await fetch(`${baseUrl}auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.status) {
+      throw new Error(result.message);
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const adminLogin = async (email, password) => {
+  try {
+    const response = await fetch(`${baseUrl}auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.status) {
+      throw new Error(result.message);
+    }
+
+    // Only admin can login
+
+    if (result.user.role !== "admin") {
+      throw new Error("You are not authorized to access the admin panel.");
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const createNewPasswordApi = async (email, password) => {
   const url = `${baseUrl}wellilab-api-gateway/public/api/create-new-password`;
 
@@ -122,94 +211,7 @@ export const verifyOtp = async ({ email, otp }) => {
   return data;
 };
 
-export const registerUser = async (name, email, password, c_password) => {
-  const url = `${baseUrl}wellilab-api-gateway/public/api/register`;
 
-  try {
-    // Basic validations
-    if (!name || !email || !password || !c_password ) {
-      throw new Error("All fields are required.");
-    }
-
-    if (password !== c_password) {
-      throw new Error("Password and Confirm Password must match.");
-    }
-
-    const payload = { name, email, password, c_password };
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const result = await response.json();
-
-    // Handle non-successful responses
-    if (!response.ok || !result?.status) {
-      const error = new Error(result.message);
-      error.details = result.data || null;
-      throw error;
-    }
-
-    // Return the successful response data
-    return result;
-
-  } catch (error) {
-    // Optional: Log the error for debugging
-    console.error("Registration Error:", error.message, error.details);
-    throw error;
-  }
-};
-
-export const loginUser = async (email, password) => {
-  const url = `${baseUrl}wellilab-api-gateway/public/api/login`;
-
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const result = await response.json();
-
-    console.log("API Response:", result); // Add this to debug
-
-    if (!response.ok || !result.status) {
-      throw new Error(result.message);
-    }
-
-    return result.data; // This is where user data should come from
-  } catch (error) {
-    throw error;
-  }
-};
-
-
-export const adminLogin = async (email, password) => {
-  const response = await fetch(`${baseUrl}wellilab-api-gateway/public/api/admin-login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password })
-  });
-
-  const data = await response.json();
-
-  if (!data.status) {
-    const error = new Error(data.message || "Login failed");
-    error.message_italian = data.message_italian || "Login mislukt";
-    throw error;
-  }
-
-  return data;
-};
 
 export const changeAdminPassword = async ({ admin_id, old_password, new_password }) => {
   try {

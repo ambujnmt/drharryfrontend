@@ -1,44 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import Main from '@/components/Main/Main';
-import { useRouter } from 'next/router';
-import { useUser } from '../context/UserContext';
-import { useAdmin } from '../context/AdminContext';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useUser } from "../context/UserContext";
+import { useAdmin } from "../context/AdminContext";
+import Main from "../components/Main/Main";
 
-export default function IndexPage() {
-  const { user } = useUser();
+export default function Home() {
+  const { loading } = useUser();
   const { admin } = useAdmin();
   const router = useRouter();
+
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      // Redirect based on user_type
-      switch (user.user_type) {
-        case 1:
-          router.replace("/doctor/dashboard");
-          break;
-        case 2:
-          router.replace("/socialWorker/dashboard");
-          break;
-        case 3:
-          router.replace("/patient/dashboard");
-          break;
-        case 4:
-          router.replace("/uPerson/dashboard");
-          break;
-        default:
-          setChecking(false); // unknown user_type, show login
-      }
-    } else if (admin) {
-      // Only admin goes to /dashboard
+    if (loading) return;
+
+    if (admin) {
       router.replace("/dashboard");
-    } else {
-      setChecking(false); // not logged in, show login
+      return;
     }
-  }, [user, admin]);
 
+    setChecking(false);
+  }, [loading, admin]);
 
-  if (checking) return null; // prevents flicker
+  if (checking) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-8 h-8 border-4 border-[var(--primary-color)] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return <Main />;
 }
