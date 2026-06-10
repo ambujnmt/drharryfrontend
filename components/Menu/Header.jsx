@@ -8,10 +8,31 @@ import {
 } from "@heroui/react";
 import { FaBars, FaTimes, FaChevronDown, FaUser } from "react-icons/fa";
 import React, { useState } from "react";
- 
+ import { useUser } from "../../context/UserContext";
+import { useRouter } from "next/router";
+import Tmodal from "../Tmodal/Tmodal";
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
- 
+ const router = useRouter();
+const { user, logout } = useUser();
+
+const [logoutModal, setLogoutModal] = useState(false);
+const [logoutLoading, setLogoutLoading] = useState(false);
+
+
+const handleLogout = () => {
+  setLogoutLoading(true);
+
+  setTimeout(() => {
+    logout();
+
+    setLogoutLoading(false);
+    setLogoutModal(false);
+
+    router.push("/");
+  }, 1500);
+};
   return (
     <header className="sticky top-0 z-[9999] w-full bg-white shadow-sm">
       <div className="">
@@ -113,7 +134,23 @@ export default function Header() {
       </Button>
     </DropdownTrigger>
 
-    <DropdownMenu aria-label="User Actions">
+  <DropdownMenu aria-label="User Actions">
+  {user ? (
+    <>
+      <DropdownItem key="profile" href="/profile">
+        Profile
+      </DropdownItem>
+
+      <DropdownItem
+        key="logout"
+        className="bg-[var(--primary-color)]"
+        onPress={() => setLogoutModal(true)}
+      >
+        Logout
+      </DropdownItem>
+    </>
+  ) : (
+    <>
       <DropdownItem key="login" href="/login">
         Login
       </DropdownItem>
@@ -121,7 +158,9 @@ export default function Header() {
       <DropdownItem key="register" href="/signUp">
         Register
       </DropdownItem>
-    </DropdownMenu>
+    </>
+  )}
+</DropdownMenu>
   </Dropdown>
 </li>
                 </ul>
@@ -166,6 +205,37 @@ export default function Header() {
           </div>
         </div>
       )}
+
+
+      <Tmodal
+  isOpen={logoutModal}
+  onClose={() => setLogoutModal(false)}
+  title="Logout"
+  footer={
+    <>
+      <Button
+        variant="light"
+        onPress={() => setLogoutModal(false)}
+      >
+        Cancel
+      </Button>
+
+      <Button
+        className="bg-[var(--primary-color)]"
+        onPress={handleLogout}
+        isDisabled={logoutLoading}
+      >
+        {logoutLoading ? (
+          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        ) : (
+          "Confirm"
+        )}
+      </Button>
+    </>
+  }
+>
+  Are you sure you want to logout?
+</Tmodal>
     </header>
   );
 }

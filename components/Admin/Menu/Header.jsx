@@ -17,11 +17,10 @@ export default function AdminHeader({ menuOpen, toggleMenu }) {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notificationOpen, setNotificationOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [logoutMessage, setLogoutMessage] = useState("");
     const router = useRouter();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { admin, logoutAdmin } = useAdmin(); // Access admin data and logout function from AdminContext
-    const { user, setUser, setUserEmail } = useUser();
+    const { admin, logoutAdmin } = useAdmin();
+    const { user, logout } = useUser();
     const [notifications, setNotifications] = useState([]);
 
 
@@ -112,6 +111,24 @@ export default function AdminHeader({ menuOpen, toggleMenu }) {
         if (user) loadUserOrDoctorNotifications();
     }, [user]);
 
+
+    const handleLogout = () => {
+        setLoading(true);
+
+        setTimeout(() => {
+            if (admin) {
+                logoutAdmin();
+                setLoading(false);
+                onClose();
+                router.replace("/admin/login");
+            } else if (user) {
+                logout();
+                setLoading(false);
+                onClose();
+                router.replace("/");
+            }
+        }, 1500);
+    };
 
     const newNotificationCount = notifications.filter((n) => n.isNew).length;
 
@@ -264,55 +281,12 @@ export default function AdminHeader({ menuOpen, toggleMenu }) {
                                 Cancel
                             </Button>
                             <Button
-                                color="primary"
-                                onPress={() => {
-                                    setLoading(true); // Start loading before any actions
-                                    setLogoutMessage(""); // Clear any old message
-
-                                    // Add a timeout to ensure the loading state is visible before processing logout
-                                    setTimeout(() => {
-                                        // Check if admin is logged in
-                                        if (admin) {
-                                            console.log("Admin is logged in. Proceeding to logout.");
-                                            logoutAdmin();
-                                            localStorage.removeItem("admin"); // Remove admin from localStorage
-                                            setLogoutMessage("You have been successfully logged out!");
-                                            const adminToken = localStorage.getItem("admin");
-                                            console.log("Admin Token After Removal: ", adminToken);
-
-                                            onClose();
-                                            setTimeout(() => {
-                                                router.push("/admin/login");
-                                                setLoading(false); // Stop loading after redirection
-                                            }, 200);
-                                        }
-                                        // Check if user is logged in
-                                        else if (user) {
-                                            // Clear user data and remove from localStorage
-                                            setUser(null); // Clears the user state
-                                            setUserEmail(""); // Clear the user email
-                                            localStorage.removeItem("user"); // Remove user from localStorage
-
-                                            // Log to check if the user token is removed
-                                            const userToken = localStorage.getItem("user");
-                                            console.log("User Token After Removal: ", userToken); // Should print null
-
-                                            onClose();
-                                            setTimeout(() => {
-                                                router.push("/login"); // Redirect to user login
-                                                setLoading(false); // Stop loading after redirection
-                                            }, 200);
-                                        }
-                                    }, 100); // Delay logout actions for spinner to show
-                                }}
+                                className="bg-[var(--primary-color)]"
+                                onPress={handleLogout}
+                                isDisabled={loading}
                             >
-                                {logoutMessage && (
-                                    <p className="text-green-500 text-center font-semibold my-2">
-                                        {logoutMessage}
-                                    </p>
-                                )}
                                 {loading ? (
-                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div> // Loader
+                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                 ) : (
                                     "Confirm"
                                 )}

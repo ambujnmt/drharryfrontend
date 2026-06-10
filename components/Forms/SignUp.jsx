@@ -20,7 +20,6 @@ export default function SignupForm() {
   const router = useRouter();
   const [loading, setloading] = useState(false);
 
- 
 
   const validate = () => {
     let newErrors = {};
@@ -42,6 +41,12 @@ export default function SignupForm() {
     }
 
     setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+  setTimeout(() => {
+    setErrors({});
+  }, 3000);
+}
     return Object.keys(newErrors).length === 0;
   };
 
@@ -50,6 +55,27 @@ export default function SignupForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const { setUserEmail } = useUser();
 
+
+ useEffect(() => {
+  if (successMessage) {
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }
+}, [successMessage]);
+
+useEffect(() => {
+  if (errors.api) {
+    const timer = setTimeout(() => {
+      setErrors({});
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }
+}, [errors.api]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -57,42 +83,58 @@ export default function SignupForm() {
     setSuccessMessage("");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!validate()) return;
+  if (!validate()) return;
 
-    setloading(true); // Start loader
+  setloading(true);
+  setErrors({});
+  setSuccessMessage("");
 
-    try {
-      const { name, email, password, c_password } = formData;
-      const response = await registerUser(name, email, password, c_password);
+  try {
+    const response = await registerUser(
+      formData.name,
+      formData.email,
+      formData.password
+    );
 
-       setSuccessMessage(response.message);
+    console.log(response);
 
-      setUserEmail(email);
+    // show success message
+    setSuccessMessage(response.message);
 
-      setTimeout(() => {
-        router.push("/otpVerification");
-      }, 3000);
+    // clear form
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      c_password: "",
+    });
 
-      setFormData({ name: "", email: "", password: "", c_password: "" });
-      setErrors({});
-    } catch (err) {
-      if (err?.details) {
-        const fieldErrors = {};
-        for (const field in err.details) {
-          fieldErrors[field] = err.details[field][0];
-        }
-        setErrors(fieldErrors);
-      } else {
-        setErrors({ api: err.message });
-      }
-      setSuccessMessage("");
-    } finally {
-      setloading(false); // Stop loader
-    }
-  };
+    // redirect after 3 seconds
+    setTimeout(() => {
+      router.push("/login");
+    }, 3000);
+  }catch (err) {
+  if (err.errors) {
+    setErrors({
+      ...err.errors,
+      api: err.message,
+    });
+  } else {
+    setErrors({
+      api: err.message,
+    });
+  }
+
+  setTimeout(() => {
+    setErrors({});
+  }, 3000);
+} finally {
+    setloading(false);
+  }
+};
 
 
 
@@ -226,11 +268,13 @@ export default function SignupForm() {
                 }}
               />
 
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.email}
-                </p>
-              )}
+         {errors.email && (
+  <p className="text-red-500 text-sm mt-1">
+    {Array.isArray(errors.email)
+      ? errors.email[0]
+      : errors.email}
+  </p>
+)}
             </div>
 
             <div className="grid grid-cols-2 gap-4">

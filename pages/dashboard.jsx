@@ -9,7 +9,7 @@ export default function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
 
   return (
-    <PrivateRoute>
+    <PrivateRoute adminOnly={true}>
 
     <div className="flex">
       {menuOpen && (
