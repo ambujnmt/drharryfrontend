@@ -1,6 +1,7 @@
 import { useStoreLogin } from "../store/login";
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+// register
 export const registerUser = async (name, email, password) => {
   const response = await fetch(`${baseUrl}auth/register`, {
     method: "POST",
@@ -59,6 +60,7 @@ export const loginUser = async (email, password) => {
   }
 };
 
+// admin login
 export const adminLogin = async (email, password) => {
   try {
     const response = await fetch(`${baseUrl}auth/login`, {
@@ -89,6 +91,80 @@ export const adminLogin = async (email, password) => {
     throw error;
   }
 };
+
+// add-course
+export async function addCourse(formData) {
+  const res = await fetch(`${baseUrl}courses/add`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw data;
+  }
+
+  return data;
+}
+
+// all-courses
+export async function getCourses() {
+  try {
+    const res = await fetch(`${baseUrl}courses/all`);
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// courser-detail
+export async function getSingleCourse(id) {
+  try {
+    const res = await fetch(`${baseUrl}courses/single/${id}`);
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// course-update
+export async function updateCourse(id, formData) {
+  try {
+    const res = await fetch(
+      `${baseUrl}courses/update/${id}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 
 export const createNewPasswordApi = async (email, password) => {
   const url = `${baseUrl}wellilab-api-gateway/public/api/create-new-password`;

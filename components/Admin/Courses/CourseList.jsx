@@ -1,63 +1,88 @@
-import React, { useMemo } from "react";
-import { Button, Input, Select, SelectItem } from "@heroui/react";
+import React, { useMemo, useEffect, useState } from "react";
+import { Button, Input, Link, Select, SelectItem } from "@heroui/react";
 import { FaPlus, FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import { Head } from "../../../layouts/head";
 import Table from "../../Table/Table";
+import { getCourses } from "../../../utils/fetchApi";
+import { Spinner } from "@heroui/react";
+import PageTitle from "../../Breadcrumb/PageTitle";
+
+
 
 export default function CourseList() {
-  const courseData = [
-    {
-      id: 1,
-      image: "/assets/images/fea-img1.png",
-      title: "Smile Design & Veneers",
-      instructor: "Dr. Robert Chen",
-      duration: "5 Days",
-      investment: "$8,500",
-      status: "Open",
-      seats: "3 Seats Left",
-    },
-    {
-      id: 2,
-      image: "/assets/images/fea-img2.png",
-      title: "Full Arch Mastery",
-      instructor: "Dr. Michael Ross",
-      duration: "7 Days",
-      investment: "$12,000",
-      status: "Open",
-      seats: "2 Seats Left",
-    },
-    {
-      id: 3,
-      image: "/assets/images/fea-img3.png",
-      title: "Implant Fundamentals",
-      instructor: "Dr. Sarah Johnson",
-      duration: "4 Days",
-      investment: "$5,500",
-      status: "Waitlist",
-      seats: "0 Seats",
-    },
-   
-  ];
+  const [courseData, setCourseData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [allCourses, setAllCourses] = useState([]);
+
+
+
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+
+      const res = await getCourses();
+
+      if (res.status) {
+        const mappedData = res.courses.map((item) => ({
+          ...item,
+
+          investment: `$${item.investment}`,
+
+          seats:
+            item.seats_left > 0
+              ? `${item.seats_left} Seats Left`
+              : "0 Seats",
+
+          status: item.status === 1 ? "Active" : "Inactive",
+        }));
+
+        setAllCourses(mappedData);
+        setCourseData(mappedData);
+      } else {
+        setMessage(res.message);
+      }
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  useEffect(() => {
+    let filtered = [...allCourses];
+
+    if (statusFilter === "1") {
+      filtered = filtered.filter(
+        (item) => item.status === "Active"
+      );
+    } else if (statusFilter === "0") {
+      filtered = filtered.filter(
+        (item) => item.status === "Inactive"
+      );
+    }
+
+    setCourseData(filtered);
+  }, [statusFilter, allCourses]);
 
   const columns = useMemo(
     () => [
       {
-        Header: "Course",
+        Header: "Course Title",
         accessor: "title",
         Cell: ({ row }) => (
           <div className="flex items-center gap-3">
-            <img
-              src={row.original.image}
-              alt=""
-              className="w-[60px] h-[60px] rounded-lg object-cover"
-            />
+
             <div>
               <h6 className="mb-1 text-[15px] font-semibold text-[#0a2342]">
                 {row.original.title}
               </h6>
-              <p className="mb-0 text-[13px] text-gray-500">
-                {row.original.instructor}
-              </p>
             </div>
           </div>
         ),
@@ -80,13 +105,10 @@ export default function CourseList() {
         Cell: ({ value }) => (
           <span
             className={`px-3 py-2 rounded-full text-xs font-medium
-            ${
-              value === "Open"
+${value === "Active"
                 ? "bg-green-100 text-green-700"
-                : value === "Full"
-                ? "bg-red-100 text-red-700"
-                : "bg-yellow-100 text-yellow-700"
-            }`}
+                : "bg-red-100 text-red-700"
+              }`}
           >
             {value}
           </span>
@@ -95,19 +117,18 @@ export default function CourseList() {
       {
         Header: "Actions",
         accessor: "actions",
-        Cell: () => (
+        Cell: ({ row }) => (
           <div className="flex gap-2">
-            <button className="w-9 h-9 rounded-lg bg-[#0a2342] text-white flex items-center justify-center">
+            <Link href={`/admin/courses/courseDetail/${row.original.id}`} className="w-9 h-9 rounded-lg bg-[#0a2342] text-white flex items-center justify-center">
               <FaEye />
-            </button>
+            </Link>
 
-            <button className="w-9 h-9 rounded-lg bg-[#c8a96a] text-white flex items-center justify-center">
+
+            <Link href={`/admin/courses/courseUpdate/${row.original.id}`} className="w-9 h-9 rounded-lg bg-[#c8a96a] text-white flex items-center justify-center">
               <FaEdit />
-            </button>
+            </Link>
 
-            <button className="w-9 h-9 rounded-lg bg-red-500 text-white flex items-center justify-center">
-              <FaTrash />
-            </button>
+
           </div>
         ),
       },
@@ -120,7 +141,7 @@ export default function CourseList() {
       <Head title="Manage Courses" />
 
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className="text-[42px] text-[var(--secondary-color)]">
             Manage Courses
@@ -131,64 +152,66 @@ export default function CourseList() {
           </p>
         </div>
 
-    
       </div>
+     <PageTitle
+                breadCrumbItems={[
+                    { label: 'Dashboard', path: '/dashboard' },
+                    { label: 'Manage Courses', active: true },
+                ]}
+                title="Manage Courses"
+            />
 
-    
+
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 shadow-md mb-8">
-        <div className="grid lg:grid-cols-3 gap-4">
-          <Input
-            placeholder="Search by course title..."
-              variant="underlined"
-                        label={
-                            <span className="text-[#000] ">
-                                Search Course
-                            </span>
-                        }
-                        classNames={{
-                            label: "text-[var(--text-color2)] h-[50px]",
-                            input: "text-[var(--secondary-color)] font-medium",
+      <div className="bg-white p-2 rounded-lg w-1/2  mb-6">
 
-                        }}
-          />
+        <p className="mb-4">Filter</p>
+        <Select
+          selectedKeys={statusFilter ? [statusFilter] : [""]}
+          onSelectionChange={(keys) =>
+            setStatusFilter(Array.from(keys)[0])
+          }
+          variant="underlined"
+          label={<span className="text-[#000]">Course Status</span>}
+          classNames={{
+            label: "text-[var(--text-color2)] h-[50px]",
+            input: "text-[var(--secondary-color)] font-medium",
+          }}
+        >
+          <SelectItem key="">All</SelectItem>
+          <SelectItem key="1">Active</SelectItem>
+          <SelectItem key="0">Inactive</SelectItem>
+        </Select>
 
-          <Select   variant="underlined"
-                        label={
-                            <span className="text-[#000] ">
-                               Course Status
-                            </span>
-                        }
-                        classNames={{
-                            label: "text-[var(--text-color2)] h-[50px]",
-                            input: "text-[var(--secondary-color)] font-medium",
 
-                        }}>
-            <SelectItem key="open">Open</SelectItem>
-            <SelectItem key="full">Full</SelectItem>
-            <SelectItem key="waitlist">Waitlist</SelectItem>
-          </Select>
-
-          <Button className="bg-[var(--primary-color)] text-white h-[56px] mt-auto">
-            Apply Filters
-          </Button>
-        </div>
       </div>
 
+
+      {message && (
+        <div className="mb-4 text-red-700  text-center">
+          {message}
+        </div>
+      )}
       {/* Course Table */}
       <div className="bg-white rounded-xl p-4 shadow-md">
-        <Table
-          columns={columns}
-          data={courseData}
-          pageSize={10}
-          pagination
-          isSearchable
-          isSortable
-          tableClass="mb-0"
-        />
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Spinner size="lg" color="warning" />
+          </div>
+        ) : (
+          <Table
+            columns={columns}
+            data={courseData}
+            pageSize={10}
+            pagination
+            isSearchable
+            isSortable
+            tableClass="mb-0"
+          />
+        )}
       </div>
 
- 
+
     </div>
   );
 }

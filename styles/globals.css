@@ -364,3 +364,7 @@ button[data-slot="trigger"] {
 .group[data-has-value="true"] .group-data-\[has-value\=true\]\:text-foreground {
     color: #000 !important;
 }
+
+button[data-slot="trigger"] label[data-slot="label"] {
+    height: 30px !important;
+}

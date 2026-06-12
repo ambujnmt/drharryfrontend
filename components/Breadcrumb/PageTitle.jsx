@@ -16,8 +16,8 @@ const PageTitle = props => {
                   </Breadcrumb.Item>
                 ) : (
                   <Breadcrumb.Item as="span" key={index}>
-                    <Link href={item.path} passHref legacyBehavior>
-                      <a className="text-decoration-none text-reset">{item.label}</a>
+                    <Link className="text-[var(--primary-color)]" href={item.path} passHref legacyBehavior>
+                      <a className="text-decoration-none text-reset ">{item.label}</a>
                     </Link>
                   </Breadcrumb.Item>
                 )

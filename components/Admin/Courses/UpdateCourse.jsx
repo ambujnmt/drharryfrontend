@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Input,
     Textarea,
@@ -8,14 +8,22 @@ import {
     Switch,
 } from "@heroui/react";
 import { Spinner } from "@heroui/react";
-import { addCourse } from "../../../utils/fetchApi";
+import {
+    getSingleCourse,
+    updateCourse,
+} from "../../../utils/fetchApi";
+import { useRouter } from "next/router";
 import PageTitle from "../../Breadcrumb/PageTitle";
 
-export default function AddCourse() {
+export default function UpdateCourse() {
     const [featured, setFeatured] = useState(false);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
+    const router = useRouter();
+    const [preview, setPreview] = useState("");
+    const [image, setImage] = useState(null);
+    const { id } = router.query;
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -30,97 +38,87 @@ export default function AddCourse() {
         image: null
     })
 
-    const handleSubmit = async () => {
-        const data = new FormData();
-
-        data.append("title", formData.title);
-        data.append("description", formData.description);
-        data.append("duration", formData.duration);
-        data.append("max_students", formData.max_students);
-        data.append("modules", formData.modules);
-        data.append("ce_credits", formData.ce_credits);
-        data.append("investment", formData.investment);
-        data.append("seats_left", formData.seats_left);
-        data.append("status", formData.status);
-        data.append("featured", featured ? 1 : 0);
-
-        if (formData.image) {
-            const maxSize = 2 * 1024 * 1024;
-
-            if (formData.image.size > maxSize) {
-                setLoading(false);
-
-                setMessage("Please select an image smaller than 2 MB.");
-                setMessageType("error");
-
-                setTimeout(() => {
-                    setMessage("");
-                }, 3000);
-
-                return;
-            }
+    useEffect(() => {
+        if (id) {
+            fetchCourse();
         }
-        if (formData.image) {
+    }, [id]);
 
-            data.append("image", formData.image);
-        }
-
+    const fetchCourse = async () => {
         try {
             setLoading(true);
 
-            const res = await addCourse(data);
+            const res = await getSingleCourse(id);
 
-            if (res.status) {
-                setMessage(res.message);
-                setMessageType("success");
+            const course = res.course;
 
-                setTimeout(() => {
-                    setFormData({
-                        title: "",
-                        description: "",
-                        duration: "",
-                        max_students: "",
-                        modules: "",
-                        ce_credits: "",
-                        investment: "",
-                        seats_left: "",
-                        status: "1",
-                        featured: 0,
-                        image: null,
-                    });
+            setFormData({
+                title: course.title || "",
+                description: course.description || "",
+                duration: course.duration || "",
+                max_students: course.max_students?.toString() || "",
+                modules: course.modules?.toString() || "",
+                ce_credits: course.ce_credits?.toString() || "",
+                investment: course.investment?.toString() || "",
+                seats_left: course.seats_left?.toString() || "",
+                status: course.status?.toString() || "1",
+                featured: course.featured || 0,
+                image: null,
+            });
 
-                    setFeatured(false);
-                    setMessage("");
-                }, 3000);
-            } else {
-                setMessage(res.message);
-                setMessageType("error");
+            setFeatured(course.featured == 1);
 
-                setTimeout(() => {
-                    setMessage("");
-                }, 3000);
-            }
-        } catch (error) {
-            let errorMsg = "Something went wrong.";
-
-            if (error.errors) {
-                errorMsg = Object.values(error.errors)
-                    .flat()
-                    .join(", ");
-            } else if (error.message) {
-                errorMsg = error.message;
-            }
-
-            setMessage(errorMsg);
-            setMessageType("error");
-
-            setTimeout(() => {
-                setMessage("");
-            }, 3000);
-
+            setPreview(course.image);
+        } catch (err) {
+            console.log(err);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleUpdate = async () => {
+        try {
+            setLoading(true);
+
+            const fd = new FormData();
+
+            fd.append("title", formData.title);
+            fd.append("description", formData.description);
+            fd.append("duration", formData.duration);
+            fd.append("max_students", formData.max_students);
+            fd.append("modules", formData.modules);
+            fd.append("ce_credits", formData.ce_credits);
+            fd.append("investment", formData.investment);
+            fd.append("seats_left", formData.seats_left);
+            fd.append("status", formData.status);
+            fd.append("featured", formData.featured);
+
+            if (image) {
+                fd.append("image", image);
+            }
+
+            const res = await updateCourse(id, fd);
+
+            setMessage(res.message);
+            setMessageType("success");
+
+            setTimeout(() => {
+                router.push("/admin/courses/courseList");
+            }, 3000);
+        } catch (err) {
+            setMessage(err.message);
+            setMessageType("error");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (loading && !formData.title) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <Spinner size="lg" color="warning" />
+            </div>
+        );
     }
 
     return (
@@ -131,34 +129,37 @@ export default function AddCourse() {
                     className="text-4xl text-[var(--secondary-color)]"
                     style={{ fontFamily: "Cormorant Garamond" }}
                 >
-                    Add New Course
+                    Update Course
                 </h1>
 
                 <p
                     className="text-[#2B2B2B] mt-2"
                     style={{ fontFamily: "Inter" }}
                 >
-                    Create and manage premium educational programs.
+                    Update and manage premium educational programs.
                 </p>
             </div>
-            <PageTitle
+
+                 <PageTitle
                 breadCrumbItems={[
                     { label: 'Dashboard', path: '/dashboard' },
-                    { label: 'Add Course', active: true },
+                    { label: 'Manage Courses', path: '/admin/courses/courseList' },
+                    { label: 'Update Course', active: true },
                 ]}
-                title="Add Course"
+                title="Update Course"
             />
 
             {message && (
                 <div
                     className={`mb-4 text-center font-medium ${messageType === "success"
-                        ? " text-green-700"
-                        : " text-red-700"
+                            ? " text-green-700"
+                            : " text-red-700"
                         }`}
                 >
                     {message}
                 </div>
             )}
+
 
             {/* Form */}
             <div className="bg-white rounded-2xl shadow-lg border border-[#e7e2d7] p-8">
@@ -356,37 +357,43 @@ export default function AddCourse() {
 
 
 
-                    <div>
+                    <Input
+                        type="file"
+                        onChange={(e) => {
+                            const file = e.target.files[0];
 
+                            setImage(file);
 
-                        <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    image: e.target.files[0],
-                                })
+                            setFormData({
+                                ...formData,
+                                image: file,
+                            });
+
+                            if (file) {
+                                setPreview(URL.createObjectURL(file));
                             }
-                            variant="underlined"
-                            label={
-                                <span className="text-[#000] ">
-                                    Image
-                                    <span className="text-red-500 ml-1">*</span>
-                                </span>
-                            }
-                            classNames={{
-                                label: "text-[var(--text-color2)] h-[50px]",
-                                input: "text-[var(--secondary-color)] font-medium",
+                        }}
+                        variant="underlined"
+                        label={
+                            <span className="text-[#000] ">
+                                Image
+                                <span className="text-red-500 ml-1">*</span>
+                            </span>
+                        }
+                        classNames={{
+                            label: "text-[var(--text-color2)] h-[50px]",
+                            input: "text-[var(--secondary-color)] font-medium",
 
-                            }}
-                        />
+                        }}
+                    />
 
-                        <p className="text-xs text-gray-500 mt-2">
-                            Supported formats: JPG, PNG, JPEG. Maximum size: 2 MB.
-                        </p>
-                    </div>
                 </div>
+                    {preview && (
+                        <img
+                            src={preview}
+                            className="w-40 h-40 object-cover rounded-lg mt-4"
+                        />
+                    )}
 
                 {/* Full Description */}
                 <div className="mt-6">
@@ -431,10 +438,11 @@ export default function AddCourse() {
                         isSelected={featured}
                         onValueChange={(value) => {
                             setFeatured(value);
-                            setFormData({
-                                ...formData,
+
+                            setFormData((prev) => ({
+                                ...prev,
                                 featured: value ? 1 : 0,
-                            });
+                            }));
                         }}
                         color="warning"
                     />
@@ -445,12 +453,12 @@ export default function AddCourse() {
                 {/* Buttons */}
                 <div className="flex flex-wrap gap-4 mt-10">
                     <Button
-                        onPress={handleSubmit}
+                        onPress={handleUpdate}
                         className="bg-[var(--primary-color)] text-white hover:bg-[var(--secondary-color)] font-semibold px-8"
                         isDisabled={loading}
                         radius="md"
                     >
-                        {loading ? <Spinner size="sm" color="white" /> : "Save Course"}
+                        {loading ? <Spinner size="sm" color="white" /> : "Update  Course"}
                     </Button>
 
 
