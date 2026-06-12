@@ -1,34 +1,33 @@
 "use client";
 
-import React from 'react'
-import { Link, user } from '@heroui/react';
+import React, { useState, useEffect } from "react";
+import { Link, Spinner, user } from '@heroui/react';
 import { FaSearch, FaFilter } from "react-icons/fa";
-import { useState } from "react";
 import { Accordion, AccordionItem } from "@heroui/react";
-
+import { getCourses } from "../../../utils/fetchApi";
 
 // == This is for Accordian ==
 const items = [
-    { 
+    {
         title: "What are the requirements for enrolling",
         content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.", 
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.",
     },
-    { 
+    {
         title: "What are the requirements for enrolling",
         content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.", 
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.",
     },
-    { 
+    {
         title: "What are the requirements for enrolling",
         content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.", 
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.",
     },
-    { 
+    {
         title: "What are the requirements for enrolling",
         content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.", 
-    }, 
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, impedit rem, quisquam aspernatur blanditiis consequuntur provident sequi omnis, laudantium assumenda officiis quas quod earum? Iste id at nesciunt ut optio.",
+    },
 ];
 // == // This is for Accordian ==
 
@@ -181,19 +180,48 @@ const tabs = [
         },
     },
 ];
- 
+
 const GOLD = "#C9A84C";
 const LIGHT_GOLD = "#FDF6E3";
 // == // This is For Video section tabs
 
 export default function Courses() {
+    const [courses, setCourses] = useState([]);
+    const [featuredCourses, setFeaturedCourses] = useState([]);
+    const [loadingCourses, setLoadingCourses] = useState(true);
 
+    const fetchCourses = async () => {
+        try {
+            setLoadingCourses(true);
+
+            const res = await getCourses();
+
+            const activeCourses = res.courses.filter(
+                (item) => item.status == 1
+            );
+
+            const featured = res.courses.filter(
+                (item) => item.status == 1 && item.featured == 1
+            );
+
+            setCourses(activeCourses);
+            setFeaturedCourses(featured);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoadingCourses(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCourses();
+    }, []);
     const [activeTab, setActiveTab] = useState("fullarch");
- 
+
     const current = tabs.find((t) => t.id === activeTab).content;
 
-  return (
-        <>  
+    return (
+        <>
             {/* == Courses Hero Section == */}
             <section className="relative bg-[url('/assets/Images/course-hero-img.jpg')] bg-cover bg-center bg-no-repeat py-[132px]">
                 {/* Overlay */}
@@ -208,7 +236,7 @@ export default function Courses() {
                                     <span className="block text-[var(--primary-color)]">
                                         Clinical Experience
                                     </span>
-                                </h1> 
+                                </h1>
                                 <p className="text-white font-light text-[16px] leading-[140%]">
                                     Elevate your practice with world-class education in aesthetic
                                     dentistry, smile design, digital workflows, and full arch
@@ -225,7 +253,7 @@ export default function Courses() {
             {/* == Search Section == */}
             <section className="bg-[var(--light-gold2)] py-[22px]">
                 <div className="container mx-auto">
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-[10px] sm:gap-0 w-full"> 
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-[10px] sm:gap-0 w-full">
                         {/* Search Input */}
                         <div className="flex-1 relative">
                             <FaSearch className="absolute left-[18px] top-1/2 -translate-y-1/2 text-[#b5aea5] text-[14px] pointer-events-none" />
@@ -235,7 +263,7 @@ export default function Courses() {
                                 placeholder="Search courses by name, topic, or keywords..."
                                 className="w-full h-[50px] border-[1.5px] border-[#ddd8ce] rounded-[50px] bg-[#faf9f7] pl-[46px] pr-5 text-[14px] text-[#4a4a4a] outline-none focus:border-[#c0b8ae] focus:ring-[3px] focus:ring-[rgba(180,165,145,0.15)]"
                             />
-                        </div> 
+                        </div>
                         {/* Select */}
                         <div className="relative flex items-center sm:ml-4">
                             <FaFilter className="absolute left-[16px] z-10 bg-[#E5E5E8] p-[4px] rounded-full w-[23px] h-[23px] text-[#7a7065]" />
@@ -248,7 +276,7 @@ export default function Courses() {
                                 <option>Intermediate</option>
                                 <option>Advanced</option>
                             </select>
-                        </div> 
+                        </div>
                     </div>
                 </div>
             </section>
@@ -264,234 +292,113 @@ export default function Courses() {
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"> 
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {/* Card 1 */}
-                        <div className="relative h-[580px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/fea-img1.png"
-                                alt="Smile Design & Veneers"
-                                className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Smile Design & Veneers
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Master the complete workflow of aesthetic smile design from facial
-                                    analysis to final cementation.
-                                </p>
-
-                                <div className="grid grid-cols-2 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>5 Days</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>12 Max</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>8 Modules</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>40 CE Credits</span>
-                                    </div>
+                        {
+                            loadingCourses ? (
+                                <div className="col-span-3 text-center py-10">
+                                    <Spinner />
                                 </div>
-                            </div>
+                            ) : (
+                                featuredCourses.map((course) => (
+                                    <div className="relative h-[580px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
+                                        <img
+                                            src={course.image}
+                                            alt={course.title}
+                                            className="w-full h-[203px] object-cover"
+                                        />
 
-                            <div className="absolute bottom-0 left-0 w-full">
-                                <div className="flex justify-between items-end px-5 pb-5">
-                                    <div>
-                                        <div className="text-[18px] text-[#505050]">Investment</div>
-                                        <div className="text-[28px] font-medium text-[var(--secondary-color)]">
-                                            $8,500
+                                        <div className="p-5">
+                                            <h2 className="text-[28px] font-medium leading-[100%]">
+                                                {course.title}
+                                            </h2>
+
+                                            <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
+                                                {course.description}
+                                            </p>
+
+                                            <div className="grid grid-cols-2 gap-x-[10px] gap-y-[7px] mt-5">
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.duration}</span>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.max_students} Max</span>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.modules} Modules</span>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.ce_credits} CE Credits</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="absolute bottom-0 left-0 w-full">
+                                            <div className="flex justify-between items-end px-5 pb-5">
+                                                <div>
+                                                    <div className="text-[18px] text-[#505050]">Investment</div>
+                                                    <div className="text-[28px] font-medium text-[var(--secondary-color)]">
+                                                        ${course.investment}
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-right">
+                                                    <div className="text-[18px] text-[#505050]">Availability</div>
+                                                    <div className="text-[18px] font-medium text-[#1A8233]">
+                                                        {
+                                                            course.seats_left > 0 ? (
+                                                                <div className="text-[18px] font-medium text-[#1A8233]">
+                                                                    {course.seats_left} seats left
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-[18px] font-medium text-red-500">
+                                                                    Full - Join Waitlist
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-[10px] px-5 pb-5">
+                                                {
+                                                    course.seats_left > 0 ? (
+                                                        <Link
+                                                            href="#"
+                                                            className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
+                                                        >
+                                                            Enroll Now
+                                                        </Link>
+                                                    ) : (
+                                                        <Link
+                                                            href="#"
+                                                            className="w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
+                                                        >
+                                                            Join Waitlist
+                                                        </Link>
+                                                    )
+                                                }
+
+                                                <Link
+                                                    href="#"
+                                                    className="border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] px-5 py-[11px]"
+                                                >
+                                                    Details
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
+                                ))
+                            )
+                        }
 
-                                    <div className="text-right">
-                                        <div className="text-[18px] text-[#505050]">Availability</div>
-                                        <div className="text-[18px] font-medium text-[#1A8233]">
-                                            3 seats left
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a
-                                    href="#"
-                                    className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                                    >
-                                    Enroll Now
-                                    </a>
-
-                                    <a
-                                    href="#"
-                                    className="border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] px-5 py-[11px]"
-                                    >
-                                    Details
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 2 */}
-                        <div className="relative h-[580px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                            src="/assets/Images/fea-img2.png"
-                            alt="Crown Preparation Excellence"
-                            className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Crown Preparation Excellence
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Perfect your anterior and posterior crown preparation techniques
-                                    with expert guidance.
-                                </p>
-
-                                <div className="grid grid-cols-2 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>3 Days</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>16 Max</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>6 Modules</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>24 CE Credits</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="absolute bottom-0 left-0 w-full">
-                                <div className="flex justify-between items-end px-5 pb-5">
-                                    <div>
-                                        <div className="text-[18px] text-[#505050]">Investment</div>
-                                        <div className="text-[28px] font-medium text-[var(--secondary-color)]">
-                                            $5,500
-                                        </div>
-                                    </div>
-
-                                    <div className="text-right">
-                                        <div className="text-[18px] text-[#505050]">Availability</div>
-                                        <div className="text-[18px] font-medium text-[#1A8233]">
-                                            8 seats left
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a
-                                    href="#"
-                                    className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                                    >
-                                    Enroll Now
-                                    </a>
-
-                                    <a
-                                    href="#"
-                                    className="border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] px-5 py-[11px]"
-                                    >
-                                    Details
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 3 */}
-                        <div className="relative h-[580px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/fea-img3.png"
-                                alt="Full Arch Rehabilitation"
-                                className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Full Arch Rehabilitation
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Comprehensive All-on-X training covering surgery, prosthetics, and
-                                    immediate load protocols.
-                                </p>
-
-                                <div className="grid grid-cols-2 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>5 Days</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>12 Max</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>8 Modules</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                        <span>40 CE Credits</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="absolute bottom-0 left-0 w-full">
-                                <div className="flex justify-between items-end px-5 pb-5">
-                                    <div>
-                                        <div className="text-[18px] text-[#505050]">Investment</div>
-                                        <div className="text-[28px] font-medium text-[var(--secondary-color)]">
-                                            $12,500
-                                        </div>
-                                    </div>
-
-                                    <div className="text-right">
-                                        <div className="text-[18px] text-[#505050]">Availability</div>
-                                        <div className="text-[18px] font-medium text-red-500">
-                                            Full - Join Waitlist
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a
-                                    href="#"
-                                    className="w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
-                                    >
-                                    Join Waitlist
-                                    </a>
-
-                                    <a
-                                    href="#"
-                                    className="border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] px-5 py-[11px]"
-                                    >
-                                    Details
-                                    </a>
-                                </div>
-                            </div>
-                        </div> 
                     </div>
                 </div>
             </section>
@@ -508,261 +415,79 @@ export default function Courses() {
                         <h6 className="text-[#000c] text-[20px] mb-[15px] leading-[138%]">Comprehensive training pathways for every <br /> stage of your career</h6>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"> 
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
                         {/* Card 1 */}
-                        <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/fea-img1.png"
-                                alt="Smile Design & Veneers"
-                                className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Smile Design & Veneers
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Master the complete workflow of aesthetic smile design from facial
-                                    analysis to final cementation.
-                                </p>
-
-                                <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">5 Days</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">40 CE</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-[16px] text-[rgba(26,_130,_51,_1)]">3 seats</span>
-                                    </div> 
-                                </div>
+                        {loadingCourses ? (
+                            <div className="col-span-3 flex justify-center py-20">
+                                <Spinner size="lg" color="warning" />
                             </div>
+                        ) : (
+                            courses.map((course) => (
+                                <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
+                                    <img
+                                        src={course.image}
+                                        alt={course.title}
+                                        className="w-full h-[203px] object-cover"
+                                    />
 
-                            <div className="left-0 w-full">  
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a
-                                    href="#"
-                                    className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                                    >
-                                    View Details
-                                    </a> 
-                                </div>
-                            </div>
-                        </div>
+                                    <div className="p-5">
+                                        <h2 className="text-[28px] font-medium leading-[100%]">
+                                           {course.title}
+                                        </h2>
 
-                        {/* Card 2 */}
-                        <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/fea-img2.png"
-                                alt="Smile Design & Veneers"
-                                className="w-full h-[203px] object-cover"
-                            />
+                                        <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
+                                            {course.description}
+                                        </p>
 
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Crown Preparation Excellence
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Perfect your anterior and posterior crown preparation techniques with expert guidance
-                                </p>
-
-                                <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">5 Days</span>
+                                        <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
+                                            <div className="flex items-center gap-2">
+                                                <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
+                                                <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">{course.duration}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
+                                                <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]"> {course.ce_credits} CE</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[16px] text-[rgba(26,_130,_51,_1)]">{course.seats_left > 0 ? (
+                                <span className="text-[16px] text-[rgba(26,130,51,1)]">
+                                    {course.seats_left} seats
+                                </span>
+                            ) : (
+                                <span className="text-[16px] text-red-600">
+                                    Waitlist
+                                </span>
+                            )}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">40 CE</span>
+
+                                    <div className="left-0 w-full">
+                                        <div className="flex gap-[10px] px-5 pb-5">
+                                            {course.seats_left > 0 ? (
+                            <Link
+                            href="#"
+                                // href={`/courses/${course.id}`}
+                                className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
+                            >
+                                View Details
+                            </Link>
+                        ) : (
+                            <Link
+                                className="flex justify-center items-center w-full text-center border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] py-[11px] hover:bg-[var(--secondary-color)] hover:text-white transition-all duration-500"
+                            >
+                                Join Waitlist
+                            </Link>
+                        )}
+
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2"> 
-                                        <span className="text-[16px] text-[rgba(26,_130,_51,_1)]">3 seats</span>
-                                    </div> 
                                 </div>
-                            </div>
+                            ))
+                        )}
 
-                            <div className="left-0 w-full">  
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a
-                                    href="#"
-                                    className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                                    >
-                                    View Details
-                                    </a> 
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 3 */}
-                        <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/Digital-Dentistry-Workflow.png"
-                                alt="Smile Design & Veneers"
-                                className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Digital Dentistry Workflow
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Learn IOS scanning, photogrammetry, Exocad design, and 3D printing workflows.
-                                </p>
-
-                                <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">5 Days</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">40 CE</span>
-                                    </div>
-                                    <div className="flex items-center gap-2"> 
-                                        <span className="text-[16px] text-[rgba(192,_14,_7,_1)]">Waitlist</span>
-                                    </div> 
-                                </div>
-                            </div>
-
-                            <div className="left-0 w-full">  
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a href="#" className="w-full text-center border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] py-[11px] hover:bg-[var(--secondary-color)] hover:text-white transition-all duration-500">Join Waitlist</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 4 */}
-                        <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/Full-Arch-Rehabilitation.png"
-                                alt="Smile Design & Veneers"
-                                className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Full Arch Rehabilitation
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Comprehensive All-on-X training covering surgery, prosthetics, and immediate load protocols.
-                                </p>
-
-                                <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">5 Days</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">40 CE</span>
-                                    </div>
-                                    <div className="flex items-center gap-2"> 
-                                        <span className="text-[16px] text-[rgba(192,_14,_7,_1)]">Waitlist</span>
-                                    </div> 
-                                </div>
-                            </div>
-
-                            <div className="left-0 w-full">  
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a href="#" className="w-full text-center border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] py-[11px] hover:bg-[var(--secondary-color)] hover:text-white transition-all duration-500">Join Waitlist</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 5 */}
-                        <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/Functional-Occlusion-VDO.png"
-                                alt="Smile Design & Veneers"
-                                className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Functional Occlusion & VDO
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Learn IOS scanning, photogrammetry, Exocad design, and 3D printing workflows.
-                                </p>
-
-                                <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">5 Days</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">40 CE</span>
-                                    </div>
-                                    <div className="flex items-center gap-2"> 
-                                        <span className="text-[16px] text-[rgba(26,_130,_51,_1)]">3 seats</span>
-                                    </div> 
-                                </div>
-                            </div>
-
-                            <div className="left-0 w-full">  
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a
-                                    href="#"
-                                    className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                                    >
-                                    View Details
-                                    </a> 
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Card 6 */}
-                        <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                            <img
-                                src="/assets/Images/Live-Patient-Intensive.png"
-                                alt="Smile Design & Veneers"
-                                className="w-full h-[203px] object-cover"
-                            />
-
-                            <div className="p-5">
-                                <h2 className="text-[28px] font-medium leading-[100%]">
-                                    Live Patient Intensive
-                                </h2>
-
-                                <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                    Hands-on experience treating real patients under expert supervision and mentorship.
-                                </p>
-
-                                <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">5 Days</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <img src="/assets/Images/check-icon.png" alt="" className="w-4" />
-                                        <span className="text-[16px] text-[rgba(0, 0, 0, 0.7)]">40 CE</span>
-                                    </div>
-                                    <div className="flex items-center gap-2"> 
-                                        <span className="text-[16px] text-[rgba(26,_130,_51,_1)]">3 seats</span>
-                                    </div> 
-                                </div>
-                            </div>
-
-                            <div className="left-0 w-full">  
-                                <div className="flex gap-[10px] px-5 pb-5">
-                                    <a
-                                    href="#"
-                                    className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                                    >
-                                    View Details
-                                    </a> 
-                                </div>
-                            </div>
-                        </div>
+                     
                     </div>
                 </div>
             </section>
@@ -841,8 +566,8 @@ export default function Courses() {
                             masterclasses, learn at your own pace with unlimited access.
                         </p>
                     </div>
-    
-    
+
+
                     {/* Tab Nav */}
                     <div
                         className="flex p-6 bg-white mx-16 rounded-xl shadow-md flex-wrap justify-evenly gap-2 mb-8"
@@ -852,26 +577,26 @@ export default function Courses() {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`px-5 py-2.5 rounded-full text-[16px] font-medium  tracking-wide transition-all duration-300 ${activeTab === tab.id
-                                        ? "bg-[var(--primary-color)] text-white"
-                                        : "text-black  bg-[#F5F2EC] hover:bg-[var(--secondary-color)] hover:text-[#ffffff]"
+                                    ? "bg-[var(--primary-color)] text-white"
+                                    : "text-black  bg-[#F5F2EC] hover:bg-[var(--secondary-color)] hover:text-[#ffffff]"
                                     }`}
                             >
                                 {tab.label}
                             </button>
                         ))}
                     </div>
-    
+
                     {/* Tab Content */}
                     <div>
                         {/* Top row: image + info */}
                         <div className="flex flex-col md:flex-row gap-8 mb-8">
                             {/* Image */}
                             <div className="md:w-1/2 relative rounded-xl overflow-hidden">
-                            <img
-                                src="/assets/Images/SurgicalProcedures.png"
-                                alt="Video Thumbnail"
-                                className="w-full h-[320px] object-cover rounded-xl"
-                            />
+                                <img
+                                    src="/assets/Images/SurgicalProcedures.png"
+                                    alt="Video Thumbnail"
+                                    className="w-full h-[320px] object-cover rounded-xl"
+                                />
                                 {/* Play button */}
                                 <button className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70px] h-[70px] rounded-full bg-white/85 flex items-center justify-center shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:scale-110 transition-all duration-300">
                                     <svg
@@ -882,7 +607,7 @@ export default function Courses() {
                                     </svg>
                                 </button>
                             </div>
-    
+
                             {/* Info */}
                             <div className="md:w-1/2 flex flex-col justify-center gap-6">
                                 <div>
@@ -893,7 +618,7 @@ export default function Courses() {
                                         {current.description}
                                     </p>
                                 </div>
-    
+
                                 {/* Stats */}
                                 <div className="grid grid-cols-3 gap-4">
                                     <div className="flex-1 text-center rounded-xl py-4 px-2 bg-[var(--light-gold2)]">
@@ -911,7 +636,7 @@ export default function Courses() {
                                     >
                                         <h4
                                             className="font-medium mb-3 text-[40px] leading-[100%] text-[var(--primary-color)]"
-                                        
+
                                         >
                                             {current.modules}
                                         </h4>
@@ -920,7 +645,7 @@ export default function Courses() {
                                         </p>
                                     </div>
                                 </div>
-    
+
                                 {/* CTA */}
                                 <div>
                                     <Link
@@ -932,7 +657,7 @@ export default function Courses() {
                                 </div>
                             </div>
                         </div>
-    
+
                         {/* Bottom cards */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                             {current.cards.map((card, i) => (
@@ -947,13 +672,13 @@ export default function Courses() {
                                     </p>
                                     <h4
                                         className="font-normal mb-2 text-[25px] "
-                            
+
                                     >
                                         {card.title}
                                     </h4>
                                     <p
                                         className=" mb-4 text-[18px] text-black/50"
-                            
+
                                     >
                                         {card.desc}
                                     </p>
@@ -985,16 +710,16 @@ export default function Courses() {
                                 <Accordion
                                     variant="splitted"
                                     className=""
-                                    >
+                                >
                                     {items.map((item) => (
-                                        <AccordionItem 
+                                        <AccordionItem
                                             aria-label={item.title}
                                             title={
                                                 <span
                                                     className="text-[20px] leading-[138%] text-[var(--secondary-color)]"
-                                                    style={{ fontFamily: "Inter, sans-serif"}}
+                                                    style={{ fontFamily: "Inter, sans-serif" }}
                                                 >
-                                                    {item.title} 
+                                                    {item.title}
                                                 </span>
                                             }
                                         >

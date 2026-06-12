@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
-import Header from "../../../components/Admin/Menu/Header";
-import AdminSideMenu from "../../../components/Admin/Menu/SideMenu";
-import Footer from "../../../components/Admin/Menu/Footer";
-import CourseList from "../../../components/Admin/Courses/CourseList";
+import PrivateRoute from "../../../../components/PrivateRoute/PrivateRoute";
+import Header from "../../../../components/Admin/Menu/Header";
+import AdminSideMenu from "../../../../components/Admin/Menu/SideMenu";
+import Footer from "../../../../components/Admin/Menu/Footer";
+import UpdateCourse from "../../../../components/Admin/Courses/UpdateCourse";
 
 export default function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
@@ -11,6 +11,7 @@ export default function DashboardPage() {
   return (
 
 <PrivateRoute adminOnly={true}>
+
 
     <div className="flex">
       {menuOpen && (
@@ -46,7 +47,7 @@ export default function DashboardPage() {
         />
 
         <div className="flex-1 overflow-auto  bg-gray-100">
-          <CourseList />
+          <UpdateCourse/>
         </div>
 
         <Footer />
