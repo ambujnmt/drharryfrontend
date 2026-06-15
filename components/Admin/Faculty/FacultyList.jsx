@@ -1,67 +1,100 @@
-import React, { useMemo } from "react";
-import { Button, Input, Select, SelectItem } from "@heroui/react";
+import React, { useMemo, useEffect, useState } from "react"; import { Button, Input, Select, SelectItem } from "@heroui/react";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import { Head } from "../../../layouts/head";
 import Table from "../../Table/Table";
+import PageTitle from "../../Breadcrumb/PageTitle";
+import { getFaculty } from "../../../utils/fetchApi";
+import { Spinner, Link } from "@heroui/react";
 
 export default function FacultyList() {
+  const [facultyData, setFacultyData] = useState([]);
+  const [allFaculty, setAllFaculty] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
-  const facultyData = [
-    {
-      id: 1,
-      image: "/assets/Images/doctor1.png",
-      name: "Dr. Sarah Mitchell",
-      role: "Founder & Clinical Director",
-      specialization: "Aesthetic Dentistry",
-      qualification: "DDS, MS, AAACD",
-      status: "Active",
-    },
-    {
-      id: 2,
-      image: "/assets/Images/doctor2.png",
-      name: "Dr. James Chen",
-      role: "Implant Specialist",
-      specialization: "Full Arch Rehabilitation",
-      qualification: "DDS, MSc",
-      status: "Active",
-    },
-    {
-      id: 3,
-      image: "/assets/Images/doctor1.png",
-      name: "Dr. Emily Watson",
-      role: "Faculty Instructor",
-      specialization: "Smile Design",
-      qualification: "DDS, BDS",
-      status: "Inactive",
-    },
-    {
-      id: 4,
-      image: "/assets/Images/doctor2.png",
-      name: "Dr. Michael Ross",
-      role: "Clinical Mentor",
-      specialization: "Implant Dentistry",
-      qualification: "DDS",
-      status: "Active",
-    },
-    {
-      id: 5,
-      image: "/assets/Images/doctor1.png",
-      name: "Dr. Andrew Miller",
-      role: "Faculty Instructor",
-      specialization: "Digital Dentistry",
-      qualification: "DDS, MSc",
-      status: "Active",
-    },
-    {
-      id: 6,
-      image: "/assets/Images/doctor2.png",
-      name: "Dr. Emma Wilson",
-      role: "Smile Design Mentor",
-      specialization: "Cosmetic Dentistry",
-      qualification: "DDS",
-      status: "Inactive",
-    },
-  ];
+  const fetchFaculty = async () => {
+
+    try {
+
+      setLoading(true);
+
+      const res = await getFaculty();
+
+      if (res.status) {
+
+        const mappedData = res.faculty.map((item) => ({
+
+          ...item,
+
+          role: item.designation,
+
+          status: item.status == 1 ? "Active" : "Inactive",
+
+        }));
+
+        setFacultyData(mappedData);
+
+        setAllFaculty(mappedData);
+
+      } else {
+
+        setMessage(res.message);
+
+      }
+
+    }
+
+    catch (error) {
+
+      setMessage(error.message);
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  useEffect(() => {
+
+    fetchFaculty();
+
+  }, []);
+
+
+  useEffect(() => {
+
+    let filtered = [...allFaculty];
+
+    if (statusFilter === "1") {
+
+      filtered = filtered.filter(
+
+        (item) => item.status === "Active"
+
+      );
+
+    }
+
+    else if (statusFilter === "0") {
+
+      filtered = filtered.filter(
+
+        (item) => item.status === "Inactive"
+
+      );
+
+    }
+
+    setFacultyData(filtered);
+
+  }, [statusFilter, allFaculty]);
+
+
 
   const columns = useMemo(
     () => [
@@ -70,11 +103,7 @@ export default function FacultyList() {
         accessor: "name",
         Cell: ({ row }) => (
           <div className="flex items-center gap-3">
-            <img
-              src={row.original.image}
-              alt=""
-              className="w-[60px] h-[60px] rounded-lg object-cover"
-            />
+
 
             <div>
               <h6 className="mb-1 text-[15px] font-semibold text-[#0a2342]">
@@ -88,15 +117,13 @@ export default function FacultyList() {
           </div>
         ),
       },
-
       {
-        Header: "Specialization",
-        accessor: "specialization",
+        Header: "Email",
+        accessor: "email",
       },
-
       {
-        Header: "Qualification",
-        accessor: "qualification",
+        Header: "Phone",
+        accessor: "phone",
       },
 
       {
@@ -109,11 +136,10 @@ export default function FacultyList() {
         accessor: "status",
         Cell: ({ value }) => (
           <span
-            className={`px-3 py-2 rounded-full text-xs font-medium ${
-              value === "Active"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
+            className={`px-3 py-2 rounded-full text-xs font-medium ${value === "Active"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+              }`}
           >
             {value}
           </span>
@@ -123,19 +149,25 @@ export default function FacultyList() {
       {
         Header: "Actions",
         accessor: "actions",
-        Cell: () => (
+        Cell: ({ row }) => (
           <div className="flex gap-2">
-            <button className="w-9 h-9 rounded-lg bg-[#0a2342] text-white flex items-center justify-center">
+            <Link
+
+              href={`/admin/faculty/facultyDetail/${row.original.id}`}
+              className="w-9 h-9 rounded-lg bg-[#0a2342] text-white flex items-center justify-center"
+            >
               <FaEye />
-            </button>
+            </Link>
 
-            <button className="w-9 h-9 rounded-lg bg-[#c8a96a] text-white flex items-center justify-center">
+            <Link
+
+              href={`/admin/faculty/facultyUpdate/${row.original.id}`}
+              className="w-9 h-9 rounded-lg bg-[#c8a96a] text-white flex items-center justify-center"
+            >
               <FaEdit />
-            </button>
+            </Link>
 
-            <button className="w-9 h-9 rounded-lg bg-red-500 text-white flex items-center justify-center">
-              <FaTrash />
-            </button>
+
           </div>
         ),
       },
@@ -158,44 +190,37 @@ export default function FacultyList() {
         </p>
       </div>
 
-    
+      <PageTitle
+        breadCrumbItems={[
+          { label: 'Dashboard', path: '/dashboard' },
+          { label: 'Manage Faculty', active: true },
+        ]}
+        title="Manage Faculty"
+      />
+
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 shadow-md mb-8">
-        <div className="grid lg:grid-cols-3 gap-4">
+      <div className="bg-white p-2 rounded-lg w-1/2  mb-6">
 
-          <Input
-            placeholder="Search by faculty..."
-            variant="underlined"
-            label={<span>Search Faculty</span>}
-            classNames={{
-              label: "text-[var(--text-color2)] h-[50px]",
-              input: "text-[var(--secondary-color)] font-medium",
-            }}
-          />
+        <p className="mb-4">Filter</p>
+        <Select
+          selectedKeys={statusFilter ? [statusFilter] : [""]}
+          onSelectionChange={(keys) =>
+            setStatusFilter(Array.from(keys)[0])
+          }
+          variant="underlined"
+          label={<span className="text-[#000]">Course Status</span>}
+          classNames={{
+            label: "text-[var(--text-color2)] h-[50px]",
+            input: "text-[var(--secondary-color)] font-medium",
+          }}
+        >
+          <SelectItem key="">All</SelectItem>
+          <SelectItem key="1">Active</SelectItem>
+          <SelectItem key="0">Inactive</SelectItem>
+        </Select>
 
-          <Select
-            variant="underlined"
-            label={<span>Faculty Status</span>}
-            classNames={{
-              label: "text-[var(--text-color2)] h-[50px]",
-              input: "text-[var(--secondary-color)] font-medium",
-            }}
-          >
-            <SelectItem key="active">
-              Active
-            </SelectItem>
 
-            <SelectItem key="inactive">
-              Inactive
-            </SelectItem>
-          </Select>
-
-          <Button className="bg-[var(--primary-color)] text-white h-[56px] mt-auto">
-            Apply Filters
-          </Button>
-
-        </div>
       </div>
 
       {/* Table */}

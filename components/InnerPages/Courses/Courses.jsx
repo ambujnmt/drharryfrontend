@@ -433,7 +433,7 @@ export default function Courses() {
 
                                     <div className="p-5">
                                         <h2 className="text-[28px] font-medium leading-[100%]">
-                                           {course.title}
+                                            {course.title}
                                         </h2>
 
                                         <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
@@ -451,14 +451,14 @@ export default function Courses() {
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-[16px] text-[rgba(26,_130,_51,_1)]">{course.seats_left > 0 ? (
-                                <span className="text-[16px] text-[rgba(26,130,51,1)]">
-                                    {course.seats_left} seats
-                                </span>
-                            ) : (
-                                <span className="text-[16px] text-red-600">
-                                    Waitlist
-                                </span>
-                            )}</span>
+                                                    <span className="text-[16px] text-[rgba(26,130,51,1)]">
+                                                        {course.seats_left} seats
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[16px] text-red-600">
+                                                        Waitlist
+                                                    </span>
+                                                )}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -466,20 +466,20 @@ export default function Courses() {
                                     <div className="left-0 w-full">
                                         <div className="flex gap-[10px] px-5 pb-5">
                                             {course.seats_left > 0 ? (
-                            <Link
-                            href="#"
-                                // href={`/courses/${course.id}`}
-                                className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                            >
-                                View Details
-                            </Link>
-                        ) : (
-                            <Link
-                                className="flex justify-center items-center w-full text-center border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] py-[11px] hover:bg-[var(--secondary-color)] hover:text-white transition-all duration-500"
-                            >
-                                Join Waitlist
-                            </Link>
-                        )}
+                                                <Link
+                                                    href="#"
+                                                    // href={`/courses/${course.id}`}
+                                                    className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
+                                                >
+                                                    View Details
+                                                </Link>
+                                            ) : (
+                                                <Link
+                                                    className="flex justify-center items-center w-full text-center border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] py-[11px] hover:bg-[var(--secondary-color)] hover:text-white transition-all duration-500"
+                                                >
+                                                    Join Waitlist
+                                                </Link>
+                                            )}
 
                                         </div>
                                     </div>
@@ -487,7 +487,7 @@ export default function Courses() {
                             ))
                         )}
 
-                     
+
                     </div>
                 </div>
             </section>

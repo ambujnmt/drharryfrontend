@@ -165,6 +165,60 @@ export async function updateCourse(id, formData) {
   }
 }
 
+// add-faculty
+export async function addFaculty(data) {
+  try {
+    const res = await fetch(`${baseUrl}faculty/add`, {
+      method: "POST",
+      body: data,
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw result;
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// all-faculty
+export const getFaculty = async () => {
+  const response = await fetch(`${baseUrl}faculty/all`);
+
+  const data = await response.json();
+
+  return data;
+};
+
+// faculty-detail
+export const getSingleFaculty = async (id) => {
+  const response = await fetch(`${baseUrl}faculty/single/${id}`);
+
+  return await response.json();
+};
+
+// update-faculty
+export const updateFaculty = async (id, data) => {
+  const response = await fetch(
+    `${baseUrl}faculty/update/${id}`,
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw result;
+  }
+
+  return result;
+};
 
 export const createNewPasswordApi = async (email, password) => {
   const url = `${baseUrl}wellilab-api-gateway/public/api/create-new-password`;
