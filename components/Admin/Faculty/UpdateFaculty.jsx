@@ -11,7 +11,12 @@ import {
 import { FaUserPlus, FaUpload } from "react-icons/fa";
 import { Head } from "../../../layouts/head";
 import dynamic from "next/dynamic";
-import { addFaculty } from "../../../utils/fetchApi";
+import {
+  getSingleFaculty,
+  updateFaculty,
+} from "../../../utils/fetchApi";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const ReactQuill = dynamic(
   () => import("react-quill"),
@@ -22,11 +27,14 @@ const ReactQuill = dynamic(
 
 import "react-quill/dist/quill.snow.css";
 import PageTitle from "../../Breadcrumb/PageTitle";
-export default function AddFaculty() {
+export default function UpdateFaculty() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
+  const router = useRouter();
+  const [preview, setPreview] = useState("");
+  const { id } = router.query;
   const [formData, setFormData] = useState({
     name: "",
     designation: "",
@@ -41,121 +49,122 @@ export default function AddFaculty() {
   });
   const fileRef = useRef(null);
 
-  const handleSubmit = async () => {
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("designation", formData.designation);
-    data.append("specialization", formData.specialization);
-    data.append("qualification", formData.qualification);
-    data.append("email", formData.email);
-    data.append("phone", formData.phone);
-    data.append("linkedin", formData.linkedin);
-    data.append("bio", formData.bio);
-    data.append("status", formData.status);
-
-    if (formData.image) {
-      const maxSize = 2 * 1024 * 1024;
-      if (formData.image.size > maxSize) {
-        setMessage("Please select image smaller than 2 MB.");
-        setMessageType("error");
-        return;
-      }
-      data.append("image", formData.image);
+  useEffect(() => {
+    if (id) {
+      fetchFaculty();
     }
+  }, [id]);
 
+  const fetchFaculty = async () => {
     try {
       setLoading(true);
-      const res = await addFaculty(data);
 
-      if (res.status) {
-        setMessage(res.message);
-        setMessageType("success");
+      const res = await getSingleFaculty(id);
 
-        setTimeout(() => {
-          setFormData({
-            name: "",
-            designation: "",
-            specialization: "",
-            qualification: "",
-            email: "",
-            phone: "",
-            linkedin: "",
-            bio: "",
-            status: "1",
-            image: null,
-          });
+      const faculty = res.faculty;
 
-          if (fileRef.current) {
-            fileRef.current.value = "";
-          }
+      setFormData({
+        name: faculty.name || "",
+        designation: faculty.designation || "",
+        specialization: faculty.specialization || "",
+        qualification: faculty.qualification || "",
+        email: faculty.email || "",
+        phone: faculty.phone || "",
+        linkedin: faculty.linkedin || "",
+        bio: faculty.bio || "",
+        status: faculty.status?.toString() || "1",
+        image: null,
+      });
 
-          setMessage("");
-          setMessageType("");
-        }, 3000);
-      }
-
-      else {
-        setMessage(res.message);
-        setMessageType("error");
-      }
-    }
-
-    catch (error) {
-      let errorMsg = "Something went wrong.";
-      if (error.errors) {
-
-        errorMsg = Object.values(error.errors)
-
-          .flat()
-
-          .join(", ");
-
-      }
-
-      else if (error.message) {
-
-        errorMsg = error.message;
-
-      }
-
-      setMessage(errorMsg);
-      setMessageType("error");
-
-      setTimeout(() => {
-        setMessage("");
-        setMessageType("");
-      }, 3000);
-    }
-
-    finally {
-
+      setPreview(faculty.image);
+    } catch (err) {
+      console.log(err);
+    } finally {
       setLoading(false);
+    }
+  };
 
+
+ const handleUpdate = async () => {
+  try {
+    setLoading(true);
+
+    const fd = new FormData();
+
+    fd.append("name", formData.name);
+    fd.append("designation", formData.designation);
+    fd.append("specialization", formData.specialization);
+    fd.append("qualification", formData.qualification);
+    fd.append("email", formData.email);
+    fd.append("phone", formData.phone);
+    fd.append("linkedin", formData.linkedin);
+    fd.append("bio", formData.bio);
+    fd.append("status", formData.status);
+
+    if (formData.image) {
+      fd.append("image", formData.image);
     }
 
-  }
+    const res = await updateFaculty(id, fd);
 
+    setMessage(res.message);
+    setMessageType("success");
+
+    setTimeout(() => {
+      router.push("/admin/faculty/facultyList");
+    }, 3000);
+  } catch (err) {
+    let errorMsg = "Something went wrong.";
+
+    if (err.errors) {
+      errorMsg = Object.values(err.errors).flat().join(", ");
+    } else if (err.message) {
+      errorMsg = err.message;
+    }
+
+    setMessage(errorMsg);
+    setMessageType("error");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  if (loading && !formData.name) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" color="warning" />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-[var(--light-gold2)] p-6">
-      <Head title="Add Faculty" />
+      <Head title="Update Faculty" />
 
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-[42px] text-[var(--secondary-color)]">
-          Add Faculty Member
+          Update Faculty Member
         </h1>
 
         <p className="text-[16px] text-[#505050] mt-2">
-          Add a new instructor or faculty member to the institute.
+          Update faculty member information.
         </p>
       </div>
       <PageTitle
-                breadCrumbItems={[
-                    { label: 'Dashboard', path: '/dashboard' },
-                    { label: 'Add Faculty', active: true },
-                ]}
-                title="Add Faculty"
-            />
+        breadCrumbItems={[
+          { label: "Dashboard", path: "/dashboard" },
+          {
+            label: "Manage Faculty",
+            path: "/admin/faculty/facultyList",
+          },
+          {
+            label: "Update Faculty",
+            active: true,
+          },
+        ]}
+        title="Update Faculty"
+      />
 
 
       <div className="bg-white rounded-[15px] shadow-md p-6 lg:p-8">
@@ -421,17 +430,30 @@ export default function AddFaculty() {
 
 
             <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  image: e.target.files[0],
-                }))
-              }
-              className="mt-4 block mx-auto"
-            />
+  ref={fileRef}
+  type="file"
+  accept="image/*"
+  onChange={(e) => {
+    const file = e.target.files[0];
+
+    setFormData((prev) => ({
+      ...prev,
+      image: file,
+    }));
+
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  }}
+  className="mt-4 block mx-auto"
+/>
+
+{preview && (
+  <img
+    src={preview}
+    className="w-40 h-40 object-cover rounded-lg mt-4 block mx-auto"
+  />
+)}
 
           </div>
         </div>
@@ -439,7 +461,7 @@ export default function AddFaculty() {
 
         <div className="flex flex-wrap gap-4 mt-8">
           <Button
-            onPress={handleSubmit}
+            onPress={handleUpdate}
             isDisabled={loading}
             className="bg-[var(--primary-color)] text-white hover:bg-[var(--secondary-color)] font-semibold px-8"
             radius="md"
@@ -447,7 +469,7 @@ export default function AddFaculty() {
             {loading ?
               <Spinner size="sm" color="white" />
               :
-              "Save Faculty"
+              "Update Faculty"
             }
           </Button>
 
