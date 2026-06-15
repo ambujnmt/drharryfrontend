@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     Input,
     Textarea,
@@ -11,9 +11,18 @@ import { Spinner } from "@heroui/react";
 import {
     getSingleCourse,
     updateCourse,
+    getFaculty
 } from "../../../utils/fetchApi";
 import { useRouter } from "next/router";
 import PageTitle from "../../Breadcrumb/PageTitle";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), {
+    ssr: false,
+});
+
+import "react-quill/dist/quill.snow.css";
+import { FaUpload } from "react-icons/fa";
 
 export default function UpdateCourse() {
     const [featured, setFeatured] = useState(false);
@@ -35,13 +44,30 @@ export default function UpdateCourse() {
         seats_left: "",
         status: "1",
         featured: 0,
-        image: null
-    })
+        faculty_id: "",
+        learning_objectives: "",
+        ideal_for: "",
+        course_order: "",
+        image: null,
+    });
+    const [facultyList, setFacultyList] = useState([]);
+    const fileRef = useRef(null);
+
+    const fetchFaculty = async () => {
+        const res = await getFaculty();
+
+        if (res.status) {
+            setFacultyList(
+                res.faculty.filter((item) => item.status == 1)
+            );
+        }
+    };
 
     useEffect(() => {
         if (id) {
             fetchCourse();
         }
+        fetchFaculty();
     }, [id]);
 
     const fetchCourse = async () => {
@@ -63,6 +89,10 @@ export default function UpdateCourse() {
                 seats_left: course.seats_left?.toString() || "",
                 status: course.status?.toString() || "1",
                 featured: course.featured || 0,
+                faculty_id: course.faculty_id?.toString() || "",
+                learning_objectives: course.learning_objectives || "",
+                ideal_for: course.ideal_for || "",
+                course_order: course.course_order?.toString() || "",
                 image: null,
             });
 
@@ -91,7 +121,11 @@ export default function UpdateCourse() {
             fd.append("investment", formData.investment);
             fd.append("seats_left", formData.seats_left);
             fd.append("status", formData.status);
-            fd.append("featured", formData.featured);
+            fd.append("featured", featured ? 1 : 0);
+            fd.append("faculty_id", formData.faculty_id);
+            fd.append("learning_objectives", formData.learning_objectives);
+            fd.append("ideal_for", formData.ideal_for);
+            fd.append("course_order", formData.course_order);
 
             if (image) {
                 fd.append("image", image);
@@ -140,7 +174,7 @@ export default function UpdateCourse() {
                 </p>
             </div>
 
-                 <PageTitle
+            <PageTitle
                 breadCrumbItems={[
                     { label: 'Dashboard', path: '/dashboard' },
                     { label: 'Manage Courses', path: '/admin/courses/courseList' },
@@ -152,8 +186,8 @@ export default function UpdateCourse() {
             {message && (
                 <div
                     className={`mb-4 text-center font-medium ${messageType === "success"
-                            ? " text-green-700"
-                            : " text-red-700"
+                        ? " text-green-700"
+                        : " text-red-700"
                         }`}
                 >
                     {message}
@@ -323,6 +357,27 @@ export default function UpdateCourse() {
 
                         }}
                     />
+                    <Input
+                        value={formData.course_order}
+                        onValueChange={(value) =>
+                            setFormData({
+                                ...formData,
+                                course_order: value,
+                            })
+                        }
+                        variant="underlined"
+                        label={
+                            <span className="text-[#000] ">
+                                Course Order
+                                <span className="text-red-500 ml-1">*</span>
+                            </span>
+                        }
+                        classNames={{
+                            label: "text-[var(--text-color2)] h-[50px]",
+                            input: "text-[var(--secondary-color)] font-medium",
+
+                        }}
+                    />
 
                     <Select
                         selectedKeys={[formData.status]}
@@ -354,29 +409,88 @@ export default function UpdateCourse() {
                         </SelectItem>
                     </Select>
 
-
-
-
-                    <Input
-                        type="file"
-                        onChange={(e) => {
-                            const file = e.target.files[0];
-
-                            setImage(file);
-
+                    <Select
+                        selectedKeys={[formData.faculty_id]}
+                        onSelectionChange={(keys) =>
                             setFormData({
                                 ...formData,
-                                image: file,
-                            });
+                                faculty_id: [...keys][0],
+                            })
+                        }
+                        variant="underlined"
+                        label="Faculty"
+                    >
+                        {facultyList.map((item) => (
+                            <SelectItem key={item.id.toString()}>
+                                {item.name}
+                            </SelectItem>
+                        ))}
+                    </Select>
 
-                            if (file) {
-                                setPreview(URL.createObjectURL(file));
-                            }
-                        }}
+
+
+                </div>
+
+                <div className="mt-6">
+                    <label className="block text-[14px] font-medium mb-2">
+                        Course Image
+                    </label>
+
+                    <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
+                        <FaUpload
+                            size={30}
+                            className="mx-auto text-[var(--primary-color)] mb-3"
+                        />
+
+                        <p>Upload Course Profile Image</p>
+
+                        <p className="text-sm text-gray-500">
+                            PNG, JPG up to 5MB
+                        </p>
+
+                        <input
+                            ref={fileRef}
+                            type="file"
+                            accept="image/*"
+                            className="mt-4 block mx-auto"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+
+                                setImage(file);
+
+                                setFormData({
+                                    ...formData,
+                                    image: file,
+                                });
+
+                                if (file) {
+                                    setPreview(URL.createObjectURL(file));
+                                }
+                            }}
+                        />
+                        {preview && (
+                            <img
+                                src={preview}
+                                className="w-40 h-40 mx-auto rounded-xl object-cover mt-4"
+                            />
+                        )}
+                    </div>
+                </div>
+
+                <div className="mt-4">
+
+                    <Textarea
+                        value={formData.ideal_for}
+                        onValueChange={(value) =>
+                            setFormData({
+                                ...formData,
+                                ideal_for: value,
+                            })
+                        }
                         variant="underlined"
                         label={
                             <span className="text-[#000] ">
-                                Image
+                                Ideal For
                                 <span className="text-red-500 ml-1">*</span>
                             </span>
                         }
@@ -385,43 +499,50 @@ export default function UpdateCourse() {
                             input: "text-[var(--secondary-color)] font-medium",
 
                         }}
+                        minRows={4}
                     />
-
                 </div>
-                    {preview && (
-                        <img
-                            src={preview}
-                            className="w-40 h-40 object-cover rounded-lg mt-4"
-                        />
-                    )}
+
 
                 {/* Full Description */}
-                <div className="mt-6">
-                    <Textarea
+                <div className="mt-4">
+                    <label>
+                        <span className="text-[#000] text-sm">
+                            Description
+                            <span className="text-red-500 ml-1">*</span>
+                        </span>
+                    </label>
+                    <ReactQuill
+                        theme="snow"
                         value={formData.description}
-                        onValueChange={(value) =>
+                        onChange={(value) =>
                             setFormData({
                                 ...formData,
                                 description: value,
                             })
                         }
-                        placeholder="Detailed course description"
-                        variant="underlined"
-                        label={
-                            <span className="text-[#000] ">
-                                Description
-                                <span className="text-red-500 ml-1">*</span>
-                            </span>
-                        }
-                        classNames={{
-                            label: "text-[var(--text-color2)] h-[50px]",
-                            input: "text-[var(--secondary-color)] font-medium",
-
-                        }}
-                        minRows={6}
                     />
                 </div>
 
+
+                <div className="mt-4">
+                    <label>
+                        <span className="text-[#000] text-sm">
+                            Learning Objectives
+                            <span className="text-red-500 ml-1">*</span>
+                        </span>
+                    </label>
+                    <ReactQuill
+                        theme="snow"
+                        value={formData.learning_objectives}
+                        onChange={(value) =>
+                            setFormData({
+                                ...formData,
+                                learning_objectives: value,
+                            })
+                        }
+                    />
+                </div>
 
                 {/* Featured */}
                 <div className="mt-8 flex items-center justify-between bg-[#F5F2EC] rounded-xl p-4">
@@ -433,7 +554,6 @@ export default function UpdateCourse() {
                         </h4>
 
                     </div>
-
                     <Switch
                         isSelected={featured}
                         onValueChange={(value) => {

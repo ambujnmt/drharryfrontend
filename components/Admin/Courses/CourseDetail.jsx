@@ -127,9 +127,20 @@ export default function CourseDetail() {
               {course.title}
             </h2>
 
-            <p className="text-[#505050] leading-7">
-              {course.description}
-            </p>
+            <div className="mt-2 mb-4">
+              <span className="text-gray-500">Faculty : </span>
+
+              <span className="font-semibold text-[var(--primary-color)]">
+                {course.faculty?.name}
+              </span>
+            </div>
+
+            <div
+              className="prose max-w-none text-[#505050]"
+              dangerouslySetInnerHTML={{
+                __html: course.description,
+              }}
+            />
 
           </div>
 
@@ -137,61 +148,142 @@ export default function CourseDetail() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
 
-          <div>
-            <p className="text-gray-500">Duration</p>
-            <h5>{course.duration}</h5>
-          </div>
+  <div>
+    <p className="text-gray-500">Duration</p>
+    <h5>{course.duration} Days</h5>
+  </div>
 
-          <div>
-            <p className="text-gray-500">Investment</p>
-            <h5>${course.investment}</h5>
-          </div>
+  <div>
+    <p className="text-gray-500">Investment</p>
+    <h5>${course.investment}</h5>
+  </div>
 
-          <div>
-            <p className="text-gray-500">Seats Left</p>
-            <h5>{course.seats_left}</h5>
-          </div>
+  <div>
+    <p className="text-gray-500">Seats Left</p>
+    <h5>{course.seats_left}</h5>
+  </div>
 
-          <div>
-            <p className="text-gray-500">Max Students</p>
-            <h5>{course.max_students}</h5>
-          </div>
+  <div>
+    <p className="text-gray-500">Max Students</p>
+    <h5>{course.max_students}</h5>
+  </div>
 
-          <div>
-            <p className="text-gray-500">Modules</p>
-            <h5>{course.modules}</h5>
-          </div>
+  <div>
+    <p className="text-gray-500">Modules</p>
+    <h5>{course.modules}</h5>
+  </div>
 
-          <div>
-            <p className="text-gray-500">CE Credits</p>
-            <h5>{course.ce_credits}</h5>
-          </div>
+  <div>
+    <p className="text-gray-500">CE Credits</p>
+    <h5>{course.ce_credits}</h5>
+  </div>
 
-          <div>
-            <p className="text-gray-500">Status</p>
+  <div>
+    <p className="text-gray-500">Course Order</p>
+    <h5>{course.course_order}</h5>
+  </div>
 
-            <span className={`px-3 py-1 rounded-full text-sm ${course.status == 1
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-              }`}>
-              {course.status == 1 ? "Active" : "Inactive"}
-            </span>
+  <div>
+    <p className="text-gray-500">Faculty</p>
+    <h5>{course.faculty?.name}</h5>
+  </div>
 
-          </div>
+  <div>
+    <p className="text-gray-500">Status</p>
 
-          <div>
-            <p className="text-gray-500">Featured</p>
+    <span
+      className={`px-3 py-1 rounded-full text-sm ${
+        course.status == 1
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700"
+      }`}
+    >
+      {course.status == 1 ? "Active" : "Inactive"}
+    </span>
+  </div>
 
-            <span className={`px-3 py-1 rounded-full text-sm ${course.featured == 1
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-gray-100 text-gray-700"
-              }`}>
-              {course.featured == 1 ? "Yes" : "No"}
-            </span>
+  <div>
+    <p className="text-gray-500">Featured</p>
 
-          </div>
+    <span
+      className={`px-3 py-1 rounded-full text-sm ${
+        course.featured == 1
+          ? "bg-yellow-100 text-yellow-700"
+          : "bg-gray-100 text-gray-700"
+      }`}
+    >
+      {course.featured == 1 ? "Yes" : "No"}
+    </span>
+  </div>
 
-        </div>
+</div>
+
+<div className="mt-10">
+
+  <h3 className="text-2xl font-semibold text-[var(--secondary-color)] mb-4">
+    Learning Objectives
+  </h3>
+
+  <div
+    className="prose max-w-none"
+    dangerouslySetInnerHTML={{
+      __html: course.learning_objectives,
+    }}
+  />
+
+</div>
+
+<div className="mt-10">
+
+  <h3 className="text-2xl font-semibold text-[var(--secondary-color)] mb-4">
+    Ideal For
+  </h3>
+
+  <p className="text-[#505050] leading-7">
+    {course.ideal_for}
+  </p>
+
+</div>
+
+<div className="mt-10 bg-[#F5F2EC] rounded-xl p-6">
+
+  <h3 className="text-2xl font-semibold text-[var(--secondary-color)] mb-6">
+    Faculty
+  </h3>
+
+  <div className="flex gap-5 items-start">
+
+    <img
+      src={`https://site2demo.in/harry/public/uploads/faculty/${course.faculty?.image}`}
+      className="w-32 h-32 rounded-full object-cover"
+    />
+
+    <div>
+
+      <h4 className="text-2xl font-bold">
+        {course.faculty?.name}
+      </h4>
+
+      <p className="text-[var(--primary-color)] mt-1">
+        {course.faculty?.designation}
+      </p>
+
+      <p className="text-gray-600 mt-2">
+        {course.faculty?.specialization}
+      </p>
+
+      <div
+        className="prose max-w-none mt-4"
+        dangerouslySetInnerHTML={{
+          __html: course.faculty?.bio,
+        }}
+      />
+
+    </div>
+
+  </div>
+
+</div>
 
       </div>
 

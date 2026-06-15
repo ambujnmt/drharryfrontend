@@ -309,13 +309,17 @@ export default function Courses() {
                                         />
 
                                         <div className="p-5">
-                                            <h2 className="text-[28px] font-medium leading-[100%]">
+                                            <h2 className="text-[18px] font-semibold leading-[100%]">
                                                 {course.title}
                                             </h2>
 
-                                            <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                                {course.description}
-                                            </p>
+                                      
+                                            <div
+                                                className="prose max-w-none text-[16px] leading-[140%] font-normal text-black mt-4 w-full overflow-hidden line-clamp-2 break-words"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: course.description,
+                                                }}
+                                            />
 
                                             <div className="grid grid-cols-2 gap-x-[10px] gap-y-[7px] mt-5">
                                                 <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
@@ -372,14 +376,14 @@ export default function Courses() {
                                                     course.seats_left > 0 ? (
                                                         <Link
                                                             href="#"
-                                                            className="w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
+                                                            className="flex justify-center items-center w-full text-center  bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
                                                         >
                                                             Enroll Now
                                                         </Link>
                                                     ) : (
                                                         <Link
                                                             href="#"
-                                                            className="w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
+                                                            className="flex justify-center items-center w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
                                                         >
                                                             Join Waitlist
                                                         </Link>
@@ -432,13 +436,18 @@ export default function Courses() {
                                     />
 
                                     <div className="p-5">
-                                        <h2 className="text-[28px] font-medium leading-[100%]">
+                                        <h2 className="text-[18px] font-semibold leading-[100%]">
                                             {course.title}
                                         </h2>
 
-                                        <p className="text-[16px] leading-[140%] font-normal text-black mt-4">
-                                            {course.description}
-                                        </p>
+                                      
+
+                                         <div
+                                                className="prose max-w-none text-[16px] leading-[140%] font-normal text-black mt-4 w-full overflow-hidden line-clamp-2 break-words"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: course.description,
+                                                }}
+                                            />
 
                                         <div className="grid grid-cols-3 gap-x-[10px] gap-y-[7px] mt-5">
                                             <div className="flex items-center gap-2">
