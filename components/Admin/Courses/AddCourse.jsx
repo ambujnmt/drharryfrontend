@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
     Input,
     Textarea,
@@ -8,15 +8,22 @@ import {
     Switch,
 } from "@heroui/react";
 import { Spinner } from "@heroui/react";
-import { addCourse } from "../../../utils/fetchApi";
+import { addCourse, getFaculty } from "../../../utils/fetchApi";
 import PageTitle from "../../Breadcrumb/PageTitle";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), {
+    ssr: false,
+});
+import "react-quill/dist/quill.snow.css";
+import { FaUpload } from "react-icons/fa";
 
 export default function AddCourse() {
     const [featured, setFeatured] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [facultyList, setFacultyList] = useState([]);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
-    const [formData, setFormData] = useState({
+    const initialFormData = {
         title: "",
         description: "",
         duration: "",
@@ -27,8 +34,34 @@ export default function AddCourse() {
         seats_left: "",
         status: "1",
         featured: 0,
-        image: null
-    })
+        faculty_id: "",
+        learning_objectives: "",
+        ideal_for: "",
+        course_order: "",
+        image: null,
+    };
+
+    const [formData, setFormData] = useState(initialFormData);
+
+    useEffect(() => {
+        fetchFaculty();
+    }, []);
+
+    const fetchFaculty = async () => {
+        try {
+            const res = await getFaculty();
+
+            if (res.status) {
+                setFacultyList(
+                    res.faculty.filter((item) => item.status == 1)
+                );
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const fileRef = useRef(null);
 
     const handleSubmit = async () => {
         const data = new FormData();
@@ -42,7 +75,15 @@ export default function AddCourse() {
         data.append("investment", formData.investment);
         data.append("seats_left", formData.seats_left);
         data.append("status", formData.status);
-        data.append("featured", featured ? 1 : 0);
+        data.append("featured", formData.featured);
+        data.append("faculty_id", formData.faculty_id);
+        data.append("description", formData.description);
+        data.append(
+            "learning_objectives",
+            formData.learning_objectives
+        );
+        data.append("ideal_for", formData.ideal_for);
+        data.append("course_order", formData.course_order);
 
         if (formData.image) {
             const maxSize = 2 * 1024 * 1024;
@@ -54,7 +95,16 @@ export default function AddCourse() {
                 setMessageType("error");
 
                 setTimeout(() => {
+                    setFormData(initialFormData);
+
+                    setFeatured(false);
+
+                    if (fileRef.current) {
+                        fileRef.current.value = "";
+                    }
+
                     setMessage("");
+                    setMessageType("");
                 }, 3000);
 
                 return;
@@ -86,9 +136,17 @@ export default function AddCourse() {
                         seats_left: "",
                         status: "1",
                         featured: 0,
+                        faculty_id: "",
+                        learning_objectives: "",
+                        ideal_for: "",
+                        course_order: "",
                         image: null,
                     });
 
+
+                    if (fileRef.current) {
+                        fileRef.current.value = "";
+                    }
                     setFeatured(false);
                     setMessage("");
                 }, 3000);
@@ -322,7 +380,51 @@ export default function AddCourse() {
 
                         }}
                     />
+                    <Input
+                        placeholder="1"
+                        value={formData.course_order}
+                        onValueChange={(value) =>
+                            setFormData({
+                                ...formData,
+                                course_order: value,
+                            })
+                        }
+                        variant="underlined"
+                        label={
+                            <span className="text-[#000] ">
+                                Course Order
+                                <span className="text-red-500 ml-1">*</span>
+                            </span>
+                        }
+                        classNames={{
+                            label: "text-[var(--text-color2)] h-[50px]",
+                            input: "text-[var(--secondary-color)] font-medium",
 
+                        }}
+                    />
+
+                    <Select
+                        selectedKeys={[formData.faculty_id]}
+                        onSelectionChange={(keys) =>
+                            setFormData({
+                                ...formData,
+                                faculty_id: [...keys][0],
+                            })
+                        }
+                        variant="underlined"
+                        label={
+                            <span>
+                                Faculty
+                                <span className="text-red-500">*</span>
+                            </span>
+                        }
+                    >
+                        {facultyList.map((item) => (
+                            <SelectItem key={item.id.toString()}>
+                                {item.name}
+                            </SelectItem>
+                        ))}
+                    </Select>
                     <Select
                         selectedKeys={[formData.status]}
                         onSelectionChange={(keys) =>
@@ -356,53 +458,22 @@ export default function AddCourse() {
 
 
 
-                    <div>
 
-
-                        <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    image: e.target.files[0],
-                                })
-                            }
-                            variant="underlined"
-                            label={
-                                <span className="text-[#000] ">
-                                    Image
-                                    <span className="text-red-500 ml-1">*</span>
-                                </span>
-                            }
-                            classNames={{
-                                label: "text-[var(--text-color2)] h-[50px]",
-                                input: "text-[var(--secondary-color)] font-medium",
-
-                            }}
-                        />
-
-                        <p className="text-xs text-gray-500 mt-2">
-                            Supported formats: JPG, PNG, JPEG. Maximum size: 2 MB.
-                        </p>
-                    </div>
                 </div>
+                <div className="mt-4">
 
-                {/* Full Description */}
-                <div className="mt-6">
                     <Textarea
-                        value={formData.description}
+                        value={formData.ideal_for}
                         onValueChange={(value) =>
                             setFormData({
                                 ...formData,
-                                description: value,
+                                ideal_for: value,
                             })
                         }
-                        placeholder="Detailed course description"
                         variant="underlined"
                         label={
                             <span className="text-[#000] ">
-                                Description
+                                Ideal For
                                 <span className="text-red-500 ml-1">*</span>
                             </span>
                         }
@@ -411,8 +482,91 @@ export default function AddCourse() {
                             input: "text-[var(--secondary-color)] font-medium",
 
                         }}
-                        minRows={6}
+
+                        minRows={4}
                     />
+                </div>
+
+                {/* Full Description */}
+
+                <div className="mt-6">
+                    <label>
+                        <span className="text-[#000] text-sm">
+                            Description
+                            <span className="text-red-500 ml-1">*</span>
+                        </span>
+                    </label>
+
+                    <ReactQuill
+                        key={formData.description}
+                        theme="snow"
+                        value={formData.description}
+                        onChange={(value) =>
+                            setFormData({
+                                ...formData,
+                                description: value,
+                            })
+                        }
+                    />
+                </div>
+
+                {/* learnign objectives */}
+                <div className="mt-6">
+                    <label>
+                        <span className="text-[#000] text-sm">
+                            Learning Objectives
+                            <span className="text-red-500 ml-1">*</span>
+                        </span>
+                    </label>
+
+                    <ReactQuill
+                        key={formData.learning_objectives}
+                        theme="snow"
+                        value={formData.learning_objectives}
+                        onChange={(value) =>
+                            setFormData({
+                                ...formData,
+                                learning_objectives: value,
+                            })
+                        }
+                    />
+                </div>
+
+                {/* image */}
+                <div className="mt-6">
+                    <label className="block text-[14px] font-medium text-[var(--secondary-color)] mb-2">
+                        Course Image
+                    </label>
+
+                    <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
+                        <FaUpload
+                            size={30}
+                            className="mx-auto text-[var(--primary-color)] mb-3"
+                        />
+
+                        <p className="text-[15px] text-[var(--secondary-color)]">
+                            Upload Course Profile Image
+                        </p>
+
+                        <p className="text-[13px] text-gray-500 mt-1">
+                            PNG, JPG up to 5MB
+                        </p>
+
+
+                        <input
+                            ref={fileRef}
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    image: e.target.files[0],
+                                })
+                            }
+                            className="mt-4 block mx-auto"
+                        />
+
+                    </div>
                 </div>
 
 
@@ -431,10 +585,11 @@ export default function AddCourse() {
                         isSelected={featured}
                         onValueChange={(value) => {
                             setFeatured(value);
-                            setFormData({
-                                ...formData,
+
+                            setFormData((prev) => ({
+                                ...prev,
                                 featured: value ? 1 : 0,
-                            });
+                            }));
                         }}
                         color="warning"
                     />
