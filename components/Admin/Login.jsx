@@ -56,19 +56,12 @@ export default function AdminLogin() {
     }, [user, admin]);
 
     useEffect(() => {
-        // wait one tick to simulate loading context or read localStorage yourself
         setChecking(false);
     }, []);
 
     if (checking) {
-        return null; // or spinner
+        return null; 
     }
-
-    // if (admin || user) {
-    //     router.replace("/dashboard");
-    //     return null;
-    // }
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -262,6 +255,7 @@ export default function AdminLogin() {
                 disabled:opacity-70
                 hover:bg-[var(--secondary-color)]
               "
+            
                             >
                                 {loading ? (
                                     <div className="flex justify-center">

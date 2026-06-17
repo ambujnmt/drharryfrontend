@@ -2,7 +2,7 @@ import React from "react";
 import { Accordion, AccordionItem } from "@heroui/react";
 import { MdOutlineSick } from "react-icons/md";
 import { FaBook, FaUser } from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard ,MdFormatListNumberedRtl } from "react-icons/md";
 import { Link } from "@heroui/react";
 import { useAdmin } from "../../../context/AdminContext";
 import { useUser } from "../../../context/UserContext";
@@ -110,40 +110,6 @@ export default function AdminSideMenu({ isOpen, onClose }) {
                     </li>
 
 
-                          {/* Course Enquiries */}
-                    {/* <li>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white text-[15px] font-medium transition-all duration-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)]"
-                        >
-                            <MdOutlineSick size={18} />
-                            Course Enquiries
-                        </Link>
-                    </li> */}
-
-                    {/* Contact Enquiries */}
-                    {/* <li>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white text-[15px] font-medium transition-all duration-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)]"
-                        >
-                            <MdOutlineSick size={18} />
-                            Contact Enquiries
-                        </Link>
-                    </li> */}
-
-                           {/* Instructor Applications */}
-                    {/* <li>
-                        <Link
-                            href="#"
-                            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white text-[15px] font-medium transition-all duration-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)]"
-                        >
-                            <FaUser size={18} />
-                            Instructor Applications
-                        </Link>
-                    </li> */}
-
-
                     {/* Courses Management */}
                     <li>
                         <Accordion variant="light" className="p-0">
@@ -218,15 +184,12 @@ export default function AdminSideMenu({ isOpen, onClose }) {
                         </Accordion>
                     </li>
 
-             
-              
-
-                    {/* Testimonials */}
-                    {/* <li>
+                                      {/* Faculty Management */}
+                    <li>
                         <Accordion variant="light" className="p-0">
                             <AccordionItem
-                                key="3"
-                                aria-label="Testimonials"
+                                key="2"
+                                aria-label="Faculty"
                                 classNames={{
                                     base: "p-0",
                                     heading: "p-0",
@@ -237,31 +200,23 @@ export default function AdminSideMenu({ isOpen, onClose }) {
                                 }}
                                 title={
                                     <span className="flex items-center gap-3" style={{ fontFamily: 'Inter, sans-serif' }}>
-                                        <FaUser size={18} />
-                                        Testimonials
+                                        <MdFormatListNumberedRtl  size={18} />
+                                        Enrollement
                                     </span>
                                 }
                             >
                                 <ul className="space-y-1 pl-9">
                                     <li>
-                                        <Link href="#" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
-                                            Add Testimonial
+                                        <Link href="/admin/enrollement/list" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                            List
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link href="#" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
-                                            Manage Testimonials
-                                        </Link>
-                                    </li>
+                            
                                 </ul>
                             </AccordionItem>
                         </Accordion>
-                    </li> */}
-
-              
-
+                    </li>
              
-
                 </ul>
             </div>
         </div>

@@ -65,7 +65,7 @@ const handleLogout = () => {
  
                   <li className="mx-[15px] relative group">
                     <Link
-                      href="/web/courses"
+                      href="/web/courses/courses"
                       className="text-[18px] leading-[100%] font-normal hover:text-[var(--primary-color)] text-[#000]"
                     >
                       Courses

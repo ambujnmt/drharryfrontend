@@ -1,68 +1,59 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
-  const [token, setToken] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
-  const [adminId, setAdminId] = useState(null);
-  const [adminName, setAdminName] = useState("");
-  const [loading, setLoading] = useState(true); // Track loading state
+  const [loading, setLoading] = useState(true);
 
-  // Load admin info from localStorage when the component first mounts
   useEffect(() => {
-    const storedAdmin = localStorage.getItem("admin");
+    const storedAdmin = Cookies.get("admin");
+
     if (storedAdmin) {
-      const parsedAdmin = JSON.parse(storedAdmin);
-      setAdmin(parsedAdmin);
-      setToken(parsedAdmin.token || "");
-      setAdminEmail(parsedAdmin.email || "");
-      setAdminId(parsedAdmin.admin_id || null);
-      setAdminName(parsedAdmin.name || "");
+      setAdmin(JSON.parse(storedAdmin));
     }
-    setLoading(false); // After the check is done, set loading to false
+
+    const storedEmail = sessionStorage.getItem("adminEmail");
+
+    if (storedEmail) {
+      setAdminEmail(storedEmail);
+    }
+
+    setLoading(false);
   }, []);
 
-  const loginAdmin = (adminData, email) => {
-    const adminInfo = {
-      token: adminData.token,
-      name: adminData.name,
-      admin_id: adminData.admin_id,
-      email: email,
-    };
-    setAdmin(adminInfo);
-    setToken(adminData.token);
-    setAdminEmail(email);
-    setAdminId(adminData.admin_id);
-    setAdminName(adminData.name);
-    localStorage.setItem("admin", JSON.stringify(adminInfo)); // Store in localStorage
+  const loginAdmin = (adminData, token) => {
+    Cookies.set("admin", JSON.stringify(adminData), {
+      expires: 7,
+    });
+
+    Cookies.set("token", token, {
+      expires: 7,
+    });
+
+    setAdmin(adminData);
   };
 
   const logoutAdmin = () => {
-    setAdmin(null);
-    setToken("");
-    setAdminEmail("");
-    setAdminId(null);
-    setAdminName("");
-    localStorage.removeItem("admin"); // Remove from localStorage
-  };
+    Cookies.remove("admin");
+    Cookies.remove("token");
+    sessionStorage.removeItem("adminEmail");
 
-  // Return loading spinner if still loading
-  if (loading) {
-    return null; // Or show a loading spinner here
-  }
+    setAdmin(null);
+    setAdminEmail("");
+  };
 
   return (
     <AdminContext.Provider
       value={{
         admin,
-        token,
-        adminEmail,
-        adminId,
-        adminName,
         loginAdmin,
         logoutAdmin,
+        loading,
+        adminEmail,
+        setAdminEmail,
       }}
     >
       {children}
