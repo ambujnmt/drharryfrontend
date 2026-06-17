@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { fetchUsers, updateUser, changeUserStatus } from '../../utils/fetchApi';
-import { LanguageContext } from "../../context/LanguageContext";
 import PageTitle from '../Breadcrumb/PageTitle';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Card, Form } from "react-bootstrap";
@@ -12,7 +11,7 @@ import { Head } from '../../layouts/head';
 export default function UserUpdate() {
     const router = useRouter();
     const { id } = router.query;
-    const { locale, translateText } = useContext(LanguageContext);
+    // const { locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
     const [users, setUsers] = useState([]);
     const [formData, setFormData] = useState({});
@@ -163,33 +162,33 @@ export default function UserUpdate() {
     ];
 
     const fieldLabels = {
-        name: translateText("name"),
-        mobile: translateText("mobile_number"),
-        country_code: translateText("Country Code"),
-        email: translateText("email_address"),
-        social_id: translateText("Social ID"),
-        password: translateText("password"),
-        provider: translateText("Provider"),
-        user_type: translateText("user_type"),
-        gender: translateText("gender"),
-        birthday: translateText("date_of_birth"),
-        address: translateText("address"),
-        profile_img: translateText("Profile Image URL"),
-        status_value: translateText("Account Status"),
+        name: ("name"),
+        mobile: ("mobile_number"),
+        country_code: ("Country Code"),
+        email: ("email_address"),
+        social_id: ("Social ID"),
+        password: ("password"),
+        provider: ("Provider"),
+        user_type: ("user_type"),
+        gender: ("gender"),
+        birthday: ("date_of_birth"),
+        address: ("address"),
+        profile_img: ("Profile Image URL"),
+        status_value: ("Account Status"),
     };
 
 
     return (
         <div>
              <Head title="User Update" />
-            <PageTitle
+            {/* <PageTitle
                 breadCrumbItems={[
                     { label: "Dashboard", path: "/dashboard" },
                     { label: "User List", path: "/user/userList" },
                     { label: "Update User", active: true },
                 ]}
                 title={translateText("Update User")}
-            />
+            /> */}
             <Card>
                 <Card.Body>
                     <div>
@@ -246,9 +245,9 @@ export default function UserUpdate() {
                                                         }}
                                                         className="border-1 border-gray-300 rounded-md"
                                                     >
-                                                        <option value="Active">{translateText("Active")}</option>
-                                                        <option value="Inactive">{translateText("Inactive")}</option>
-                                                        <option value="Suspended">{translateText("Suspended")}</option>
+                                                        <option value="Active">{("Active")}</option>
+                                                        <option value="Inactive">{("Inactive")}</option>
+                                                        <option value="Suspended">{("Suspended")}</option>
                                                     </Form.Select>
                                                     {errors.userType && (
                                                         <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
@@ -274,10 +273,10 @@ export default function UserUpdate() {
                                                         onChange={handleChange}
                                                         className="border-1 border-gray-300 rounded-md"
                                                     >
-                                                        <option value="2">{translateText("social_worker")}</option>
-                                                        <option value="3">{translateText("patient")}</option>
-                                                        <option value="4">{translateText("user")}</option>
-                                                        <option value="1" hidden>{translateText("doctor")}</option>
+                                                        <option value="2">{("social_worker")}</option>
+                                                        <option value="3">{("patient")}</option>
+                                                        <option value="4">{("user")}</option>
+                                                        <option value="1" hidden>{("doctor")}</option>
                                                     </Form.Select>
                                                     {errors.userType && (
                                                         <p className="text-red-500 text-sm mt-1">{errors.userType}</p>
@@ -292,8 +291,8 @@ export default function UserUpdate() {
                                                         className="border-1 border-gray-300 rounded-md"
                                                     >
 
-                                                        <option value="Male">{translateText("Male")}</option>
-                                                        <option value="Female">{translateText("Female")}</option>
+                                                        <option value="Male">{("Male")}</option>
+                                                        <option value="Female">{("Female")}</option>
                                                     </Form.Select>
                                                 </Form.Group>
                                             ) : (
@@ -369,7 +368,7 @@ export default function UserUpdate() {
                                     {loading ? (
                                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
                                     ) : (
-                                        translateText("Update")
+                                        ("Update")
                                     )}
                                 </button>
 
@@ -377,7 +376,7 @@ export default function UserUpdate() {
                                     type="button"
                                     onClick={() => router.push('/user/userList')}
                                     className="btn btn-secondary"                                >
-                                    {translateText("Cancel")}
+                                    {("Cancel")}
                                 </button>
                             </div>
                         </form>

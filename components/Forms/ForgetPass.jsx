@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
-import { LanguageContext } from "../../context/LanguageContext";
 import { loginUser } from "../../utils/fetchApi"
 import { Input } from "@heroui/react";
 import { IoLanguage } from "react-icons/io5";
@@ -10,7 +9,6 @@ import { IoLanguage } from "react-icons/io5";
 
 
 export default function ForgetPass() {
-  const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const [clientLocale, setClientLocale] = useState("");
 
   useEffect(() => {
@@ -46,21 +44,21 @@ export default function ForgetPass() {
       <div className="bg-[#5274F6] w-full max-w-3xl mx-4 md:mx-10 lg:mx-20  p-6 md:p-12 flex items-center justify-center h-[100vh]">
         <div className="w-full md:w-1/2  flex flex-col justify-center items-center">
     <img src="https://nmtdevserver.com/welli/attention.png" className="w-[25%] h-auto mb-24" alt="" />
-          <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">{translateText("wrong_pass")}</h2>
+          {/* <h2 className="font-bold text-lg md:text-2xl lg:text-3xl xl:text-4xl text-center mb-10 text-white">{translateText("wrong_pass")}</h2> */}
           
-            <div
+            {/* <div
               type="submit"
               className="font-bold w-full uppercase text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] bg-[#FFBA1B] py-2"
             ><Link className="text-white" href="/passwordChangeVerify">
               {translateText("recover")}
             </Link>
-            </div>
+            </div> */}
             <div
 
               className="font-bold w-full text-[11px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center  uppercase rounded-[600px] border-1 border-white py-2"
             >
-              <Link className="text-white" href="/signupWith">{translateText("try_again")}
-              </Link>
+              {/* <Link className="text-white" href="/signupWith">{translateText("try_again")}
+              </Link> */}
             </div>
         </div>
       </div>

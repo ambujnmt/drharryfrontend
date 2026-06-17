@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import PageTitle from "../Breadcrumb/PageTitle";
 import Table from "../Table/Table";
 import { fetchUsers } from "../../utils/fetchApi";
-import { LanguageContext } from "../../context/LanguageContext";
 import { FaEye, FaPen } from "react-icons/fa";
 import { Link } from "@heroui/react";
 import { Head } from "../../layouts/head";
@@ -94,7 +93,7 @@ const sizePerPageList = [
 ];
 
 const Advanced = () => {
-    const { translateText } = useContext(LanguageContext);
+    // const { translateText } = useContext(LanguageContext);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -123,13 +122,13 @@ const Advanced = () => {
     return (
         <div className="m-10">
              <Head title="User List" />
-            <PageTitle
+            {/* <PageTitle
                 breadCrumbItems={[
                     { label: "Dashboard", path: "/dashboard" },
                     { label: "User List", path: "/user/userList", active: true },
                 ]}
                 title={translateText("User List")} // Or just "Users"
-            />
+            /> */}
 
             <Row>
                 <Col>

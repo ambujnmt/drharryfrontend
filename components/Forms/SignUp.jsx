@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Link } from "@heroui/react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
-import { LanguageContext } from "../../context/LanguageContext";
 import { Input } from "@heroui/react";
 import { registerUser } from "../../utils/fetchApi";
 import { IoLanguage } from "react-icons/io5";
@@ -43,10 +42,10 @@ export default function SignupForm() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-  setTimeout(() => {
-    setErrors({});
-  }, 3000);
-}
+      setTimeout(() => {
+        setErrors({});
+      }, 3000);
+    }
     return Object.keys(newErrors).length === 0;
   };
 
@@ -56,25 +55,25 @@ export default function SignupForm() {
   const { setUserEmail } = useUser();
 
 
- useEffect(() => {
-  if (successMessage) {
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-    }, 3000);
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
 
-    return () => clearTimeout(timer);
-  }
-}, [successMessage]);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
-useEffect(() => {
-  if (errors.api) {
-    const timer = setTimeout(() => {
-      setErrors({});
-    }, 3000);
+  useEffect(() => {
+    if (errors.api) {
+      const timer = setTimeout(() => {
+        setErrors({});
+      }, 3000);
 
-    return () => clearTimeout(timer);
-  }
-}, [errors.api]);
+      return () => clearTimeout(timer);
+    }
+  }, [errors.api]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,58 +82,62 @@ useEffect(() => {
     setSuccessMessage("");
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!validate()) return;
+    if (!validate()) return;
 
-  setloading(true);
-  setErrors({});
-  setSuccessMessage("");
-
-  try {
-    const response = await registerUser(
-      formData.name,
-      formData.email,
-      formData.password
-    );
-
-    console.log(response);
-
-    // show success message
-    setSuccessMessage(response.message);
-
-    // clear form
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-      c_password: "",
-    });
-
-    // redirect after 3 seconds
-    setTimeout(() => {
-      router.push("/login");
-    }, 3000);
-  }catch (err) {
-  if (err.errors) {
-    setErrors({
-      ...err.errors,
-      api: err.message,
-    });
-  } else {
-    setErrors({
-      api: err.message,
-    });
-  }
-
-  setTimeout(() => {
+    setloading(true);
     setErrors({});
-  }, 3000);
-} finally {
-    setloading(false);
-  }
-};
+    setSuccessMessage("");
+
+    try {
+      const response = await registerUser(
+        formData.name,
+        formData.email,
+        formData.password
+      );
+
+      console.log(response);
+
+      // show success message
+      setSuccessMessage(response.message);
+
+      // save email
+      setUserEmail(response.email);
+      sessionStorage.setItem("userEmail", response.email);
+
+      // clear form
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        c_password: "",
+      });
+
+      // redirect after 3 seconds
+      setTimeout(() => {
+        router.push("/otpVerification");
+      }, 2000);
+    } catch (err) {
+      if (err.errors) {
+        setErrors({
+          ...err.errors,
+          api: err.message,
+        });
+      } else {
+        setErrors({
+          api: err.message,
+        });
+      }
+
+      setTimeout(() => {
+        setErrors({});
+      }, 3000);
+    } finally {
+      setloading(false);
+    }
+  };
 
 
 
@@ -268,13 +271,13 @@ const handleSubmit = async (e) => {
                 }}
               />
 
-         {errors.email && (
-  <p className="text-red-500 text-sm mt-1">
-    {Array.isArray(errors.email)
-      ? errors.email[0]
-      : errors.email}
-  </p>
-)}
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {Array.isArray(errors.email)
+                    ? errors.email[0]
+                    : errors.email}
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -286,17 +289,17 @@ const handleSubmit = async (e) => {
                   value={formData.password}
                   onChange={handleChange}
                   variant="underlined"
-                label={
-                  <span className="text-[#000] ">
-                    Password
-                    <span className="text-red-500 ml-1">*</span>
-                  </span>
-                }
-                classNames={{
-                  label: "text-[var(--text-color2)] h-[50px]",
-                  input: "text-[var(--secondary-color)] font-medium",
+                  label={
+                    <span className="text-[#000] ">
+                      Password
+                      <span className="text-red-500 ml-1">*</span>
+                    </span>
+                  }
+                  classNames={{
+                    label: "text-[var(--text-color2)] h-[50px]",
+                    input: "text-[var(--secondary-color)] font-medium",
 
-                }}
+                  }}
                 />
 
                 {errors.password && (
@@ -312,18 +315,18 @@ const handleSubmit = async (e) => {
                   name="c_password"
                   value={formData.c_password}
                   onChange={handleChange}
-                   variant="underlined"
-                label={
-                  <span className="text-[#000] ">
-                   Confirm Password
-                    <span className="text-red-500 ml-1">*</span>
-                  </span>
-                }
-                classNames={{
-                  label: "text-[var(--text-color2)] h-[50px]",
-                  input: "text-[var(--secondary-color)] font-medium",
+                  variant="underlined"
+                  label={
+                    <span className="text-[#000] ">
+                      Confirm Password
+                      <span className="text-red-500 ml-1">*</span>
+                    </span>
+                  }
+                  classNames={{
+                    label: "text-[var(--text-color2)] h-[50px]",
+                    input: "text-[var(--secondary-color)] font-medium",
 
-                }}
+                  }}
                 />
 
                 {errors.c_password && (

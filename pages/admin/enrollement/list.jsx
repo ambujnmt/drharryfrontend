@@ -3,7 +3,7 @@ import PrivateRoute from "../../../components/PrivateRoute/PrivateRoute";
 import Header from "../../../components/Admin/Menu/Header";
 import AdminSideMenu from "../../../components/Admin/Menu/SideMenu";
 import Footer from "../../../components/Admin/Menu/Footer";
-import FacultyList from "../../../components/Admin/Faculty/FacultyList";
+import List from "../../../components/Admin/Enrollement/List";
 
 export default function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false); 
@@ -45,7 +45,7 @@ export default function DashboardPage() {
         />
 
         <div className="flex-1 overflow-auto  bg-gray-100">
-          <FacultyList />
+          <List />
         </div>
 
         <Footer />

@@ -2,7 +2,6 @@ import { HeroUIProvider } from "@heroui/react";
 import DefaultLayout from "@/layouts/default";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-import { LanguageProvider } from "../context/LanguageContext";
 import { UserProvider } from "../context/UserContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { RegisteredUserProvider } from "../context/RegisteredUserContext";
@@ -23,7 +22,6 @@ export function App({ Component, pageProps, websiteData }) {
           container={{ element: "recaptcha-container", parameters: { badge: "inline" } }}
         >
           <div id="recaptcha-container" style={{ display: "none" }}></div>
-          <LanguageProvider>
             <UserProvider>
               <RegisteredUserProvider>
                 <AdminProvider>
@@ -36,7 +34,6 @@ export function App({ Component, pageProps, websiteData }) {
                 </AdminProvider>
               </RegisteredUserProvider>
             </UserProvider>
-          </LanguageProvider>
         </GoogleReCaptchaProvider>
       </GoogleOAuthProvider>
   );

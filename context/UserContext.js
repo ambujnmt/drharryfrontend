@@ -5,6 +5,7 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userEmail, setUserEmail] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,6 +13,12 @@ export const UserProvider = ({ children }) => {
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
+    }
+
+    const storedEmail = sessionStorage.getItem("userEmail");
+
+    if (storedEmail) {
+      setUserEmail(storedEmail);
     }
 
     setLoading(false);
@@ -32,7 +39,10 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     Cookies.remove("user");
     Cookies.remove("token");
+    sessionStorage.removeItem("userEmail");
+
     setUser(null);
+    setUserEmail("");
   };
 
   return (
@@ -42,6 +52,8 @@ export const UserProvider = ({ children }) => {
         login,
         logout,
         loading,
+        userEmail,
+        setUserEmail,
       }}
     >
       {children}

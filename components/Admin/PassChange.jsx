@@ -3,11 +3,9 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Input } from "@h
 import { IoLanguage } from "react-icons/io5";
 import { useRouter } from "next/router";
 import { changeAdminPassword } from "../../utils/fetchApi";
-import { LanguageContext } from "../../context/LanguageContext";
 import { useAdmin } from "../../context/AdminContext"; // Use the correct hook
 
 export default function AdminPasswordChange() {
-  const { switchLanguage, locale, translateText } = useContext(LanguageContext);
   const { admin, adminId, logoutAdmin } = useAdmin(); // Use the hook to get values
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -66,7 +64,7 @@ export default function AdminPasswordChange() {
       console.log("API response:", response);
 
       setError(!response.status);
-      setMessage(locale === "ita" ? response.message_italian : response.message);
+      // setMessage(locale === "ita" ? response.message_italian : response.message);
 
       if (response.status) {
         setTimeout(() => {
@@ -105,7 +103,7 @@ export default function AdminPasswordChange() {
       <div className="bg-[#5274F6] w-full md:max-w-xl lg:max-w-3xl p-6 md:p-12 flex items-center justify-center h-[100vh]">
         <div className="w-full md:w-1/2 flex flex-col">
           <p className="font-bold text-3xl text-center text-white mb-8">
-            {translateText("change_password")}
+            {/* {translateText("change_password")} */}
           </p>
 
           {message && (
@@ -143,11 +141,11 @@ export default function AdminPasswordChange() {
             disabled={loading}
             className="font-bold text-[15px] md:text-[14px] lg:text-[16px] xl:text-[16px] my-2 text-center text-white rounded-[600px] py-2 w-full flex items-center justify-center bg-[#FFBA1B]"
           >
-            {loading ? (
+            {/* {loading ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                             ) : (
             translateText("after_you")
-                            )}
+                            )} */}
           </button>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { fetchUsers } from '../../utils/fetchApi';
-import { LanguageContext } from "../../context/LanguageContext";
 import { FaEye, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaBirthdayCake, FaClock } from "react-icons/fa";
 import { Link } from '@heroui/react';
 import PageTitle from '../Breadcrumb/PageTitle';
@@ -12,7 +11,7 @@ import { Head } from '../../layouts/head';
 export default function UserDetail() {
     const router = useRouter();
     const { id } = router.query;
-    const { locale, translateText } = useContext(LanguageContext);
+    // const { locale, translateText } = useContext(LanguageContext);
     const [clientLocale, setClientLocale] = useState("");
 
     const [user, setUser] = useState(null);
@@ -110,14 +109,14 @@ export default function UserDetail() {
     return (
         <div>
              <Head title="User Detail" />
-            <PageTitle
+            {/* <PageTitle
                 breadCrumbItems={[
                     { label: "Dashboard", path: "/dashboard" },
                     { label: "User List", path: "/user/userList" },
                     { label: "User Detail", path: "/user/userDetail", active: true },
                 ]}
                 title={translateText("User Detail")}
-            />
+            /> */}
 
             <Row className="g-4">
                 {/* User Profile Header */}
