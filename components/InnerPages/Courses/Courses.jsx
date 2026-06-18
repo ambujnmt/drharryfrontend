@@ -313,112 +313,105 @@ export default function Courses() {
                                 </div>
                             ) : (
                                 featuredCourses.map((course) => (
-                                    <Link
-                                        key={course.id}
-                                        href={`/web/courses/detail/${course.id}`}
-                                        className="block"
-                                    >
+                                    <div className="relative h-[580px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
+                                        <img
+                                            src={course.image}
+                                            alt={course.title}
+                                            className="w-full h-[203px] object-cover"
+                                        />
+
+                                        <div className="p-5">
+                                            <h2 className="text-[18px] text-[#000] font-semibold leading-[100%]">
+                                                {course.title}
+                                            </h2>
 
 
-                                        <div className="relative h-[580px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                                            <img
-                                                src={course.image}
-                                                alt={course.title}
-                                                className="w-full h-[203px] object-cover"
+                                            <div
+                                                className="prose max-w-none text-[16px] leading-[140%] font-normal text-black mt-4 w-full overflow-hidden line-clamp-2 break-words"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: course.description,
+                                                }}
                                             />
 
-                                            <div className="p-5">
-                                                <h2 className="text-[18px] text-[#000] font-semibold leading-[100%]">
-                                                    {course.title}
-                                                </h2>
-
-
-                                                <div
-                                                    className="prose max-w-none text-[16px] leading-[140%] font-normal text-black mt-4 w-full overflow-hidden line-clamp-2 break-words"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: course.description,
-                                                    }}
-                                                />
-
-                                                <div className="grid grid-cols-2 gap-x-[10px] gap-y-[7px] mt-5">
-                                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                                        <span>{course.duration}</span>
-                                                    </div>
-
-                                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                                        <span>{course.max_students} Max</span>
-                                                    </div>
-
-                                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                                        <span>{course.modules} Modules</span>
-                                                    </div>
-
-                                                    <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
-                                                        <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
-                                                        <span>{course.ce_credits} CE Credits</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="absolute bottom-0 left-0 w-full">
-                                                <div className="flex justify-between items-end px-5 pb-5">
-                                                    <div>
-                                                        <div className="text-[18px] text-[#505050]">Investment</div>
-                                                        <div className="text-[28px] font-medium text-[var(--secondary-color)]">
-                                                            ${course.investment}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="text-right">
-                                                        <div className="text-[18px] text-[#505050]">Availability</div>
-                                                        <div className="text-[18px] font-medium text-[#1A8233]">
-                                                            {
-                                                                course.seats_left > 0 ? (
-                                                                    <div className="text-[18px] font-medium text-[#1A8233]">
-                                                                        {course.seats_left} seats left
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="text-[18px] font-medium text-red-500">
-                                                                        Full - Join Waitlist
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        </div>
-                                                    </div>
+                                            <div className="grid grid-cols-2 gap-x-[10px] gap-y-[7px] mt-5">
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.duration}</span>
                                                 </div>
 
-                                                <div className="flex gap-[10px] px-5 pb-5">
-                                                    {
-                                                        course.seats_left > 0 ? (
-                                                            <button
-                                                                onClick={() => handleEnroll(course)}
-                                                                className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
-                                                            >
-                                                                Enroll Now
-                                                            </button>
-                                                        ) : (
-                                                            <Link
-                                                                href="#"
-                                                                className="flex justify-center items-center w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
-                                                            >
-                                                                Join Waitlist
-                                                            </Link>
-                                                        )
-                                                    }
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.max_students} Max</span>
+                                                </div>
 
-                                                    <Link
-                                                        href="#"
-                                                        className="border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] px-5 py-[11px]"
-                                                    >
-                                                        Details
-                                                    </Link>
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.modules} Modules</span>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 text-[18px] text-[var(--secondary-color)]">
+                                                    <img src="/assets/Images/check-icon.png" alt="" className="w-5" />
+                                                    <span>{course.ce_credits} CE Credits</span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </Link>
+
+                                        <div className="absolute bottom-0 left-0 w-full">
+                                            <div className="flex justify-between items-end px-5 pb-5">
+                                                <div>
+                                                    <div className="text-[18px] text-[#505050]">Investment</div>
+                                                    <div className="text-[28px] font-medium text-[var(--secondary-color)]">
+                                                        ${course.investment}
+                                                    </div>
+                                                </div>
+
+                                                <div className="text-right">
+                                                    <div className="text-[18px] text-[#505050]">Availability</div>
+                                                    <div className="text-[18px] font-medium text-[#1A8233]">
+                                                        {
+                                                            course.seats_left > 0 ? (
+                                                                <div className="text-[18px] font-medium text-[#1A8233]">
+                                                                    {course.seats_left} seats left
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-[18px] font-medium text-red-500">
+                                                                    Full - Join Waitlist
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-[10px] px-5 pb-5">
+                                                {
+                                                    course.seats_left > 0 ? (
+                                                        <button
+                                                            onClick={() => handleEnroll(course)}
+                                                            className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
+                                                        >
+                                                            Enroll Now
+                                                        </button>
+                                                    ) : (
+                                                        <Link
+                                                            href="#"
+                                                            className="flex justify-center items-center w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
+                                                        >
+                                                            Join Waitlist
+                                                        </Link>
+                                                    )
+                                                }
+
+                                                <Link
+                                                    href={`/web/courses/detail/${course.id}`}
+                                                    className="border border-[var(--secondary-color)] text-[var(--secondary-color)] rounded-[8px] px-5 py-[11px]"
+                                                >
+                                                    Details
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 ))
                             )
                         }
@@ -496,7 +489,7 @@ export default function Courses() {
                                         <div className="flex gap-[10px] px-5 pb-5">
                                             <Link
                                                 key={course.id}
-                                        href={`/web/courses/detail/${course.id}`}
+                                                href={`/web/courses/detail/${course.id}`}
                                                 className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
                                             >
                                                 View Details

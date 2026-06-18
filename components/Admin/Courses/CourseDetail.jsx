@@ -245,6 +245,26 @@ export default function CourseDetail() {
 
 </div>
 
+<div className="mt-10">
+
+  <h3 className="text-2xl font-semibold text-[var(--secondary-color)] mb-4">
+    Course Highlights
+  </h3>
+
+  <ul className="grid md:grid-cols-3 gap-3">
+    {course.course_highlights?.map((item, index) => (
+      <li
+        key={index}
+        className="flex items-center gap-3 "
+      >
+        <span className="text-green-600 text-xl">✓</span>
+        <span className="text-[#505050] font-medium">{item}</span>
+      </li>
+    ))}
+  </ul>
+
+</div>
+
 <div className="mt-10 bg-[#F5F2EC] rounded-xl p-6">
 
   <h3 className="text-2xl font-semibold text-[var(--secondary-color)] mb-6">

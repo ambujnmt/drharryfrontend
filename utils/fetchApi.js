@@ -376,8 +376,30 @@ export async function updateEnrollmentStatus(id, status) {
   }
 }
 
+// hero-banner-view
+export const getHeroBanner = async () => {
+  const response = await fetch(
+    `${baseUrl}hero-banner/view`
+  );
 
+  const data = await response.json();
 
+  return data;
+};
 
+// Update Hero Banner
+export const updateHeroBanner = async (formData) => {
 
+  const response = await fetch(
+    `${baseUrl}hero-banner/update`,
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: formData,
+    }
+  );
 
+  return await response.json();
+};
