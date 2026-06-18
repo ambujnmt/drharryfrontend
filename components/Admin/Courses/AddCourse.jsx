@@ -37,6 +37,7 @@ export default function AddCourse() {
         faculty_id: "",
         learning_objectives: "",
         ideal_for: "",
+        course_highlights: [""],
         course_order: "",
         image: null,
     };
@@ -84,7 +85,11 @@ export default function AddCourse() {
         );
         data.append("ideal_for", formData.ideal_for);
         data.append("course_order", formData.course_order);
-
+        formData.course_highlights.forEach((item, index) => {
+            if (item.trim() !== "") {
+                data.append(`course_highlights[${index}]`, item);
+            }
+        });
         if (formData.image) {
             const maxSize = 2 * 1024 * 1024;
 
@@ -139,6 +144,7 @@ export default function AddCourse() {
                         faculty_id: "",
                         learning_objectives: "",
                         ideal_for: "",
+                        course_highlights: [""],
                         course_order: "",
                         image: null,
                     });
@@ -485,6 +491,67 @@ export default function AddCourse() {
 
                         minRows={4}
                     />
+                </div>
+
+
+                <div className="mt-6">
+                    <label className="block text-sm font-medium mb-3">
+                        Course Highlights
+                    </label>
+
+                    {formData.course_highlights.map((item, index) => (
+                        <div key={index} className="flex gap-2 mb-3">
+
+                            <Input
+                                placeholder={`Highlight ${index + 1}`}
+                                value={item}
+                                onValueChange={(value) => {
+                                    const updated = [...formData.course_highlights];
+                                    updated[index] = value;
+
+                                    setFormData({
+                                        ...formData,
+                                        course_highlights: updated,
+                                    });
+                                }}
+                                
+                            />
+
+                            {formData.course_highlights.length > 1 && (
+                                <Button
+                                    color="danger"
+                                    onPress={() => {
+                                        const updated =
+                                            formData.course_highlights.filter(
+                                                (_, i) => i !== index
+                                            );
+
+                                        setFormData({
+                                            ...formData,
+                                            course_highlights: updated,
+                                        });
+                                    }}
+                                >
+                                    Remove
+                                </Button>
+                            )}
+                        </div>
+                    ))}
+
+                    <Button
+                        variant="bordered"
+                        onPress={() =>
+                            setFormData({
+                                ...formData,
+                                course_highlights: [
+                                    ...formData.course_highlights,
+                                    "",
+                                ],
+                            })
+                        }
+                    >
+                        + Add Highlight
+                    </Button>
                 </div>
 
                 {/* Full Description */}
