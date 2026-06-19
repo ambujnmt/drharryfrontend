@@ -8,6 +8,7 @@ import { useAdmin } from "../../../context/AdminContext";
 import { useUser } from "../../../context/UserContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { SiHomepage } from "react-icons/si";
+import { LiaClinicMedicalSolid } from "react-icons/lia";
 
 export default function AdminSideMenu({ isOpen, onClose }) {
     const { admin } = useAdmin();
@@ -244,6 +245,50 @@ export default function AdminSideMenu({ isOpen, onClose }) {
                                     <li>
                                         <Link href="/admin/homePage/heroBanner" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
                                             Hero Title
+                                        </Link>
+                                    </li>
+
+                                </ul>
+                            </AccordionItem>
+                        </Accordion>
+                    </li>
+
+
+                          {/* Case Management */}
+                    <li>
+                        <Accordion variant="light" className="p-0">
+                            <AccordionItem
+                                key="2"
+                                aria-label="Faculty"
+                                classNames={{
+                                    base: "p-0",
+                                    heading: "p-0",
+                                    trigger: "flex items-center gap-3 px-4 py-2.5 rounded-xl text-white text-[15px] font-medium hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300 min-h-0 h-auto",
+                                    title: "text-white text-[15px] font-medium",
+                                    indicator: "text-[var(--primary-color)]",
+                                    content: "pt-1 pb-1"
+                                }}
+                                title={
+                                    <span className="flex items-center gap-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+                                        <LiaClinicMedicalSolid size={18} />
+                                       Case Management
+                                    </span>
+                                }
+                            >
+                                <ul className="space-y-1 pl-9">
+                                    <li>
+                                        <Link href="/admin/case/category/category" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                            Case Category
+                                        </Link>
+                                    </li>
+                                      <li>
+                                        <Link href="/admin/case/case/addCase" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                            Add Case
+                                        </Link>
+                                    </li>
+                                      <li>
+                                        <Link href="/admin/case/case/manageCase" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                           Manage Case
                                         </Link>
                                     </li>
 

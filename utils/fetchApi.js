@@ -403,3 +403,74 @@ export const updateHeroBanner = async (formData) => {
 
   return await response.json();
 };
+
+// case-category-list
+export const getCaseCategories = async () => {
+  const res = await fetch(`${baseUrl}case-category/all`);
+  return await res.json();
+};
+
+// case-add-category
+export const addCaseCategory = async (data) => {
+  const res = await fetch(`${baseUrl}case-category/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return await res.json();
+};
+
+// case-category-update
+export const updateCaseCategory = async (id, data) => {
+  const res = await fetch(`${baseUrl}case-category/update/${id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  return await res.json();
+};
+
+// add-clinical-case
+export const addCase = async (data) => {
+  const response = await fetch(`${baseUrl}clinical-case/add`, {
+    method: "POST",
+    body: data,
+  });
+
+  return await response.json();
+};
+
+// list-clinical-case
+export const getCases = async () => {
+  const response = await fetch(`${baseUrl}clinical-case/all`);
+
+  return await response.json();
+};
+
+// detail-clinical-case
+export const getSingleCase = async (id) => {
+  const response = await fetch(
+    `${baseUrl}clinical-case/detail/${id}`
+  );
+
+  return await response.json();
+};
+
+// update-clinical-case
+export const updateCase = async (id, data) => {
+  const response = await fetch(
+    `${baseUrl}clinical-case/update/${id}`,
+    {
+      method: "POST",
+      body: data,
+    }
+  );
+
+  return await response.json();
+};
