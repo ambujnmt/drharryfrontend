@@ -1,154 +1,6 @@
-import { useState } from "react";
-
-const TABS = [
-  { id: "AllCases", label: "All Cases" },
-  { id: "Veneers", label: "Veneers" },
-  { id: "SmileDesign", label: "Smile Design" },
-  { id: "CrownPreparation", label: "Crown Preparation" },
-  { id: "FullMouth", label: "Full Mouth Restoration" },
-  { id: "AllOnX", label: "All-on-X" },
-];
-
-const CASES = {
-  AllCases: [
-    {
-      title: "Full Smile Makeover",
-      img: "/assets/Images/Implant-Supported-Bridge.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Anterior Aesthetic Crowns",
-      img: "/assets/Images/Anterior-Aesthetic-Crowns.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Minimal Prep Veneers",
-      img: "/assets/Images/Minimal-Prep-Veneers.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Complex Smile Rehabilitation",
-      img: "/assets/Images/Complex-Smile-Rehabilitation.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Digital Smile Design Case",
-      img: "/assets/Images/Digital-Smile-Design-Case.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Implant-Supported Bridge",
-      img: "/assets/Images/Implant-Supported-Bridge.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-  ],
-  Veneers: [
-    {
-      title: "Complex Smile Rehabilitation",
-      img: "/assets/Images/Complex-Smile-Rehabilitation.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Digital Smile Design Case",
-      img: "/assets/Images/Digital-Smile-Design-Case.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Implant-Supported Bridge",
-      img: "/assets/Images/Implant-Supported-Bridge.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-  ],
-  SmileDesign: [
-    {
-      title: "Digital Smile Design Case",
-      img: "/assets/Images/Digital-Smile-Design-Case.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Implant-Supported Bridge",
-      img: "/assets/Images/Implant-Supported-Bridge.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-  ],
-  CrownPreparation: [
-    {
-      title: "Complex Smile Rehabilitation",
-      img: "/assets/Images/Complex-Smile-Rehabilitation.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Digital Smile Design Case",
-      img: "/assets/Images/Digital-Smile-Design-Case.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Implant-Supported Bridge",
-      img: "/assets/Images/Implant-Supported-Bridge.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-  ],
-  FullMouth: [
-    {
-      title: "Digital Smile Design Case",
-      img: "/assets/Images/Digital-Smile-Design-Case.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Implant-Supported Bridge",
-      img: "/assets/Images/Implant-Supported-Bridge.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-  ],
-  AllOnX: [
-    {
-      title: "Implant-Supported Bridge",
-      img: "/assets/Images/Implant-Supported-Bridge.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-    {
-      title: "Digital Smile Design Case",
-      img: "/assets/Images/Digital-Smile-Design-Case.png",
-      desc: "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-      doctor: "Dr. James Chen",
-      weeks: 6,
-    },
-  ],
-};
+import { useState, useEffect } from "react";
+import { getCaseCategories, getCases } from "../../../utils/fetchApi";
+import { Link, Spinner } from "@heroui/react";
 
 function CaseCard({ title, img, desc, doctor, weeks }) {
   return (
@@ -160,7 +12,10 @@ function CaseCard({ title, img, desc, doctor, weeks }) {
       />
       <div className="p-5">
         <h4 className="text-[28px]">{title}</h4>
-        <p className="text-[16px] text-black mb-2 leading-relaxed">{desc}</p>
+        <div
+          className="text-[16px] text-black mb-2 leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: desc }}
+        />
         <span className="text-[16px] text-black/50 font-normal leading-[140%]">
           by&nbsp;{doctor}
         </span>
@@ -168,12 +23,12 @@ function CaseCard({ title, img, desc, doctor, weeks }) {
           <p className="text-[16px] text-black/50 font-normal leading-[140%] m-0">
             Treatment:&nbsp;{weeks} weeks
           </p>
-          <a
+          <Link
             href="#"
             className="text-[var(--primary-color)] text-[18px] transition-all duration-500 hover:text-[var(--secondary-color)]"
           >
             View Details
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -181,7 +36,50 @@ function CaseCard({ title, img, desc, doctor, weeks }) {
 }
 
 export default function ClinicLibrary() {
-  const [activeTab, setActiveTab] = useState("AllCases");
+  // const [activeTab, setActiveTab] = useState("AllCases");
+  const [categories, setCategories] = useState([]);
+  const [activeTab, setActiveTab] = useState("all");
+  const [cases, setCases] = useState([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetchCategories();
+    fetchCases();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await getCaseCategories();
+
+      if (res.status) {
+        setCategories(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const fetchCases = async () => {
+    try {
+      setLoading(true);
+
+      const res = await getCases();
+
+      if (res.status) {
+        setCases(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching cases:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredCases =
+    activeTab === "all"
+      ? cases
+      : cases.filter(
+        (item) => item.category_id === Number(activeTab)
+      );
 
   return (
     <section className="bg-[#f5f0e8] py-[70px]">
@@ -199,37 +97,70 @@ export default function ClinicLibrary() {
 
         {/* Tab Nav */}
         <div className="flex p-6 bg-white mx-16 rounded-xl shadow-md flex-wrap justify-evenly gap-2 mb-8">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2.5 rounded-full text-[16px] font-medium  tracking-wide transition-all duration-300 ${
-                activeTab === tab.id
-                  ? "bg-[var(--primary-color)] text-white"
-                  : "text-black  bg-[#F5F2EC] hover:bg-[var(--secondary-color)] hover:text-[#ffffff]" 
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`px-5 py-2.5 rounded-full text-[16px] font-medium transition-all duration-300 ${activeTab === "all"
+              ? "bg-[var(--primary-color)] text-white"
+              : "text-black bg-[#F5F2EC]"
               }`}
+          >
+            All Cases
+          </button>
+
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setActiveTab(category.id)}
+              className={`px-5 py-2.5 rounded-full text-[16px] font-medium transition-all duration-300 ${activeTab === category.id
+                ? "bg-[var(--primary-color)] text-white"
+                : "text-black bg-[#F5F2EC] hover:bg-[var(--secondary-color)] hover:text-white"
+                }`}
             >
-              {tab.label}
+              {category.name}
             </button>
           ))}
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(CASES[activeTab] || []).map((c, i) => (
-            <CaseCard key={i} {...c} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Spinner size="lg" />
+          </div>
+        ) : filteredCases.length === 0 ? (
+          <div className="text-center py-20">
+            <h4 className="text-2xl font-semibold text-gray-700">
+              No clinical cases found
+            </h4>
+            <p className="text-gray-500 mt-2">
+              There are currently no cases available in this category.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCases.map((c) => (
+              <CaseCard
+                key={c.id}
+                title={c.title}
+                img={c.image}
+                desc={c.description}
+                doctor={c.doctor}
+                weeks={c.treatment_weeks}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Load More */}
-        <div className="text-center mt-[50px]">
-          <a
-            href="#"
-            className="inline-block text-[var(--secondary-color)] border border-[var(--secondary-color)] px-8 py-[15px] rounded-[10px] transition-all duration-500 hover:bg-[var(--secondary-color)] hover:text-white"
-          >
-            Load More Cases
-          </a>
-        </div>
+        {filteredCases.length > 0 && !loading && (
+          <div className="text-center mt-[50px]">
+            <Link
+              href="#"
+              className="inline-block text-[var(--secondary-color)] border border-[var(--secondary-color)] px-8 py-[15px] rounded-[10px] transition-all duration-500 hover:bg-[var(--secondary-color)] hover:text-white"
+            >
+              Load More Cases
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

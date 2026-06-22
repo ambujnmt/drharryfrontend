@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef  } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
     Input,
     Textarea,
@@ -10,7 +10,7 @@ import {
 import { Spinner } from "@heroui/react";
 import { useRouter } from "next/router";
 import {
-       getCaseCategories,
+    getCaseCategories,
     getSingleCase,
     updateCase,
 } from "../../../../utils/fetchApi";
@@ -24,9 +24,9 @@ import { FaUpload } from "react-icons/fa";
 
 export default function UpdateCase() {
     const [loading, setLoading] = useState(false);
-const router = useRouter();
-const { id } = router.query;
-const [oldImage, setOldImage] = useState("");
+    const router = useRouter();
+    const { id } = router.query;
+    const [oldImage, setOldImage] = useState("");
     const [categoryList, setCategoryList] = useState([]);
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");
@@ -60,39 +60,39 @@ const [oldImage, setOldImage] = useState("");
     };
 
     useEffect(() => {
-    if (id) {
-        fetchCase();
-    }
-}, [id]);
+        if (id) {
+            fetchCase();
+        }
+    }, [id]);
 
     const fetchCase = async () => {
-    if (!id) return;
+        if (!id) return;
 
-    try {
-        setLoading(true);
+        try {
+            setLoading(true);
 
-        const res = await getSingleCase(id);
+            const res = await getSingleCase(id);
 
-        if (res.status) {
-            setFormData({
-                category_id: res.case.category_id.toString(),
-                title: res.case.title || "",
-                description: res.case.description || "",
-                doctor: res.case.doctor || "",
-                treatment_weeks:
-                    res.case.treatment_weeks?.toString() || "",
-                status: res.case.status.toString(),
-                image: null,
-            });
+            if (res.status) {
+                setFormData({
+                    category_id: res.case.category_id.toString(),
+                    title: res.case.title || "",
+                    description: res.case.description || "",
+                    doctor: res.case.doctor || "",
+                    treatment_weeks:
+                        res.case.treatment_weeks?.toString() || "",
+                    status: res.case.status.toString(),
+                    image: null,
+                });
 
-            setOldImage(res.case.image);
+                setOldImage(res.case.image);
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
         }
-    } catch (err) {
-        console.log(err);
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     const fileRef = useRef(null);
 
@@ -119,15 +119,15 @@ const [oldImage, setOldImage] = useState("");
         try {
             setLoading(true);
 
-           const res = await updateCase(id, data);
+            const res = await updateCase(id, data);
 
             if (res.status) {
                 setMessage(res.message);
                 setMessageType("success");
 
-              setTimeout(() => {
-    router.push("/admin/case/case/manageCase");
-}, 1500);
+                setTimeout(() => {
+                    router.push("/admin/case/case/manageCase");
+                }, 1500);
             } else {
                 setMessage(res.message);
                 setMessageType("error");
@@ -167,7 +167,7 @@ const [oldImage, setOldImage] = useState("");
                     className="text-4xl text-[var(--secondary-color)]"
                     style={{ fontFamily: "Cormorant Garamond" }}
                 >
-                      Update Clinical Case
+                    Update Clinical Case
                 </h1>
 
                 <p
@@ -180,7 +180,7 @@ const [oldImage, setOldImage] = useState("");
             <PageTitle
                 breadCrumbItems={[
                     { label: 'Dashboard', path: '/dashboard' },
-                      { label: 'Manage Case', path: '/admin/case/case/manageCase' },
+                    { label: 'Manage Case', path: '/admin/case/case/manageCase' },
                     { label: 'Update Case', active: true },
                 ]}
                 title="Update Case"
@@ -351,7 +351,7 @@ const [oldImage, setOldImage] = useState("");
                     />
                 </div>
 
-              
+
                 {/* image */}
                 <div className="mt-6">
                     <label className="block text-[14px] font-medium text-[var(--secondary-color)] mb-2">
@@ -372,15 +372,15 @@ const [oldImage, setOldImage] = useState("");
                             PNG, JPG up to 5MB
                         </p>
 
-{oldImage && (
-    <div className="mb-4">
-        <img
-            src={oldImage}
-            alt="Case"
-            className="w-40 h-40 object-cover rounded-lg border mx-auto"
-        />
-    </div>
-)}
+                        {oldImage && (
+                            <div className="mb-4">
+                                <img
+                                    src={oldImage}
+                                    alt="Case"
+                                    className="w-40 h-40 object-cover rounded-lg border mx-auto"
+                                />
+                            </div>
+                        )}
                         <input
                             ref={fileRef}
                             type="file"
