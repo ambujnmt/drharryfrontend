@@ -75,7 +75,7 @@ const handleLogout = () => {
  
                   <li className="mx-[15px]">
                     <Link
-                      href="#"
+                      href="/web/faculty/faculty"
                       className="text-[18px] leading-[100%] font-normal hover:text-[var(--primary-color)] text-[#000]">
                       Faculty
                     </Link>
