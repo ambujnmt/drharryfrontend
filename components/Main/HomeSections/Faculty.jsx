@@ -13,13 +13,13 @@ const fetchFaculty = async () => {
   try {
     const res = await getFaculty();
 
-    if (res.status) {
-      const activeFaculty = res.faculty.filter(
-        (item) => item.status === 1
-      );
+if (res.status) {
+  const activeFaculty = res.faculty
+    .filter((item) => item.status === 1)
+    .slice(0, 4);
 
-      setFaculty(activeFaculty);
-    }
+  setFaculty(activeFaculty);
+}
   } catch (err) {
     console.log(err);
   }
@@ -53,39 +53,41 @@ const stripHtml = (html) => {
         </div>
 
         {/* Faculty Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-[50px]">
-          {faculty.map((member, index) => (
-            <div key={index}>
-              <div>
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className={`w-full object-cover rounded-[15px] grayscale-[2] hover:grayscale-0 transition-all duration-500 ${member.large ? "h-[360px]" : "h-[330px]"
-                    }`}
-                />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-[50px]">
+  {faculty.map((member) => (
+    <Link
+      key={member.id}
+      href={`/web/faculty/detail/${member.id}`}
+      className="block group"
+    >
+      <div>
+        <img
+          src={member.image}
+          alt={member.name}
+          className="w-full h-[330px] object-cover rounded-[15px] grayscale-[2] group-hover:grayscale-0 transition-all duration-500"
+        />
 
-                <div className="py-[20px]">
-                  <h4 className="text-[24px] font-medium text-[var(--secondary-color)] mb-[10px]">
-                    {member.name}
-                  </h4>
+        <div className="py-[20px]">
+          <h4 className="text-[24px] font-medium text-[var(--secondary-color)] mb-[10px] group-hover:text-[var(--primary-color)] transition-colors">
+            {member.name}
+          </h4>
 
-                  <span className="text-[var(--primary-color)] block mb-[20px]">
-                    {member.designation}
-                  </span>
+          <span className="text-[var(--primary-color)] block mb-[20px]">
+            {member.designation}
+          </span>
 
-                  <p className="mt-[6px] mb-0 text-[16px] leading-[138%] text-[var(--text-color3)] w-full overflow-hidden line-clamp-3 break-words">
-                    {stripHtml(member.bio)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
+          <p className="mt-[6px] mb-0 text-[16px] leading-[138%] text-[var(--text-color3)] overflow-hidden line-clamp-3 break-words">
+            {stripHtml(member.bio)}
+          </p>
         </div>
-
+      </div>
+    </Link>
+  ))}
+</div>
         {/* Button */}
         <div className="text-center mt-[50px]">
           <Link
-            href="#"
+            href="web/faculty/faculty"
             className="inline-block border border-[var(--secondary-color)] text-[var(--secondary-color)] px-[32px] py-[15px] rounded-[10px] transition-all duration-500 ease-in-out hover:bg-[var(--secondary-color)] hover:text-white"
           >
             Meet All Faculty
