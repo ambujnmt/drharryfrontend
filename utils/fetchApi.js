@@ -474,3 +474,63 @@ export const updateCase = async (id, data) => {
 
   return await response.json();
 };
+
+// get-all subs-plans
+export const getPlans = async () => {
+  try {
+    const response = await fetch(
+      `${baseUrl}plans/all`
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching plans:", error);
+    return {
+      status: false,
+      data: [],
+    };
+  }
+};
+
+// update subscription plan
+export const updatePlan = async (id, payload) => {
+  try {
+    const response = await fetch(
+      `${baseUrl}plans/update/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating plan:", error);
+
+    return {
+      status: false,
+      message: "Something went wrong",
+    };
+  }
+};
+
+// detail subscription plan
+export const getSinglePlan = async (id) => {
+  try {
+    const response = await fetch(
+      `${baseUrl}plans/detail/${id}`
+    );
+
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+
+    return {
+      status: false,
+    };
+  }
+};

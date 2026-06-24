@@ -1,34 +1,29 @@
-import React from "react";
-import {Link} from "@heroui/react";
+import React, { useEffect, useState } from "react";
+import { Link } from "@heroui/react";
+import { getPlans } from "../../../utils/fetchApi";
 
 export default function ChoosePlan() {
-  const plans = [
-    {
-      name: "Basic",
-      price: "$99",
-      description: "perfect for getting started with online learning",
-      popular: false,
-    },
-    {
-      name: "Advance",
-      price: "$249",
-      description: "perfect for getting started with online learning",
-      popular: true,
-    },
-    {
-      name: "Elite",
-      price: "$499",
-      description: "perfect for getting started with online learning",
-      popular: false,
-    },
-  ];
+  const [plans, setPlans] = useState([]);
 
-  const features = [
-    "Access to video library (100+ courses)",
-    "Monthly webinars",
-    "Community forum access",
-    "Course Completion certification",
-  ];
+  useEffect(() => {
+    fetchPlans();
+  }, []);
+
+  const fetchPlans = async () => {
+    try {
+      const res = await getPlans();
+
+      if (res?.status) {
+        const activePlans = res.data.filter(
+          (plan) => plan.status === true || plan.status === 1
+        );
+
+        setPlans(activePlans);
+      }
+    } catch (error) {
+      console.error("Error loading plans:", error);
+    }
+  };
 
   return (
     <section className="mt-[70px] py-[60px] bg-[var(--light-gold2)]">
@@ -48,17 +43,16 @@ export default function ChoosePlan() {
 
         {/* Plans */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-[50px]">
-          {plans.map((plan, index) => (
+          {plans.map((plan) => (
             <div
-              key={index}
-              className={`border border-[var(--primary-color)] rounded-[15px] shadow-[0px_2px_12px_rgba(0,0,0,0.20)] p-[50px_20px] h-full ${
-                plan.popular
+              key={plan.id}
+              className={`border border-[var(--primary-color)] rounded-[15px] shadow-[0px_2px_12px_rgba(0,0,0,0.20)] p-[50px_20px] h-full ${plan.is_popular
                   ? "bg-[var(--secondary-color)]"
                   : "bg-white"
-              }`}
+                }`}
             >
               {/* Most Popular Badge */}
-              {plan.popular && (
+              {plan.is_popular && (
                 <div className="mb-[15px]">
                   <p className="bg-[var(--primary-color)] text-white text-[18px] leading-[138%] font-normal w-max px-[12px] py-[10px] rounded-[5px] mb-0">
                     Most Popular
@@ -68,30 +62,27 @@ export default function ChoosePlan() {
 
               {/* Plan Name */}
               <h6
-                className={`font-[var(--head-font)] text-[28px]  leading-[138%] mb-0 ${
-                  plan.popular ? "text-white" : ""
-                }`}
+                className={`font-[var(--head-font)] text-[28px] leading-[138%] mb-0 ${plan.is_popular ? "text-white" : ""
+                  }`}
               >
                 {plan.name}
               </h6>
 
               {/* Price */}
               <h5
-                className={`font-[var(--head-font)] text-[29px]  leading-[138%] ${
-                  plan.popular ? "text-white" : ""
-                }`}
+                className={`font-[var(--head-font)] text-[29px] leading-[138%] ${plan.is_popular ? "text-white" : ""
+                  }`}
               >
                 <span className="text-[50px] font-normal leading-[138%]">
-                  {plan.price}
+                  ${parseFloat(plan.price)}
                 </span>{" "}
-                per month
+                per {plan.duration}
               </h5>
 
               {/* Description */}
               <p
-                className={`text-[18px] leading-[138%] font-normal mb-0 ${
-                  plan.popular ? "text-white" : ""
-                }`}
+                className={`text-[18px] leading-[138%] font-normal mb-0 ${plan.is_popular ? "text-white" : ""
+                  }`}
               >
                 {plan.description}
               </p>
@@ -100,27 +91,25 @@ export default function ChoosePlan() {
               <div className="mt-8">
                 <Link
                   href="#"
-                  className={`block text-center py-[15px] px-[30px] rounded-[10px] text-[18px] font-medium transition-all duration-500 ${
-                    plan.popular
-                      ? "bg-[var(--primary-color)]  text-white hover:bg-[#fff] hover:text-[var(--primary-color)]"
-                      : "bg-[var(--secondary-color)] hover:bg-[var(--primary-color)] text-white "
-                  }`}
+                  className={`block text-center py-[15px] px-[30px] rounded-[10px] text-[18px] font-medium transition-all duration-500 ${plan.is_popular
+                      ? "bg-[var(--primary-color)] text-white hover:bg-[#fff] hover:text-[var(--primary-color)]"
+                      : "bg-[var(--secondary-color)] hover:bg-[var(--primary-color)] text-white"
+                    }`}
                 >
-                  Start Essential
+                  {plan.button_text}
                 </Link>
               </div>
 
               {/* Features */}
               <div className="mt-[30px]">
                 <ul className="space-y-4">
-                  {features.map((feature, idx) => (
+                  {plan.features?.map((feature, idx) => (
                     <li
                       key={idx}
-                      className={`flex items-start gap-3 ${
-                        plan.popular
+                      className={`flex items-start gap-3 ${plan.is_popular
                           ? "text-white font-extralight"
                           : "text-black"
-                      }`}
+                        }`}
                     >
                       <img
                         src="/assets/Images/check-icon.png"
