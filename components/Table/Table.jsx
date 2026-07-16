@@ -5,25 +5,49 @@ import 'regenerator-runtime/runtime';
 import Pagination from "../Pagination/Pagination";
 // Define a default UI for filtering
 const GlobalFilter = ({
-    preGlobalFilteredRows,
-    globalFilter,
-    setGlobalFilter,
-    searchBoxClass
+  preGlobalFilteredRows,
+  globalFilter,
+  setGlobalFilter,
+  searchBoxClass,
 }) => {
-    const count = preGlobalFilteredRows.length;
-    const [value, setValue] = useState(globalFilter);
-    const onChange = useAsyncDebounce(value => {
-        setGlobalFilter(value || undefined);
-    }, 200);
-    return <div className={classNames(searchBoxClass)}>
-        <span className="d-flex align-items-center text-gray-500">
-            Search :{" "}
-            <input type="search" value={value || ""} onChange={e => {
-                setValue(e.target.value);
-                onChange(e.target.value);
-            }} placeholder={`${count} records...`} className="form-control w-auto ms-1 text-gray-400" />
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = useState(globalFilter);
+
+  const onChange = useAsyncDebounce((value) => {
+    setGlobalFilter(value || undefined);
+  }, 200);
+
+  return (
+    <div className={classNames("mb-4", searchBoxClass)}>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+        <span className="text-gray-600 font-medium whitespace-nowrap">
+          Search:
         </span>
-    </div>;
+
+        <input
+          type="search"
+          value={value || ""}
+          onChange={(e) => {
+            setValue(e.target.value);
+            onChange(e.target.value);
+          }}
+          placeholder={`${count} records...`}
+          className="
+            w-full
+            sm:w-64
+            border
+            rounded-lg
+            px-3
+            py-2
+            text-sm
+            focus:outline-none
+            focus:ring-2
+            focus:ring-[var(--primary-color)]
+          "
+        />
+      </div>
+    </div>
+  );
 };
 const IndeterminateCheckbox = forwardRef(({
     indeterminate,
@@ -122,9 +146,14 @@ const Table = props => {
     let rows = pagination ? dataTable.page : dataTable.rows;
     return <>
         {isSearchable && <GlobalFilter preGlobalFilteredRows={dataTable.preGlobalFilteredRows} globalFilter={dataTable.state.globalFilter} setGlobalFilter={dataTable.setGlobalFilter} searchBoxClass={props["searchBoxClass"]} />}
-
-        <div className="table-responsive">
-            <table {...dataTable.getTableProps()} className={classNames("table table-centered react-table table-nowrap", props["tableClass"])}>
+<div className="w-full overflow-x-auto overflow-y-hidden rounded-lg border border-gray-200">
+    <table
+        {...dataTable.getTableProps()}
+        className={classNames(
+            "table table-centered react-table table-nowrap min-w-[900px] lg:min-w-full",
+            props["tableClass"]
+        )}
+    >
                 <thead className={props["theadClass"]}>
                     {(dataTable.headerGroups || []).map((headerGroup, idx) => <tr {...headerGroup.getHeaderGroupProps()} key={idx}>
                         {(headerGroup.headers || []).map((column, index) =>

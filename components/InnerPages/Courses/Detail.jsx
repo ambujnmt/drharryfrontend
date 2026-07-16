@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { getSingleCourse, getSingleFaculty } from "../../../utils/fetchApi";
 import { Link, Spinner } from "@heroui/react";
 import { useUser } from "../../../context/UserContext";
+import BreadCrumb from "../../Breadcrumb/BreadCrumb";
 
 export default function CourseHero() {
   const [course, setCourse] = useState(null);
@@ -91,6 +92,13 @@ export default function CourseHero() {
   }
   return (
     <section>
+         <BreadCrumb
+                    title="Course Detail"
+                    breadcrumb={[
+                      "Home",
+                      "Course Detail",
+                    ]}
+                  />
       {/* HERO */}
       <div className="bg-[#0d1b2e] py-10">
 

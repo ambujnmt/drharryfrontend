@@ -108,6 +108,7 @@ export default function UpdateCourse() {
         }
     };
 
+
     const handleUpdate = async () => {
         try {
             setLoading(true);
@@ -129,10 +130,10 @@ export default function UpdateCourse() {
             fd.append("ideal_for", formData.ideal_for);
             fd.append("course_order", formData.course_order);
             formData.course_highlights.forEach((item, index) => {
-    if (item.trim() !== "") {
-        fd.append(`course_highlights[${index}]`, item);
-    }
-});
+                if (item.trim() !== "") {
+                    fd.append(`course_highlights[${index}]`, item);
+                }
+            });
             if (image) {
                 fd.append("image", image);
             }
@@ -166,14 +167,14 @@ export default function UpdateCourse() {
             {/* Header */}
             <div className="mb-8">
                 <h1
-                    className="text-4xl text-[var(--secondary-color)]"
+                    className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]"
                     style={{ fontFamily: "Cormorant Garamond" }}
                 >
                     Update Course
                 </h1>
 
                 <p
-                    className="text-[#2B2B2B] mt-2"
+                    className="text-[#2B2B2B] text-[14px] md:text-[14px] lg:text-[16px] mt-2"
                     style={{ fontFamily: "Inter" }}
                 >
                     Update and manage premium educational programs.
@@ -202,7 +203,7 @@ export default function UpdateCourse() {
 
 
             {/* Form */}
-            <div className="bg-white rounded-2xl shadow-lg border border-[#e7e2d7] p-8">
+            <div className="bg-white rounded-2xl shadow-lg border border-[#e7e2d7] p-3 md:p-6 lg:p-8">
                 <div className="grid md:grid-cols-2 gap-6">
                     <Input
                         placeholder="Enter course title"
@@ -438,27 +439,56 @@ export default function UpdateCourse() {
                 </div>
 
                 <div className="mt-6">
-                    <label className="block text-[14px] font-medium mb-2">
+                    <label className="block text-[14px] md:text-[15px] font-medium mb-2">
                         Course Image
                     </label>
 
-                    <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
+                    <div className="
+    border-2 
+    border-dashed 
+    border-[var(--primary-color)] 
+    rounded-xl 
+    text-center 
+    bg-[var(--light-gold)]
+    p-5
+    sm:p-6
+    md:p-8
+  ">
+
                         <FaUpload
                             size={30}
                             className="mx-auto text-[var(--primary-color)] mb-3"
                         />
 
-                        <p>Upload Course Profile Image</p>
+                        <p className="text-[14px] sm:text-[15px] md:text-base text-[var(--secondary-color)] font-medium">
+                            Upload Course Profile Image
+                        </p>
 
-                        <p className="text-sm text-gray-500">
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
                             PNG, JPG up to 5MB
                         </p>
+
 
                         <input
                             ref={fileRef}
                             type="file"
                             accept="image/*"
-                            className="mt-4 block mx-auto"
+                            className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
                             onChange={(e) => {
                                 const file = e.target.files[0];
 
@@ -474,12 +504,26 @@ export default function UpdateCourse() {
                                 }
                             }}
                         />
+
+
                         {preview && (
                             <img
                                 src={preview}
-                                className="w-40 h-40 mx-auto rounded-xl object-cover mt-4"
+                                className="
+          w-32
+          h-32
+          sm:w-36
+          sm:h-36
+          md:w-40
+          md:h-40
+          mx-auto
+          rounded-xl
+          object-cover
+          mt-4
+        "
                             />
                         )}
+
                     </div>
                 </div>
 
@@ -510,63 +554,63 @@ export default function UpdateCourse() {
                 </div>
 
                 <div className="mt-6">
-    <label className="block text-sm font-medium mb-3">
-        Course Highlights
-    </label>
+                    <label className="block text-sm font-medium mb-3">
+                        Course Highlights
+                    </label>
 
-    {formData.course_highlights.map((item, index) => (
-        <div key={index} className="flex gap-2 mb-3">
+                    {formData.course_highlights.map((item, index) => (
+                        <div key={index} className="flex gap-2 mb-3">
 
-            <Input
-                value={item}
-                placeholder={`Highlight ${index + 1}`}
-                onValueChange={(value) => {
-                    const updated = [...formData.course_highlights];
-                    updated[index] = value;
+                            <Input
+                                value={item}
+                                placeholder={`Highlight ${index + 1}`}
+                                onValueChange={(value) => {
+                                    const updated = [...formData.course_highlights];
+                                    updated[index] = value;
 
-                    setFormData({
-                        ...formData,
-                        course_highlights: updated,
-                    });
-                }}
-            />
+                                    setFormData({
+                                        ...formData,
+                                        course_highlights: updated,
+                                    });
+                                }}
+                            />
 
-            {formData.course_highlights.length > 1 && (
-                <Button
-                    color="danger"
-                    onPress={() => {
-                        const updated =
-                            formData.course_highlights.filter(
-                                (_, i) => i !== index
-                            );
+                            {formData.course_highlights.length > 1 && (
+                                <Button
+                                    color="danger"
+                                    onPress={() => {
+                                        const updated =
+                                            formData.course_highlights.filter(
+                                                (_, i) => i !== index
+                                            );
 
-                        setFormData({
-                            ...formData,
-                            course_highlights: updated,
-                        });
-                    }}
-                >
-                    Remove
-                </Button>
-            )}
-        </div>
-    ))}
+                                        setFormData({
+                                            ...formData,
+                                            course_highlights: updated,
+                                        });
+                                    }}
+                                >
+                                    Remove
+                                </Button>
+                            )}
+                        </div>
+                    ))}
 
-    <Button
-        variant="bordered"
-        onPress={() =>
-            setFormData({
-                ...formData,
-                course_highlights: [
-                    ...formData.course_highlights,
-                    "",
-                ],
-            })
-        }
-    >
-        + Add Highlight
-    </Button>
-</div>
+                    <Button
+                        variant="bordered"
+                        onPress={() =>
+                            setFormData({
+                                ...formData,
+                                course_highlights: [
+                                    ...formData.course_highlights,
+                                    "",
+                                ],
+                            })
+                        }
+                    >
+                        + Add Highlight
+                    </Button>
+                </div>
 
 
                 {/* Full Description */}

@@ -63,16 +63,18 @@ const Pagination = ({
 const activePage = pageIndex + 1;
 
 return (
-  <>
-    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mt-6 bg-white p-4 rounded-xl shadow-sm border border-[var(--light-gold)]">
+  <div className="mt-6 bg-white p-3 lg:p-4 rounded-xl shadow-sm border border-[var(--light-gold)]">
 
-      {/* Left Side */}
-      <div className="flex flex-wrap items-center gap-4">
+    {/* Top Section */}
+    <div className="flex flex-row  items-center justify-between gap-3 lg:gap-5">
+
+      {/* Left Controls */}
+      <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-4">
 
         {sizePerPageList.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <label
-              className="text-[14px] font-medium"
+              className="text-sm font-medium whitespace-nowrap"
               style={{ color: "var(--secondary-color)" }}
             >
               Show
@@ -80,10 +82,10 @@ return (
 
             <select
               value={tableProps.state.pageSize}
-              onChange={(e) => {
-                tableProps.setPageSize(Number(e.target.value));
-              }}
-              className="border rounded-lg px-3 py-2 text-sm focus:outline-none"
+              onChange={(e) =>
+                tableProps.setPageSize(Number(e.target.value))
+              }
+              className="border rounded-lg px-3 py-2 text-sm w-full sm:w-auto focus:outline-none"
               style={{
                 borderColor: "var(--primary-color)",
                 color: "var(--secondary-color)",
@@ -99,16 +101,16 @@ return (
         )}
 
         <div
-          className="text-sm font-medium"
+          className="text-sm font-medium whitespace-nowrap"
           style={{ color: "var(--secondary-color)" }}
         >
           Page <strong>{pageIndex + 1}</strong> of{" "}
           <strong>{tableProps.pageOptions.length}</strong>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className=" items-center hidden lg:block gap-2 w-full sm:w-auto">
           <label
-            className="text-sm"
+            className="text-sm whitespace-nowrap"
             style={{ color: "var(--secondary-color)" }}
           >
             Go To
@@ -124,9 +126,8 @@ return (
                 : 0;
 
               tableProps.gotoPage(page);
-              setPageIndex(tableProps.state.pageIndex);
             }}
-            className="w-16 border rounded-lg text-center py-2"
+            className="w-20 border rounded-lg text-center py-2"
             style={{
               borderColor: "var(--primary-color)",
               color: "var(--secondary-color)",
@@ -136,18 +137,16 @@ return (
       </div>
 
       {/* Pagination */}
-      <div>
-        <ul className="flex items-center gap-2 m-0 p-0 list-none">
+      <div className="flex justify-center xl:justify-end">
+        <ul className="flex flex-wrap justify-center items-center gap-2 m-0 p-0 list-none">
 
           {/* Previous */}
           <li>
             <button
               type="button"
               disabled={activePage === 1}
-              onClick={() =>
-                activePage > 1 && changePage(activePage - 1)
-              }
-              className="w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-300 disabled:opacity-40"
+              onClick={() => activePage > 1 && changePage(activePage - 1)}
+              className="w-10 h-10 rounded-lg border flex items-center justify-center transition-all disabled:opacity-40"
               style={{
                 borderColor: "var(--primary-color)",
                 color: "var(--secondary-color)",
@@ -157,7 +156,7 @@ return (
             </button>
           </li>
 
-          {/* Pages */}
+          {/* Page Numbers */}
           {(visiblePages || []).map((page, index, array) => {
             const showEllipsis =
               index > 0 && array[index - 1] + 1 < page;
@@ -165,16 +164,16 @@ return (
             return (
               <React.Fragment key={page}>
                 {showEllipsis && (
-                  <li>
+                  <li className="hidden md:block">
                     <span className="px-2 text-gray-500">...</span>
                   </li>
                 )}
 
-                <li className="hidden xl:block">
+                <li className="hidden lg:block">
                   <button
                     type="button"
                     onClick={() => changePage(page)}
-                    className="w-10 h-10 rounded-lg font-medium transition-all duration-300"
+                    className="w-10 h-10 rounded-lg font-medium transition-all"
                     style={{
                       backgroundColor:
                         activePage === page
@@ -206,7 +205,7 @@ return (
                 activePage < tableProps.pageCount &&
                 changePage(activePage + 1)
               }
-              className="w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-300 disabled:opacity-40"
+              className="w-10 h-10 rounded-lg border flex items-center justify-center transition-all disabled:opacity-40"
               style={{
                 borderColor: "var(--primary-color)",
                 color: "var(--secondary-color)",
@@ -218,8 +217,7 @@ return (
         </ul>
       </div>
     </div>
-  </>
+  </div>
 );
-
 };
 export default Pagination;

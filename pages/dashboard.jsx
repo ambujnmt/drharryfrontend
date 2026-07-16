@@ -21,9 +21,9 @@ export default function DashboardPage() {
 
       <div
         className={`
-          ${menuOpen ? "w-64" : "w-0 overflow-hidden"}
+          ${menuOpen ? "w-64" : "w-0"}
           fixed lg:relative
-          top-0 left-0 h-screen bg-white shadow-lg transition-all duration-300
+          top-0 left-0 h-[100%] shadow-lg transition-all duration-300
           z-40
           lg:w-64
           

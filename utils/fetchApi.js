@@ -124,6 +124,34 @@ export const loginUser = async (email, password) => {
   }
 };
 
+// user-list
+export const getUsers = async () => {
+  try {
+
+    const response = await fetch(`${baseUrl}auth/users`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+
+    const data = await response.json();
+
+    return data;
+
+  } catch (error) {
+
+    console.error("Get users error:", error);
+
+    return {
+      status: false,
+      data: []
+    };
+
+  }
+};
+
 // admin login
 export const adminLogin = async (email, password) => {
   try {
@@ -533,4 +561,284 @@ export const getSinglePlan = async (id) => {
       status: false,
     };
   }
+};
+
+// all-faqs
+export const fetchFaqs = async () => {
+  try {
+    const response = await fetch(`${baseUrl}faqs/all`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch FAQs");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching FAQs:", error);
+    throw error;
+  }
+};
+
+// add-faqs
+export const addFaq = async (faqData) => {
+  try {
+    const response = await fetch(`${baseUrl}faqs/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(faqData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error adding FAQ:", error);
+    throw error;
+  }
+};
+
+// Update FAQ
+export const updateFaq = async (id, faqData) => {
+  try {
+    const response = await fetch(`${baseUrl}faqs/update/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(faqData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error updating FAQ:", error);
+    throw error;
+  }
+};
+
+// Get Privacy Policy
+export const fetchPrivacyPolicy = async () => {
+  try {
+
+    const response = await fetch(
+      `${baseUrl}privacy-policy/all`
+    );
+
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch privacy policy");
+    }
+
+
+    return await response.json();
+
+
+  } catch(error) {
+
+    console.error(
+      "Error fetching privacy policy:",
+      error
+    );
+
+    throw error;
+
+  }
+};
+
+// Update Privacy Policy
+export const updatePrivacyPolicy = async (id, data) => {
+
+  try {
+
+    const response = await fetch(
+      `${baseUrl}privacy-policy/update/${id}`,
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json",
+        },
+
+        body:JSON.stringify(data)
+
+      }
+    );
+
+    const result = await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+    return result;
+  } catch(error){
+
+    console.error(
+      "Error updating privacy policy:",
+      error
+    );
+
+    throw error;
+
+  }
+
+};
+
+// Get terms and condition
+export const fetchTerms = async () => {
+  try {
+
+    const response = await fetch(
+      `${baseUrl}terms/all`
+    );
+
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch terms and condition");
+    }
+
+
+    return await response.json();
+
+
+  } catch(error) {
+
+    console.error(
+      "Error fetching terms and condition:",
+      error
+    );
+
+    throw error;
+
+  }
+};
+
+// Update terms and condition
+export const updateTerms = async (id, data) => {
+
+  try {
+
+    const response = await fetch(
+      `${baseUrl}terms/update/${id}`,
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json",
+        },
+
+        body:JSON.stringify(data)
+
+      }
+    );
+
+    const result = await response.json();
+
+    if(!response.ok){
+
+      throw new Error(
+        result.message
+      );
+
+    }
+
+    return result;
+  } catch(error){
+
+    console.error(
+      "Error updating terms and condition:",
+      error
+    );
+
+    throw error;
+
+  }
+
+};
+
+// contact-detal
+export const fetchContact = async () => {
+  try {
+    const response = await fetch(`${baseUrl}contact`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch contact data");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching contact:", error);
+    throw error;
+  }
+};
+
+
+// submit-enquiry
+export const submitContactEnquiry = async (data) => {
+    try {
+        const response = await fetch(`${baseUrl}contact-enquiry`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message);
+        }
+
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// update-ontact
+export const updateContact = async (data) => {
+    const response = await fetch(`${baseUrl}contact`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message);
+    }
+
+    return result;
+};
+
+// contact-enquiries
+export const fetchContactEnquiries = async () => {
+    const response = await fetch(`${baseUrl}contact-enquiries`);
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message);
+    }
+
+    return result;
 };

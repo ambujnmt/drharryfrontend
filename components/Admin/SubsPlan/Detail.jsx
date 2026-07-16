@@ -57,11 +57,11 @@ export default function Detail() {
 
   return (
     <div className="min-h-screen bg-[#F5F2EC] p-6">
-      <h1 className="text-[42px] text-[var(--secondary-color)] mb-2">
+      <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)] mb-2">
         Subscription Plan Detail
       </h1>
 
-      <p className="text-[#505050] mb-8">
+      <p className="text-[#505050] text-[14px] md:text-[14px] lg:text-[16px] mb-8">
         View complete information about this subscription plan.
       </p>
 
@@ -73,7 +73,7 @@ export default function Detail() {
           },
           {
             label: "Subscription Plans",
-            path: "/admin/subsPlan",
+            path: "/admin/subsPlan/subsPlan",
           },
           {
             label: "Plan Detail",
@@ -83,7 +83,7 @@ export default function Detail() {
         title="Plan Detail"
       />
 
-      <div className="bg-white rounded-xl shadow-md p-8">
+      <div className="bg-white rounded-xl shadow-md p-3 md:p-6 lg:p-8">
 
         {/* Header */}
         <div className="border-b pb-6 mb-8">

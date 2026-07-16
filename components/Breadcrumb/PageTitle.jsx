@@ -1,14 +1,20 @@
 import { Row, Col, Breadcrumb } from "react-bootstrap";
 import { Link } from "@heroui/react";
-/**
- * PageTitle
- */
-const PageTitle = props => {
-  return  <Row>
+
+const PageTitle = (props) => {
+  return (
+    <Row>
       <Col>
-        <div className="page-title-box">
-          <div className="page-title-right">
-            <Breadcrumb className="m-0 float-right text-sm">
+        <div className="page-title-box flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+
+          {/* Title */}
+          <h5 className="page-title text-xl md:text-2xl font-semibold mb-0">
+            {props.title}
+          </h5>
+
+          {/* Breadcrumb */}
+          <div className="overflow-x-auto">
+            <Breadcrumb className="m-0 whitespace-nowrap text-sm">
               {(props.breadCrumbItems || []).map((item, index) =>
                 item.active ? (
                   <Breadcrumb.Item active key={index}>
@@ -16,18 +22,22 @@ const PageTitle = props => {
                   </Breadcrumb.Item>
                 ) : (
                   <Breadcrumb.Item as="span" key={index}>
-                    <Link className="text-[var(--primary-color)]" href={item.path} passHref legacyBehavior>
-                      <a className="text-decoration-none text-reset ">{item.label}</a>
+                    <Link
+                      href={item.path}
+                      className="text-[var(--primary-color)] no-underline"
+                    >
+                      {item.label}
                     </Link>
                   </Breadcrumb.Item>
                 )
               )}
             </Breadcrumb>
           </div>
-          <h5 className="page-title">{props.title}</h5>
+
         </div>
       </Col>
-    </Row>;
+    </Row>
+  );
 };
-export default PageTitle;
 
+export default PageTitle;

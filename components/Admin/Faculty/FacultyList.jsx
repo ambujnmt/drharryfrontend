@@ -181,11 +181,11 @@ export default function FacultyList() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[42px] text-[var(--secondary-color)]">
+        <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]">
           Manage Faculty
         </h1>
 
-        <p className="text-[#505050] text-[16px] mt-2">
+        <p className="text-[#505050] text-[14px] md:text-[14px] lg:text-[16px] mt-2">
           View, manage and update all faculty members.
         </p>
       </div>
@@ -199,32 +199,47 @@ export default function FacultyList() {
       />
 
 
-      {/* Filters */}
-      <div className="bg-white p-2 rounded-lg w-1/2  mb-6">
+{/* Filters */}
+<div className="bg-white p-4 rounded-lg w-full sm:w-1/2 mb-6">
 
-        <p className="mb-4">Filter</p>
-        <Select
-          selectedKeys={statusFilter ? [statusFilter] : [""]}
-          onSelectionChange={(keys) =>
-            setStatusFilter(Array.from(keys)[0])
-          }
-          variant="underlined"
-          label={<span className="text-[#000]">Course Status</span>}
-          classNames={{
-            label: "text-[var(--text-color2)] h-[50px]",
-            input: "text-[var(--secondary-color)] font-medium",
-          }}
-        >
-          <SelectItem key="">All</SelectItem>
-          <SelectItem key="1">Active</SelectItem>
-          <SelectItem key="0">Inactive</SelectItem>
-        </Select>
+  <p className="mb-4 text-[var(--secondary-color)] font-medium">
+    Filter
+  </p>
 
+  <Select
+    selectedKeys={statusFilter ? [statusFilter] : [""]}
+    onSelectionChange={(keys) =>
+      setStatusFilter(Array.from(keys)[0])
+    }
+    variant="underlined"
+    label={
+      <span className="text-[#000]">
+        Course Status
+      </span>
+    }
+    classNames={{
+      label: "text-[var(--text-color2)] h-[50px]",
+      input: "text-[var(--secondary-color)] font-medium",
+    }}
+  >
+    <SelectItem key="">
+      All
+    </SelectItem>
 
-      </div>
+    <SelectItem key="1">
+      Active
+    </SelectItem>
+
+    <SelectItem key="0">
+      Inactive
+    </SelectItem>
+
+  </Select>
+
+</div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl p-4 shadow-md">
+      <div className="bg-white rounded-xl p-3 lg:p-4  shadow-md">
         <Table
           columns={columns}
           data={facultyData}

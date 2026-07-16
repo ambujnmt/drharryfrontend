@@ -6,51 +6,47 @@ import Footer from "../../../components/Admin/Menu/Footer";
 import List from "../../../components/Admin/Enrollement/List";
 
 export default function DashboardPage() {
-  const [menuOpen, setMenuOpen] = useState(false); 
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
 
 
-    <div className="flex">
-      {menuOpen && (
+    <PrivateRoute adminOnly={true}>
+
+      <div className="flex min-h-screen overflow-x-hidden">
+        {menuOpen && (
+          <div
+            className="fixed inset-0 bg-black opacity-50 z-30 lg:hidden"
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
+
         <div
-          className="fixed inset-0 bg-black opacity-50 z-30 lg:hidden"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
-
-      <div
-        className={`
-          ${menuOpen ? "w-64" : "w-0 overflow-hidden"}
-          fixed lg:relative
-          top-0 left-0 h-screen bg-white shadow-lg transition-all duration-300
-          z-40
-          lg:w-64
-          
-        `}
-      >
-        <AdminSideMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
-      </div>
-
-      <div
-        className={`
-          flex-1 flex flex-col transition-all duration-300
-          ${menuOpen ? "ml-0" : "ml-0"} 
-         
-        `}
-      >
-        <Header
-          menuOpen={menuOpen}
-          toggleMenu={() => setMenuOpen(!menuOpen)}
-        />
-
-        <div className="flex-1 overflow-auto  bg-gray-100">
-          <List />
+          className={`
+               ${menuOpen ? "w-64" : "w-0"}
+               fixed lg:relative
+               top-0 left-0 h-[100%] shadow-lg transition-all duration-300
+               z-40
+               lg:w-64
+               
+             `}
+        >
+          <AdminSideMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
         </div>
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          <Header
+            menuOpen={menuOpen}
+            toggleMenu={() => setMenuOpen(!menuOpen)}
+          />
 
-        <Footer />
+          <div className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <List />
+          </div>
+
+          <Footer />
+        </div>
       </div>
-    </div>
-  
+
+    </PrivateRoute>
   );
 }

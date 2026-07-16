@@ -129,7 +129,7 @@ export default function Category() {
                 accessor: "name",
             },
 
-     
+
 
             {
                 Header: "Status",
@@ -170,7 +170,7 @@ export default function Category() {
 
                 <div>
 
-                    <h1 className="text-4xl text-[var(--secondary-color)]">
+                    <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]">
 
                         Category Management
 
@@ -196,7 +196,7 @@ export default function Category() {
                 ]}
                 title="Category"
             />
-            <div className="bg-white rounded-xl p-4 shadow-md">
+            <div className="bg-white rounded-xl p-3 lg:p-4 shadow-md">
 
                 {loading ? (
 
@@ -271,17 +271,17 @@ export default function Category() {
                             setStatus(value === "1");
                         }}
                         variant="underlined"
-                    label={
-                        <span className="text-[#000] ">
-                           Status
-                            <span className="text-red-500 ml-1">*</span>
-                        </span>
-                    }
-                    classNames={{
-                        label: "text-[var(--text-color2)] h-[50px]",
-                        input: "text-[var(--secondary-color)] font-medium",
+                        label={
+                            <span className="text-[#000] ">
+                                Status
+                                <span className="text-red-500 ml-1">*</span>
+                            </span>
+                        }
+                        classNames={{
+                            label: "text-[var(--text-color2)] h-[50px]",
+                            input: "text-[var(--secondary-color)] font-medium",
 
-                    }}
+                        }}
                     >
                         <SelectItem key="1">
                             Active

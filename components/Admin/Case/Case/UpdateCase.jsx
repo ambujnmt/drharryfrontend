@@ -164,14 +164,14 @@ export default function UpdateCase() {
             {/* Header */}
             <div className="mb-8">
                 <h1
-                    className="text-4xl text-[var(--secondary-color)]"
+                    className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]"
                     style={{ fontFamily: "Cormorant Garamond" }}
                 >
                     Update Clinical Case
                 </h1>
 
                 <p
-                    className="text-[#2B2B2B] mt-2"
+                    className="text-[#2B2B2B] text-[14px] md:text-[14px] lg:text-[16px] mt-2"
                     style={{ fontFamily: "Inter" }}
                 >
                     Update and manage clinical cases.
@@ -198,7 +198,7 @@ export default function UpdateCase() {
             )}
 
             {/* Form */}
-            <div className="bg-white rounded-2xl shadow-lg border border-[#e7e2d7] p-8">
+            <div className="bg-white rounded-2xl shadow-lg border border-[#e7e2d7] p-3 md:p-6 lg:p-8">
                 <div className="grid md:grid-cols-2 gap-6">
                     <Input
                         placeholder="Enter Case title"
@@ -352,51 +352,105 @@ export default function UpdateCase() {
                 </div>
 
 
-                {/* image */}
-                <div className="mt-6">
-                    <label className="block text-[14px] font-medium text-[var(--secondary-color)] mb-2">
-                        Case Image
-                    </label>
+       {/* Case Image */}
 
-                    <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
-                        <FaUpload
-                            size={30}
-                            className="mx-auto text-[var(--primary-color)] mb-3"
-                        />
+<div className="mt-6">
 
-                        <p className="text-[15px] text-[var(--secondary-color)]">
-                            Upload Case Profile Image
-                        </p>
+  <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
+    Case Image
+  </label>
 
-                        <p className="text-[13px] text-gray-500 mt-1">
-                            PNG, JPG up to 5MB
-                        </p>
 
-                        {oldImage && (
-                            <div className="mb-4">
-                                <img
-                                    src={oldImage}
-                                    alt="Case"
-                                    className="w-40 h-40 object-cover rounded-lg border mx-auto"
-                                />
-                            </div>
-                        )}
-                        <input
-                            ref={fileRef}
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    image: e.target.files[0],
-                                })
-                            }
-                            className="mt-4 block mx-auto"
-                        />
+  <div
+    className="
+      border-2
+      border-dashed
+      border-[var(--primary-color)]
+      rounded-xl
+      text-center
+      bg-[var(--light-gold)]
+      p-5
+      sm:p-6
+      lg:p-8
+    "
+  >
 
-                    </div>
-                </div>
+    <FaUpload
+      size={30}
+      className="mx-auto text-[var(--primary-color)] mb-3"
+    />
 
+
+    <p className="text-[14px] sm:text-[15px] text-[var(--secondary-color)]">
+      Upload Case Profile Image
+    </p>
+
+
+    <p className="text-xs sm:text-[13px] text-gray-500 mt-1">
+      PNG, JPG up to 5MB
+    </p>
+
+
+
+    {oldImage && (
+
+      <div className="mb-4 mt-5">
+
+        <img
+          src={oldImage}
+          alt="Case"
+          className="
+            w-28
+            h-28
+            md:w-32
+            md:h-32
+            lg:w-36
+            lg:h-36
+            object-cover
+            rounded-lg
+            border
+            mx-auto
+          "
+        />
+
+      </div>
+
+    )}
+
+
+
+    <input
+      ref={fileRef}
+      type="file"
+      accept="image/*"
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          image: e.target.files[0],
+        })
+      }
+      className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
+    />
+
+
+  </div>
+
+</div>
 
                 {/* Buttons */}
                 <div className="flex flex-wrap gap-4 mt-10">

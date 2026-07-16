@@ -2,7 +2,7 @@ import React from "react";
 import { Accordion, AccordionItem } from "@heroui/react";
 import { MdOutlineSick } from "react-icons/md";
 import { FaBook, FaUser, FaAmazonPay } from "react-icons/fa";
-import { MdDashboard, MdFormatListNumberedRtl } from "react-icons/md";
+import { MdDashboard, MdFormatListNumberedRtl, MdManageAccounts } from "react-icons/md";
 import { Link } from "@heroui/react";
 import { useAdmin } from "../../../context/AdminContext";
 import { useUser } from "../../../context/UserContext";
@@ -17,7 +17,7 @@ export default function AdminSideMenu({ isOpen, onClose }) {
     return (
         <div
             className={`
-        fixed top-0 left-0 z-40 h-screen w-64
+        fixed top-0 left-0 z-40 h-[100%] w-64
         bg-[var(--secondary-color)]
         border-r-4 border-[var(--primary-color)]
         shadow-2xl
@@ -61,13 +61,13 @@ export default function AdminSideMenu({ isOpen, onClose }) {
             </div>
 
             {/* Menu */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar py-3">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar py-3">
                 <ul className="space-y-1 px-2">
 
                     {/* Dashboard */}
                     <li>
                         <Link
-                            href="#"
+                            href="/dashboard"
                             className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white text-[15px] font-medium transition-all duration-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)]"
                         >
                             <MdDashboard size={18} />
@@ -97,11 +97,11 @@ export default function AdminSideMenu({ isOpen, onClose }) {
                                 }
                             >
                                 <ul className="space-y-1 pl-9">
-                                    <li>
+                                    {/* <li>
                                         <Link href="/admin/students/addStudent" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
                                             Add student
                                         </Link>
-                                    </li>
+                                    </li> */}
                                     <li>
                                         <Link href="/admin/students/studentList" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
                                             Manage students
@@ -325,6 +325,54 @@ export default function AdminSideMenu({ isOpen, onClose }) {
 
 
                                 </ul>
+                            </AccordionItem>
+                        </Accordion>
+                    </li>
+
+                    {/* CMS */}
+                    <li>
+                        <Accordion variant="light" className="p-0">
+                            <AccordionItem
+                                key="2"
+                                aria-label="Faculty"
+                                classNames={{
+                                    base: "p-0",
+                                    heading: "p-0",
+                                    trigger: "flex items-center gap-3 px-4 py-2.5 rounded-xl text-white text-[15px] font-medium hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300 min-h-0 h-auto",
+                                    title: "text-white text-[15px] font-medium",
+                                    indicator: "text-[var(--primary-color)]",
+                                    content: "pt-1 pb-1"
+                                }}
+                                title={
+                                    <span className="flex items-center gap-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+                                        <MdManageAccounts size={18} />
+                                        CMS
+                                    </span>
+                                }
+                            >
+                                <ul className="space-y-1 pl-9">
+                                    <li>
+                                        <Link href="/admin/cms/faqs" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                            FAQ's
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/admin/cms/privacyPolicy" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                            Privacy Policy
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/admin/cms/terms" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                            Terms of Service
+                                        </Link>
+                                    </li>
+                                                     <li>
+                                        <Link href="/admin/cms/contactUs" className="block rounded-lg px-4 py-2 text-[14px] text-gray-300 hover:bg-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-all duration-300">
+                                           Contact Us
+                                        </Link>
+                                    </li>
+                                                                    </ul>
+
                             </AccordionItem>
                         </Accordion>
                     </li>

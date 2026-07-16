@@ -98,6 +98,7 @@ export default function SubsPlan() {
                         : "-",
             },
 
+
             {
                 Header: "Action",
 
@@ -127,7 +128,7 @@ export default function SubsPlan() {
         <div className="min-h-screen bg-[#F5F2EC] p-6">
 
             <div className="mb-6">
-                <h1 className="text-4xl text-[var(--secondary-color)]">
+                <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]">
                     Subscription Plan Management
                 </h1>
             </div>
@@ -140,7 +141,7 @@ export default function SubsPlan() {
                 title="Subscription Plans"
             />
 
-            <div className="bg-white rounded-xl p-4 shadow-md">
+            <div className="bg-white rounded-xl p-3 lg:p-4 shadow-md">
                 {loading ? (
                     <div className="flex justify-center py-20">
                         <Spinner size="lg" color="warning" />

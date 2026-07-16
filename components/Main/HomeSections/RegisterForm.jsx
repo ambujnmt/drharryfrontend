@@ -87,19 +87,19 @@ export default function RegisterForm() {
             if (res.status) {
                 setSuccessMessage(res.message);
 
-                setFormData({
-                    course_id: selectedCourse?.id || "",
-                    full_name: "",
-                    email: "",
-                    phone: "",
-                    address: "",
-                    dob: "",
-                    gender: "",
-                    qualification: "",
-                    message: "",
-                    photo: null,
-                    document: null,
-                });
+               setFormData({
+    course_id: selectedCourse?.id || "",
+    full_name: user?.name || user?.full_name || "",
+    email: user?.email || "",
+    phone: "",
+    address: "",
+    dob: "",
+    gender: "",
+    qualification: "",
+    message: "",
+    photo: null,
+    document: null,
+});
                 if (photoRef.current) {
                     photoRef.current.value = "";
                 }
@@ -121,6 +121,16 @@ export default function RegisterForm() {
     };
 
     useEffect(() => {
+    if (user) {
+        setFormData((prev) => ({
+            ...prev,
+            full_name: user.name || user.full_name || "",
+            email: user.email || "",
+        }));
+    }
+}, [user]);
+
+    useEffect(() => {
         if (successMessage || errorMessage) {
             const timer = setTimeout(() => {
                 setSuccessMessage("");
@@ -139,7 +149,7 @@ export default function RegisterForm() {
                         {/* Left Content */}
                         <div className="lg:col-span-5 lg:sticky lg:top-[150px] self-start">
                             <div className="head-sec">
-                                <h2 className="font-[var(--head-font)] text-[var(--secondary-color)] text-[50px] mb-[15px] leading-[105%]">
+                                <h2 className="font-[var(--head-font)] text-[var(--secondary-color)] md:text-[40px] text-[30px] lg:text-[50px] mb-[15px] leading-[105%]">
                                     Register in Minutes
                                 </h2>
 
@@ -281,28 +291,33 @@ export default function RegisterForm() {
 
                                         <div className="mt-4">
                                             <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+<input
+    required
+    type="text"
+    name="full_name"
+    value={formData.full_name}
+    readOnly={isLoggedIn}
+    disabled={disableForm}
+    onChange={handleChange}
+    placeholder="Your Name"
+    className={`w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 ${
+        isLoggedIn ? "bg-gray-100 cursor-not-allowed" : "bg-transparent"
+    }`}
+/>
 
-                                                <input
-                                                    disabled={disableForm}
-                                                    required
-                                                    type="text"
-                                                    name="full_name"
-                                                    value={formData.full_name}
-                                                    onChange={handleChange}
-                                                    placeholder="Your Name"
-                                                    className="w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 bg-transparent"
-                                                />
-
-                                                <input
-                                                    disabled={disableForm}
-                                                    required
-                                                    type="email"
-                                                    name="email"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
-                                                    placeholder="Your E-mail"
-                                                    className="w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 bg-transparent"
-                                                />
+                                            <input
+    required
+    type="email"
+    name="email"
+    value={formData.email}
+    readOnly={isLoggedIn}
+    disabled={disableForm}
+    onChange={handleChange}
+    placeholder="Your E-mail"
+    className={`w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 ${
+        isLoggedIn ? "bg-gray-100 cursor-not-allowed" : "bg-transparent"
+    }`}
+/>
                                             </div>
 
 

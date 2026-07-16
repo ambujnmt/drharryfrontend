@@ -115,7 +115,7 @@ export default function HeroBanner() {
       <Head title="Hero Banner" />
 
       <div className="mb-8">
-        <h1 className="text-[42px] text-[var(--secondary-color)]">
+        <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]">
           Hero Banner
         </h1>
       </div>
@@ -130,17 +130,17 @@ export default function HeroBanner() {
 
       {message && (
         <div
-          className={`text-center mb-5 font-medium ${
-            messageType === "success"
+          className={`text-center mb-5 font-medium ${messageType === "success"
               ? "text-green-600"
               : "text-red-600"
-          }`}
+            }`}
         >
           {message}
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-lg p-8">
+
+      <div className="bg-white rounded-xl shadow-lg p-3 md:p-6 lg:p-8">
 
         <div className="grid md:grid-cols-2 gap-6">
 
@@ -195,7 +195,7 @@ export default function HeroBanner() {
                 button1_text: value,
               }))
             }
-              label={
+            label={
               <span className="text-[#000]">
                 Button 1 Text
               </span>
@@ -216,7 +216,7 @@ export default function HeroBanner() {
                 button1_link: value,
               }))
             }
-             label={
+            label={
               <span className="text-[#000]">
                 Button 1 Link
               </span>
@@ -237,7 +237,7 @@ export default function HeroBanner() {
                 button2_text: value,
               }))
             }
-             label={
+            label={
               <span className="text-[#000]">
                 Button 2 Text
               </span>
@@ -258,7 +258,7 @@ export default function HeroBanner() {
                 button2_link: value,
               }))
             }
-              label={
+            label={
               <span className="text-[#000]">
                 Button 2 Link
               </span>
@@ -271,31 +271,66 @@ export default function HeroBanner() {
           />
 
         </div>
+        {/* Hero Image */}
 
         <div className="mt-8">
 
-          <label className="block text-[14px] font-medium text-[var(--secondary-color)] mb-2">
+          <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
             Hero Image
           </label>
 
-          <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
+
+          <div
+            className="
+      border-2
+      border-dashed
+      border-[var(--primary-color)]
+      rounded-xl
+      bg-[var(--light-gold)]
+      text-center
+      p-5
+      sm:p-6
+      lg:p-8
+    "
+          >
 
             <FaUpload
               size={30}
               className="mx-auto text-[var(--primary-color)] mb-3"
             />
 
-            <p>Upload Hero Banner</p>
+
+            <p className="text-sm sm:text-[15px] text-[var(--secondary-color)]">
+              Upload Hero Banner
+            </p>
+
 
             <input
               ref={fileRef}
               type="file"
               accept="image/*"
-              className="mt-4 block mx-auto"
+              className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
               onChange={(e) => {
+
                 const file = e.target.files[0];
 
                 if (file) {
+
                   setFormData((prev) => ({
                     ...prev,
                     image: file,
@@ -304,17 +339,32 @@ export default function HeroBanner() {
                   setPreview(
                     URL.createObjectURL(file)
                   );
+
                 }
+
               }}
             />
 
+
             {preview && (
+
               <img
                 src={preview}
-                className="w-full max-w-[500px] mx-auto rounded-xl mt-6"
+                className="
+          w-full
+          max-w-[500px]
+          h-auto
+          mx-auto
+          rounded-xl
+          mt-6
+          object-cover
+        "
               />
+
             )}
+
           </div>
+
         </div>
 
         <div className="mt-10">

@@ -85,49 +85,49 @@ export default function UpdateFaculty() {
   };
 
 
- const handleUpdate = async () => {
-  try {
-    setLoading(true);
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
 
-    const fd = new FormData();
+      const fd = new FormData();
 
-    fd.append("name", formData.name);
-    fd.append("designation", formData.designation);
-    fd.append("specialization", formData.specialization);
-    fd.append("qualification", formData.qualification);
-    fd.append("email", formData.email);
-    fd.append("phone", formData.phone);
-    fd.append("linkedin", formData.linkedin);
-    fd.append("bio", formData.bio);
-    fd.append("status", formData.status);
+      fd.append("name", formData.name);
+      fd.append("designation", formData.designation);
+      fd.append("specialization", formData.specialization);
+      fd.append("qualification", formData.qualification);
+      fd.append("email", formData.email);
+      fd.append("phone", formData.phone);
+      fd.append("linkedin", formData.linkedin);
+      fd.append("bio", formData.bio);
+      fd.append("status", formData.status);
 
-    if (formData.image) {
-      fd.append("image", formData.image);
+      if (formData.image) {
+        fd.append("image", formData.image);
+      }
+
+      const res = await updateFaculty(id, fd);
+
+      setMessage(res.message);
+      setMessageType("success");
+
+      setTimeout(() => {
+        router.push("/admin/faculty/facultyList");
+      }, 3000);
+    } catch (err) {
+      let errorMsg = "Something went wrong.";
+
+      if (err.errors) {
+        errorMsg = Object.values(err.errors).flat().join(", ");
+      } else if (err.message) {
+        errorMsg = err.message;
+      }
+
+      setMessage(errorMsg);
+      setMessageType("error");
+    } finally {
+      setLoading(false);
     }
-
-    const res = await updateFaculty(id, fd);
-
-    setMessage(res.message);
-    setMessageType("success");
-
-    setTimeout(() => {
-      router.push("/admin/faculty/facultyList");
-    }, 3000);
-  } catch (err) {
-    let errorMsg = "Something went wrong.";
-
-    if (err.errors) {
-      errorMsg = Object.values(err.errors).flat().join(", ");
-    } else if (err.message) {
-      errorMsg = err.message;
-    }
-
-    setMessage(errorMsg);
-    setMessageType("error");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 
   if (loading && !formData.name) {
@@ -143,11 +143,11 @@ export default function UpdateFaculty() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[42px] text-[var(--secondary-color)]">
+        <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]">
           Update Faculty Member
         </h1>
 
-        <p className="text-[16px] text-[#505050] mt-2">
+        <p className="text-[12px] md:text-[12px] lg:text-[16px]text-[16px] text-[#505050] mt-2">
           Update faculty member information.
         </p>
       </div>
@@ -167,7 +167,7 @@ export default function UpdateFaculty() {
       />
 
 
-      <div className="bg-white rounded-[15px] shadow-md p-6 lg:p-8">
+      <div className="bg-white rounded-[15px] shadow-md p-3 md:p-6 lg:p-8">
         {message &&
           <div className={`mb-4 text-center font-medium ${messageType === "success" ?
 
@@ -187,7 +187,7 @@ export default function UpdateFaculty() {
 
           </div>
         }
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
 
           {/* Faculty Name */}
           <Input
@@ -408,55 +408,98 @@ export default function UpdateFaculty() {
 
         </div>
 
-        {/* Faculty Image */}
-        <div className="mt-6">
-          <label className="block text-[14px] font-medium text-[var(--secondary-color)] mb-2">
-            Faculty Image
-          </label>
+  {/* Faculty Image */}
+<div className="mt-6">
+  <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
+    Faculty Image
+  </label>
 
-          <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
-            <FaUpload
-              size={30}
-              className="mx-auto text-[var(--primary-color)] mb-3"
-            />
+  <div
+    className="
+      border-2
+      border-dashed
+      border-[var(--primary-color)]
+      rounded-xl
+      text-center
+      bg-[var(--light-gold)]
+      p-5
+      sm:p-6
+      md:p-8
+    "
+  >
 
-            <p className="text-[15px] text-[var(--secondary-color)]">
-              Upload Faculty Profile Image
-            </p>
-
-            <p className="text-[13px] text-gray-500 mt-1">
-              PNG, JPG up to 5MB
-            </p>
+    <FaUpload
+      size={30}
+      className="mx-auto text-[var(--primary-color)] mb-3"
+    />
 
 
-            <input
-  ref={fileRef}
-  type="file"
-  accept="image/*"
-  onChange={(e) => {
-    const file = e.target.files[0];
+    <p className="text-[14px] sm:text-[15px] text-[var(--secondary-color)] font-medium">
+      Upload Faculty Profile Image
+    </p>
 
-    setFormData((prev) => ({
-      ...prev,
-      image: file,
-    }));
 
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    }
-  }}
-  className="mt-4 block mx-auto"
-/>
+    <p className="text-xs sm:text-[13px] text-gray-500 mt-1">
+      PNG, JPG up to 5MB
+    </p>
 
-{preview && (
-  <img
-    src={preview}
-    className="w-40 h-40 object-cover rounded-lg mt-4 block mx-auto"
-  />
-)}
 
-          </div>
-        </div>
+    <input
+      ref={fileRef}
+      type="file"
+      accept="image/*"
+      onChange={(e) => {
+        const file = e.target.files[0];
+
+        setFormData((prev) => ({
+          ...prev,
+          image: file,
+        }));
+
+        if (file) {
+          setPreview(URL.createObjectURL(file));
+        }
+      }}
+      className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
+    />
+
+
+    {preview && (
+      <img
+        src={preview}
+        className="
+          w-32
+          h-32
+          sm:w-36
+          sm:h-36
+          md:w-40
+          md:h-40
+          object-cover
+          rounded-lg
+          mt-4
+          block
+          mx-auto
+        "
+      />
+    )}
+
+  </div>
+</div>
 
 
         <div className="flex flex-wrap gap-4 mt-8">
