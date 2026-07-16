@@ -172,27 +172,7 @@ export default function AdminHeader({ menuOpen, toggleMenu }) {
             </button>
 
             <div className="flex items-center gap-4 relative">
-                {/* {admin && (!user || (typeof user === "object" && Object.keys(user).length === 0)) && (
-                    <Link
-                        href="/admin/passChange"
-                        className="
-  bg-[var(--primary-color)]
-  text-white
-  px-5
-  py-2.5
-  rounded-full
-  text-sm
-  font-medium
-  hover:bg-[var(--secondary-color)]
-  hover:text-[var(--secondary-color)]
-  transition-all
-  hover:border-2
-"
-                    >
-                        Change Password
-                    </Link>
-                )} */}
-
+     
 
                 {user && (user.user_id || user.id) && (
                     <Link

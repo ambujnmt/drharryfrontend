@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -19,10 +19,16 @@ import {
   FaTooth,
   FaDollarSign,
 } from "react-icons/fa";
-
 import { MdMedicalServices } from "react-icons/md";
 import { BsClockHistory } from "react-icons/bs";
 import { Head } from "../../layouts/head";
+import {
+  getUsers,
+  getCourses,
+  getFaculty,
+  getEnrollmentList,
+} from "../../utils/fetchApi";
+import { Skeleton } from "@heroui/react";
 
 const COLORS = [
   "#c8a96a",
@@ -33,31 +39,133 @@ const COLORS = [
 ];
 
 export default function Dashboard() {
-const stats = [
+const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+const [stats, setStats] = useState({
+  students: 0,
+  courses: 0,
+  faculty: 0,
+ enrollments: 0,
+});
+
+const [courseChart, setCourseChart] = useState([]);
+const [pieChart, setPieChart] = useState([]);
+const [recentEnrollments, setRecentEnrollments] = useState([]);
+
+const fetchDashboard = async () => {
+  try {
+    setLoading(true);
+
+    const [
+      usersRes,
+      coursesRes,
+      facultyRes,
+      enrollmentRes,
+    ] = await Promise.all([
+      getUsers(),
+      getCourses(),
+      getFaculty(),
+      getEnrollmentList(),
+    ]);
+
+
+
+    const users = usersRes?.data || [];
+    const coursesData = coursesRes?.courses || coursesRes?.data || [];
+setCourses(coursesData);
+    const faculty = facultyRes?.faculty || [];
+    const enrollments = enrollmentRes?.data || [];
+
+    // Cards
+ setStats({
+  students: users.length,
+  courses: coursesData.length,
+  faculty: faculty.length,
+  enrollments: enrollments.length,
+});
+
+
+    // Recent Activity
+   setRecentEnrollments(
+  [...enrollments]
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 5)
+);
+
+    // Monthly Enrollments Chart
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+
+    const monthly = months.map((month, index) => ({
+      month,
+      enrollments: enrollments.filter((item) => {
+        const d = new Date(item.created_at);
+        return d.getMonth() === index;
+      }).length,
+    }));
+
+    setCourseChart(monthly);
+
+    // Pie Chart (Course Wise Enrollment)
+
+ const pie = coursesData.map((course) => ({
+  name: course.title,
+  value: enrollments.filter(
+    (item) => item.course_id === course.id
+  ).length,
+}));
+
+    setPieChart(pie.filter((item) => item.value > 0));
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+useEffect(() => {
+  fetchDashboard();
+}, []);
+
+const cards = [
   {
     title: "Total Students",
-    value: "1,248",
+    value: stats.students,
     icon: <FaUserInjured />,
     bg: "bg-[#0a2342]",
   },
   {
     title: "Active Courses",
-    value: "48",
+    value: stats.courses,
     icon: <FaCalendarCheck />,
     bg: "bg-[#c8a96a]",
   },
   {
     title: "Faculty Members",
-    value: "12",
+    value: stats.faculty,
     icon: <FaTooth />,
     bg: "bg-[#2b405c]",
   },
   {
-    title: "Certifications Issued",
-    value: "867",
+    title: "Total Enrollments",
+    value: stats.enrollments,
     icon: <MdMedicalServices />,
     bg: "bg-[#d3b77a]",
-  }
+  },
 ];
 
 const courseEnrollmentData = [
@@ -93,7 +201,7 @@ const courseEnrollmentData = [
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
-        {stats.map((item, index) => (
+        {cards.map((item, index) => (
           <div
             key={index}
             className="bg-white rounded-[15px] px-3 py-3 shadow-lg border border-[#eee]"
@@ -104,9 +212,13 @@ const courseEnrollmentData = [
                   {item.title}
                 </p>
 
-                <h3 className="text-[30px] text-[#0a2342] font-semibold mt-2">
-                  {item.value}
-                </h3>
+             {loading ? (
+  <Skeleton className="h-8 w-20 rounded-lg mt-2" />
+) : (
+  <h3 className="text-[30px] text-[#0a2342] font-semibold mt-2">
+    {item.value}
+  </h3>
+)}
               </div>
 
               <div
@@ -128,7 +240,7 @@ const courseEnrollmentData = [
           </h3>
 
           <ResponsiveContainer width="100%" height={350}>
-            <BarChart data={courseEnrollmentData}>
+            <BarChart data={courseChart}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
@@ -153,14 +265,14 @@ const courseEnrollmentData = [
           <ResponsiveContainer width="100%" height={350}>
             <PieChart>
               <Pie
-                data={treatmentData}
+                data={pieChart}
                 cx="50%"
                 cy="50%"
                 outerRadius={120}
                 dataKey="value"
                 label
               >
-                {treatmentData.map((entry, index) => (
+                {pieChart.map((entry, index) => (
                   <Cell
                     key={index}
                     fill={COLORS[index % COLORS.length]}
@@ -181,30 +293,33 @@ const courseEnrollmentData = [
           Recent Activity
         </h3>
 
-       <div className="space-y-4">
-  <div className="border-b pb-3">
-    <p className="font-[Inter] text-[#2B2B2B]">
-      25 students enrolled in Smile Design Mastery.
-    </p>
-  </div>
+ <div className="space-y-4">
+  {recentEnrollments.map((item) => {
+    const course = courses.find(
+      (course) => course.id === item.course_id
+    );
 
-  <div className="border-b pb-3">
-    <p className="font-[Inter] text-[#2B2B2B]">
-      New faculty member added to Implantology Department.
-    </p>
-  </div>
+    return (
+      <div
+        key={item.id}
+        className="border-b pb-3 last:border-b-0"
+      >
+        <p className="font-medium text-[#2B2B2B]">
+          <span className="font-semibold">{item.full_name}</span> enrolled in{" "}
+          <span className="text-[#0a2342] font-semibold">
+            {course?.title || "Unknown Course"}
+          </span>
+        </p>
 
-  <div className="border-b pb-3">
-    <p className="font-[Inter] text-[#2B2B2B]">
-      Advanced Veneers Workshop registration opened.
-    </p>
-  </div>
-
-  <div>
-    <p className="font-[Inter] text-[#2B2B2B]">
-      40 certificates issued this month.
-    </p>
-  </div>
+        <div className="flex items-center justify-between mt-1 text-sm text-gray-500">
+          <span>Status: {item.status}</span>
+          <span>
+            {new Date(item.created_at).toLocaleDateString()}
+          </span>
+        </div>
+      </div>
+    );
+  })}
 </div>
       </div>
     </div>

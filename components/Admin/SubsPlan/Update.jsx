@@ -21,7 +21,7 @@ import {
 
 export default function Update() {
   const router = useRouter();
-const { id } = router.query;
+  const { id } = router.query;
 
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -59,12 +59,12 @@ const { id } = router.query;
 
         setIsPopular(
           plan.is_popular === true ||
-            plan.is_popular === 1
+          plan.is_popular === 1
         );
 
         setStatus(
           plan.status === true ||
-            plan.status === 1
+          plan.status === 1
         );
 
         setFeatures(
@@ -139,7 +139,7 @@ const { id } = router.query;
   return (
     <div className="min-h-screen bg-[#F5F2EC] p-6">
 
-      <h1 className="text-4xl text-[var(--secondary-color)] mb-6">
+      <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)] mb-6">
         Update Subscription Plan
       </h1>
 
@@ -161,216 +161,216 @@ const { id } = router.query;
         title="Update Plan"
       />
 
-    {message && (
-          <div className="text-green-700 text-center mt-5">
-            {message}
-          </div>
-        )}
-      <div className="bg-white rounded-xl shadow-md p-6">
+      {message && (
+        <div className="text-green-700 text-center mt-5">
+          {message}
+        </div>
+      )}
+      <div className="bg-white rounded-xl shadow-md p-3 md:p-6 lg:p-8">
         <h3 className="text-xl font-semibold mb-3 border-b pb-3">
           Plan Information
         </h3>
 
-     
-                     <div className="grid grid-cols-2 gap-3 mb-3">
-     
-                         <Input
-                             value={name}
-                             onValueChange={setName}
-                             variant="underlined"
-                             label={
-                                 <span className="text-[#000] ">
-                                     Plan Name
-                                     <span className="text-red-500 ml-1">*</span>
-                                 </span>
-                             }
-                             classNames={{
-                                 label: "text-[var(--text-color2)] h-[50px]",
-                                 input: "text-[var(--secondary-color)] font-medium",
-     
-                             }}
-                         />
-                         <Input
-                             label="Price"
-                             value={price}
-                             onValueChange={setPrice}
-                             variant="underlined"
-                             label={
-                                 <span className="text-[#000] ">
-                                     Price
-                                     <span className="text-red-500 ml-1">*</span>
-                                 </span>
-                             }
-                             classNames={{
-                                 label: "text-[var(--text-color2)] h-[50px]",
-                                 input: "text-[var(--secondary-color)] font-medium",
-     
-                             }}
-                         />
-                     </div>
-     
-                     <div className="grid grid-cols-2 gap-3 mb-3">
-                         <Input
-                             value={duration}
-                             onValueChange={setDuration}
-                             variant="underlined"
-                             label={
-                                 <span className="text-[#000] ">
-                                     Duration
-                                     <span className="text-red-500 ml-1">*</span>
-                                 </span>
-                             }
-                             classNames={{
-                                 label: "text-[var(--text-color2)] h-[50px]",
-                                 input: "text-[var(--secondary-color)] font-medium",
-     
-                             }}
-                         />
-     
-                         <Input
-                             value={buttonText}
-                             onValueChange={setButtonText}
-                             variant="underlined"
-                             label={
-                                 <span className="text-[#000] ">
-                                     Button Text
-                                     <span className="text-red-500 ml-1">*</span>
-                                 </span>
-                             }
-                             classNames={{
-                                 label: "text-[var(--text-color2)] h-[50px]",
-                                 input: "text-[var(--secondary-color)] font-medium",
-     
-                             }}
-                         />
 
-                         
-                     </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
 
-                         <div className="grid grid-cols-2 gap-3 mb-3">
-     
-     
-                         <Select
-                             selectedKeys={[isPopular ? "1" : "0"]}
-                             onSelectionChange={(keys) => {
-                                 const value = Array.from(keys)[0];
-                                 setIsPopular(value === "1");
-                             }}
-                             variant="underlined"
-                             label={
-                                 <span className="text-[#000] ">
-                                     Most Popular
-                                     <span className="text-red-500 ml-1">*</span>
-                                 </span>
-                             }
-                             classNames={{
-                                 label: "text-[var(--text-color2)] h-[50px]",
-                                 input: "text-[var(--secondary-color)] font-medium",
-     
-                             }}
-                         >
-                             <SelectItem key="1">
-                                 Yes
-                             </SelectItem>
-     
-                             <SelectItem key="0">
-                                 No
-                             </SelectItem>
-                         </Select>
-                         <Select
-                             variant="underlined"
-                             selectedKeys={[status ? "1" : "0"]}
-                             onSelectionChange={(keys) => {
-                                 const value = Array.from(keys)[0];
-                                 setStatus(value === "1");
-                             }}
-                             variant="underlined"
-                             label={
-                                 <span className="text-[#000] ">
-                                     Status
-                                     <span className="text-red-500 ml-1">*</span>
-                                 </span>
-                             }
-                             classNames={{
-                                 label: "text-[var(--text-color2)] h-[50px]",
-                                 input: "text-[var(--secondary-color)] font-medium",
-     
-                             }}
-                         >
-                             <SelectItem key="1">
-                                 Active
-                             </SelectItem>
-     
-                             <SelectItem key="0">
-                                 Inactive
-                             </SelectItem>
-                         </Select>
-                     </div>
-     
-     <div className="mb-3">
+          <Input
+            value={name}
+            onValueChange={setName}
+            variant="underlined"
+            label={
+              <span className="text-[#000] ">
+                Plan Name
+                <span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            classNames={{
+              label: "text-[var(--text-color2)] h-[50px]",
+              input: "text-[var(--secondary-color)] font-medium",
 
-                     <Input
-                         value={description}
-                         onValueChange={setDescription}
-                         variant="underlined"
-                         label={
-                             <span className="text-[#000] ">
-                                 Description
-                                 <span className="text-red-500 ml-1">*</span>
-                             </span>
-                         }
-                         classNames={{
-                             label: "text-[var(--text-color2)] h-[50px]",
-                             input: "text-[var(--secondary-color)] font-medium",
-     
-                         }}
-                     />
-     </div>
-     
-                 
-                     <div className="mt-4">
-                         <div className="flex justify-between items-center mb-3">
-                             <label className="font-medium">
-                                 Features
-                             </label>
-     
-                             <Button
-                                 size="sm"
-                                 className="bg-[var(--primary-color)] text-white hover:bg-[var(--secondary-color)]"
-                                 onPress={addFeature}
-                             >
-                                 Add Feature
-                             </Button>
-                         </div>
-     
-                         {features.map((feature, index) => (
-                             <div
-                                 key={index}
-                                 className="flex gap-2 mb-2"
-                             >
-                                 <Input
-                                     value={feature}
-                                     onValueChange={(value) =>
-                                         updateFeature(index, value)
-                                     }
-                                 />
-     
-                                 {features.length > 1 && (
-                                     <Button
-                                         color="danger"
-                                         size="sm"
-                                         onPress={() =>
-                                             removeFeature(index)
-                                         }
-                                     >
-                                         Remove
-                                     </Button>
-                                 )}
-                             </div>
-                         ))}
-                     </div>
+            }}
+          />
+          <Input
+            label="Price"
+            value={price}
+            onValueChange={setPrice}
+            variant="underlined"
+            label={
+              <span className="text-[#000] ">
+                Price
+                <span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            classNames={{
+              label: "text-[var(--text-color2)] h-[50px]",
+              input: "text-[var(--secondary-color)] font-medium",
 
-    
+            }}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+          <Input
+            value={duration}
+            onValueChange={setDuration}
+            variant="underlined"
+            label={
+              <span className="text-[#000] ">
+                Duration
+                <span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            classNames={{
+              label: "text-[var(--text-color2)] h-[50px]",
+              input: "text-[var(--secondary-color)] font-medium",
+
+            }}
+          />
+
+          <Input
+            value={buttonText}
+            onValueChange={setButtonText}
+            variant="underlined"
+            label={
+              <span className="text-[#000] ">
+                Button Text
+                <span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            classNames={{
+              label: "text-[var(--text-color2)] h-[50px]",
+              input: "text-[var(--secondary-color)] font-medium",
+
+            }}
+          />
+
+
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+
+
+          <Select
+            selectedKeys={[isPopular ? "1" : "0"]}
+            onSelectionChange={(keys) => {
+              const value = Array.from(keys)[0];
+              setIsPopular(value === "1");
+            }}
+            variant="underlined"
+            label={
+              <span className="text-[#000] ">
+                Most Popular
+                <span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            classNames={{
+              label: "text-[var(--text-color2)] h-[50px]",
+              input: "text-[var(--secondary-color)] font-medium",
+
+            }}
+          >
+            <SelectItem key="1">
+              Yes
+            </SelectItem>
+
+            <SelectItem key="0">
+              No
+            </SelectItem>
+          </Select>
+          <Select
+            variant="underlined"
+            selectedKeys={[status ? "1" : "0"]}
+            onSelectionChange={(keys) => {
+              const value = Array.from(keys)[0];
+              setStatus(value === "1");
+            }}
+            variant="underlined"
+            label={
+              <span className="text-[#000] ">
+                Status
+                <span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            classNames={{
+              label: "text-[var(--text-color2)] h-[50px]",
+              input: "text-[var(--secondary-color)] font-medium",
+
+            }}
+          >
+            <SelectItem key="1">
+              Active
+            </SelectItem>
+
+            <SelectItem key="0">
+              Inactive
+            </SelectItem>
+          </Select>
+        </div>
+
+        <div className="mb-3">
+
+          <Input
+            value={description}
+            onValueChange={setDescription}
+            variant="underlined"
+            label={
+              <span className="text-[#000] ">
+                Description
+                <span className="text-red-500 ml-1">*</span>
+              </span>
+            }
+            classNames={{
+              label: "text-[var(--text-color2)] h-[50px]",
+              input: "text-[var(--secondary-color)] font-medium",
+
+            }}
+          />
+        </div>
+
+
+        <div className="mt-4">
+          <div className="flex justify-between items-center mb-3">
+            <label className="font-medium">
+              Features
+            </label>
+
+            <Button
+              size="sm"
+              className="bg-[var(--primary-color)] text-white hover:bg-[var(--secondary-color)]"
+              onPress={addFeature}
+            >
+              Add Feature
+            </Button>
+          </div>
+
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="flex gap-2 mb-2"
+            >
+              <Input
+                value={feature}
+                onValueChange={(value) =>
+                  updateFeature(index, value)
+                }
+              />
+
+              {features.length > 1 && (
+                <Button
+                  color="danger"
+                  size="sm"
+                  onPress={() =>
+                    removeFeature(index)
+                  }
+                >
+                  Remove
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
+
+
 
         <div className="mt-8 flex justify-center">
 

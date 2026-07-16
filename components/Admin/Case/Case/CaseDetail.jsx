@@ -63,11 +63,11 @@ const fetchCase = async () => {
 
       <Head title="Case Detail" />
 
-      <h1 className="text-[42px] text-[var(--secondary-color)] mb-2">
+      <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)] mb-2">
          Clinical Case Detail
       </h1>
 
-      <p className="text-[#505050] mb-8">
+      <p className="text-[#505050] text-[14px] md:text-[14px] lg:text-[16px] mb-8">
         View complete information about this clinical case.
       </p>
 
@@ -79,7 +79,7 @@ const fetchCase = async () => {
         ]}
         title="Case Detail"
       />
-  <div className="bg-white rounded-xl shadow-md p-8">
+  <div className="bg-white rounded-xl shadow-md p-3 md:p-6 lg:p-8">
 
 <div className="grid lg:grid-cols-2 gap-10">
 

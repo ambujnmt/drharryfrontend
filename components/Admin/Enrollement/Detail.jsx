@@ -106,31 +106,32 @@ export default function Detail() {
                 ]}
                 title="Enrollment Detail"
             />
+            <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8 mt-6">
 
-            <div className="bg-white rounded-xl shadow-lg p-8 mt-6">
-
-                <div className="flex gap-8">
+                {/* Profile Section */}
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
                     <img
                         src={enquiry.photo}
-                        className="w-72 h-72 rounded-xl object-cover border"
+                        className="w-full sm:w-72 h-72 rounded-xl object-cover border mx-auto lg:mx-0"
                     />
 
                     <div className="flex-1">
 
-                        <h2 className="text-4xl text-[var(--secondary-color)] mb-3">
+                        <h2 className="text-3xl lg:text-4xl text-[var(--secondary-color)] mb-3">
                             {enquiry.full_name}
                         </h2>
 
-                        <p className="text-[var(--primary-color)] text-xl">
+                        <p className="text-[var(--primary-color)] text-lg lg:text-xl">
                             {course?.title}
                         </p>
 
-                        <div className="grid grid-cols-2 gap-5 mt-8">
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-8">
 
                             <div>
                                 <p className="text-gray-500">Email</p>
-                                <h5>{enquiry.email}</h5>
+                                <h5 className="break-all">{enquiry.email}</h5>
                             </div>
 
                             <div>
@@ -156,17 +157,16 @@ export default function Detail() {
                             <div>
                                 <p className="text-gray-500">Status</p>
 
-                              <span
-  className={`px-3 py-1 rounded-full text-sm font-medium ${
-    enquiry.status === "Approved"
-      ? "bg-green-100 text-green-700"
-      : enquiry.status === "Rejected"
-      ? "bg-red-100 text-red-700"
-      : "bg-yellow-100 text-yellow-700"
-  }`}
->
-  {enquiry.status}
-</span>
+                                <span
+                                    className={`px-3 py-1 rounded-full text-sm font-medium ${enquiry.status === "Approved"
+                                            ? "bg-green-100 text-green-700"
+                                            : enquiry.status === "Rejected"
+                                                ? "bg-red-100 text-red-700"
+                                                : "bg-yellow-100 text-yellow-700"
+                                        }`}
+                                >
+                                    {enquiry.status}
+                                </span>
                             </div>
 
                         </div>
@@ -175,55 +175,68 @@ export default function Detail() {
 
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 mt-10">
+
+
+                {/* Address Message */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
 
                     <div>
-
-                        <h3 className="text-2xl text-[var(--secondary-color)] mb-3">
+                        <h3 className="text-xl lg:text-2xl text-[var(--secondary-color)] mb-3">
                             Address
                         </h3>
 
-                        <p>{enquiry.address}</p>
-
+                        <p className="break-words">
+                            {enquiry.address}
+                        </p>
                     </div>
 
-                    <div>
 
-                        <h3 className="text-2xl text-[var(--secondary-color)] mb-3">
+                    <div>
+                        <h3 className="text-xl lg:text-2xl text-[var(--secondary-color)] mb-3">
                             Message
                         </h3>
 
-                        <p>{enquiry.message}</p>
-
+                        <p className="break-words">
+                            {enquiry.message}
+                        </p>
                     </div>
 
                 </div>
 
+
+
+                {/* Document */}
                 <div className="mt-10">
 
-                    <h3 className="text-2xl text-[var(--secondary-color)] mb-5">
+                    <h3 className="text-xl lg:text-2xl text-[var(--secondary-color)] mb-5">
                         Uploaded Document
                     </h3>
 
                     <a
                         href={enquiry.document}
                         target="_blank"
-                        className="bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white px-5 py-3 rounded-lg"
+                        className="inline-block bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white px-5 py-3 rounded-lg"
                     >
                         View Document
                     </a>
 
                 </div>
 
-                <div className="mt-12 bg-[#F5F2EC] rounded-xl p-6">
 
-                    <h2 className="text-2xl text-[var(--secondary-color)] mb-5">
+
+
+                {/* Update Status */}
+                <div className="mt-12 bg-[#F5F2EC] rounded-xl p-4 sm:p-6">
+
+                    <h2 className="text-xl lg:text-2xl text-[var(--secondary-color)] mb-5">
                         Update Enrollment Status
                     </h2>
 
-                    <div className="flex items-end gap-5">
 
-                        <div className="w-72">
+                    <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+
+
+                        <div className="w-full sm:w-72">
 
                             <Select
                                 selectedKeys={[selectedStatus]}
@@ -232,7 +245,7 @@ export default function Detail() {
                                 }
                                 variant="underlined"
                                 label={
-                                    <span className="text-[#000] ">
+                                    <span className="text-[#000]">
                                         Select Status
                                         <span className="text-red-500 ml-1">*</span>
                                     </span>
@@ -240,31 +253,18 @@ export default function Detail() {
                                 classNames={{
                                     label: "text-[var(--text-color2)] h-[50px]",
                                     input: "text-[var(--secondary-color)] font-medium",
-
                                 }}
                             >
 
-                                <SelectItem
-                                    key="Pending"
-                                    isDisabled={
-                                        enquiry.status === "Approved" ||
-                                        enquiry.status === "Rejected"
-                                    }
-                                >
+                                <SelectItem key="Pending">
                                     Pending
                                 </SelectItem>
 
-                                <SelectItem
-                                    key="Approved"
-                                    isDisabled={enquiry.status === "Rejected"}
-                                >
+                                <SelectItem key="Approved">
                                     Approved
                                 </SelectItem>
 
-                                <SelectItem
-                                    key="Rejected"
-                                    isDisabled={enquiry.status === "Approved"}
-                                >
+                                <SelectItem key="Rejected">
                                     Rejected
                                 </SelectItem>
 
@@ -272,8 +272,10 @@ export default function Detail() {
 
                         </div>
 
+
+
                         <Button
-                            className="text-white bg-[var(--primary-color)]"
+                            className="text-white bg-[var(--primary-color)] w-full sm:w-auto"
                             onPress={() => setIsOpen(true)}
                             isDisabled={
                                 enquiry.status === "Approved" ||
@@ -283,39 +285,45 @@ export default function Detail() {
                             Update Status
                         </Button>
 
+
                     </div>
 
                 </div>
 
 
-
+                {/* Course Details */}
                 {course && (
 
-                    <div className="mt-14 bg-[#F5F2EC] rounded-xl p-8">
+                    <div className="mt-14 bg-[#F5F2EC] rounded-xl p-4 sm:p-6 lg:p-8">
 
-                        <h2 className="text-3xl text-[var(--secondary-color)] mb-6">
+                        <h2 className="text-2xl lg:text-3xl text-[var(--secondary-color)] mb-6">
                             Enrolled Course
                         </h2>
 
-                        <div className="flex gap-6">
+
+                        <div className="flex flex-col lg:flex-row gap-6">
+
 
                             <img
                                 src={course.image}
-                                className="w-80 h-52 rounded-xl object-cover"
+                                className="w-full lg:w-80 h-52 rounded-xl object-cover"
                             />
 
-                            <div>
 
-                                <h3 className="text-2xl font-semibold">
+                            <div className="flex-1">
+
+                                <h3 className="text-xl lg:text-2xl font-semibold">
                                     {course.title}
                                 </h3>
+
 
                                 <p className="mt-2 text-[var(--primary-color)]">
                                     Faculty : {course.faculty?.name}
                                 </p>
 
+
                                 <div
-                                    className="prose mt-4 max-w-none"
+                                    className="prose mt-4 max-w-none overflow-hidden"
                                     dangerouslySetInnerHTML={{
                                         __html: course.description,
                                     }}
@@ -323,14 +331,16 @@ export default function Detail() {
 
                             </div>
 
+
                         </div>
+
 
                     </div>
 
                 )}
 
-            </div>
 
+            </div>
             <Tmodal
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}

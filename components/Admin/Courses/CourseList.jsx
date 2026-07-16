@@ -143,29 +143,32 @@ ${value === "Active"
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-[42px] text-[var(--secondary-color)]">
+          <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]">
             Manage Courses
           </h1>
 
-          <p className="text-[#505050] text-[16px] mt-2">
+          <p className="text-[#505050] text-[12px] md:text-[12px] lg:text-[16px] mt-2">
             View, manage and update all dental institute courses.
           </p>
         </div>
 
       </div>
-     <PageTitle
-                breadCrumbItems={[
-                    { label: 'Dashboard', path: '/dashboard' },
-                    { label: 'Manage Courses', active: true },
-                ]}
-                title="Manage Courses"
-            />
+      <PageTitle
+        breadCrumbItems={[
+          { label: 'Dashboard', path: '/dashboard' },
+          { label: 'Manage Courses', active: true },
+        ]}
+        title="Manage Courses"
+      />
 
 
       {/* Filters */}
-      <div className="bg-white p-2 rounded-lg w-1/2  mb-6">
+      <div className="bg-white p-4 rounded-lg w-full sm:w-1/2 mb-6">
 
-        <p className="mb-4">Filter</p>
+        <p className="mb-4 text-[var(--secondary-color)] font-medium">
+          Filter
+        </p>
+
         <Select
           selectedKeys={statusFilter ? [statusFilter] : [""]}
           onSelectionChange={(keys) =>
@@ -183,17 +186,16 @@ ${value === "Active"
           <SelectItem key="0">Inactive</SelectItem>
         </Select>
 
-
       </div>
-
 
       {message && (
         <div className="mb-4 text-red-700  text-center">
           {message}
         </div>
       )}
+
       {/* Course Table */}
-      <div className="bg-white rounded-xl p-4 shadow-md">
+      <div className="bg-white rounded-xl p-3 lg:p-4 shadow-md">
         {loading ? (
           <div className="flex justify-center py-20">
             <Spinner size="lg" color="warning" />

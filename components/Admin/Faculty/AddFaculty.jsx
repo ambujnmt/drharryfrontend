@@ -141,24 +141,24 @@ export default function AddFaculty() {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-[42px] text-[var(--secondary-color)]">
+        <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]">
           Add Faculty Member
         </h1>
 
-        <p className="text-[16px] text-[#505050] mt-2">
+        <p className="text-[14px] md:text-[14px] lg:text-[16px] text-[#505050] mt-2">
           Add a new instructor or faculty member to the institute.
         </p>
       </div>
       <PageTitle
-                breadCrumbItems={[
-                    { label: 'Dashboard', path: '/dashboard' },
-                    { label: 'Add Faculty', active: true },
-                ]}
-                title="Add Faculty"
-            />
+        breadCrumbItems={[
+          { label: 'Dashboard', path: '/dashboard' },
+          { label: 'Add Faculty', active: true },
+        ]}
+        title="Add Faculty"
+      />
 
 
-      <div className="bg-white rounded-[15px] shadow-md p-6 lg:p-8">
+      <div className="bg-white rounded-[15px] shadow-md p-3 md:p-6 lg:p-8">
         {message &&
           <div className={`mb-4 text-center font-medium ${messageType === "success" ?
 
@@ -178,7 +178,7 @@ export default function AddFaculty() {
 
           </div>
         }
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
 
           {/* Faculty Name */}
           <Input
@@ -401,21 +401,32 @@ export default function AddFaculty() {
 
         {/* Faculty Image */}
         <div className="mt-6">
-          <label className="block text-[14px] font-medium text-[var(--secondary-color)] mb-2">
+          <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
             Faculty Image
           </label>
 
-          <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
+          <div className="
+    border-2
+    border-dashed
+    border-[var(--primary-color)]
+    rounded-xl
+    bg-[var(--light-gold)]
+    text-center
+    p-5
+    sm:p-6
+    md:p-8
+  ">
+
             <FaUpload
               size={30}
               className="mx-auto text-[var(--primary-color)] mb-3"
             />
 
-            <p className="text-[15px] text-[var(--secondary-color)]">
+            <p className="text-[14px] sm:text-[15px] text-[var(--secondary-color)] font-medium">
               Upload Faculty Profile Image
             </p>
 
-            <p className="text-[13px] text-gray-500 mt-1">
+            <p className="text-xs sm:text-[13px] text-gray-500 mt-1">
               PNG, JPG up to 5MB
             </p>
 
@@ -430,7 +441,22 @@ export default function AddFaculty() {
                   image: e.target.files[0],
                 }))
               }
-              className="mt-4 block mx-auto"
+              className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
             />
 
           </div>

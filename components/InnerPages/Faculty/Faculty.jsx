@@ -1,6 +1,7 @@
 import { Link, Spinner } from "@heroui/react";
 import React, { useEffect, useState } from "react";
 import { getFaculty } from "../../../utils/fetchApi";
+import BreadCrumb from "../../Breadcrumb/BreadCrumb";
 
 export default function Detail() {
     const [faculty, setFaculty] = useState([]);
@@ -41,7 +42,16 @@ export default function Detail() {
         return doc.body.textContent || "";
     };
     return (
+        <>
+           <BreadCrumb
+                      title="Faculty"
+                      breadcrumb={[
+                        "Home",
+                        "Faculty",
+                      ]}
+                    />
         <div className="container mx-auto py-10">
+
             {loading ? (
                 <div className="flex min-h-[400px] items-center justify-center">
                     <Spinner size="lg" color="warning" />
@@ -80,5 +90,6 @@ export default function Detail() {
                 </div>
             )}
         </div>
+        </>
     );
 }

@@ -77,11 +77,11 @@ export default function FacultyDetail() {
 
             <Head title="Faculty Detail" />
 
-            <h1 className="text-[42px] text-[var(--secondary-color)] mb-2">
+            <h1 className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)] mb-2">
                 Faculty Detail
             </h1>
 
-            <p className="text-[#505050] mb-8">
+            <p className="text-[#505050] text-[14px] md:text-[14px] lg:text-[16px] mb-8">
                 View complete information about this faculty member.
             </p>
 
@@ -93,9 +93,9 @@ export default function FacultyDetail() {
                 ]}
                 title="Faculty Detail"
             />
-            <div className="bg-white rounded-xl shadow-md p-8">
+            <div className="bg-white rounded-xl shadow-md p-3 md:p-6 lg:p-8">
 
-                <div className="flex flex-col lg:flex-row gap-8">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
                     <img
                         src={faculty.image}

@@ -17,6 +17,7 @@ import { HiChatBubbleLeftRight } from "react-icons/hi2";
 import { GiGrowth } from "react-icons/gi";
 import { useRouter } from "next/router";
 import { getSingleFaculty ,getCourses } from "../../../utils/fetchApi";
+import BreadCrumb from "../../Breadcrumb/BreadCrumb";
 
 export default function Detail() {
   const router = useRouter();
@@ -81,9 +82,16 @@ const facultyCourses = courses.filter(
   }
   return (
     <>
+     <BreadCrumb
+                        title="Faculty Detail"
+                        breadcrumb={[
+                          "Home",
+                          "Faculty Detail",
+                        ]}
+                      />
       <section className="relative overflow-hidden bg-slate-900 px-4 py-14">
         {/* Background Shapes */}
-        <div className="absolute -right-16 -top-16 h-96 w-96 rounded-full bg-amber-500/10"></div>
+        <div className="absolute -right-16 -top-16 h-96 w-96 rounded-full bg-amber-500/10 lg:block md:hidden hidden"></div>
         <div className="absolute -bottom-20 left-1/3 h-64 w-64 rounded-full bg-amber-500/5"></div>
 
         <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-10 lg:flex-row">
@@ -171,7 +179,7 @@ const facultyCourses = courses.filter(
           {/* ABOUT */}
           <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
             <h2 className="mb-6 inline-block border-b-2 border-amber-500 pb-3 text-2xl font-bold text-slate-900">
-              About Dr. Harry Ashitey
+              About {faculty?.name}
             </h2>
 
             <div className="space-y-4 text-[15px] leading-8 text-slate-600">

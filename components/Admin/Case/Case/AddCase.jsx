@@ -131,14 +131,14 @@ export default function AddCase() {
             {/* Header */}
             <div className="mb-8">
                 <h1
-                    className="text-4xl text-[var(--secondary-color)]"
+                    className="text-[25px] md:text-[35px] lg:text-[42px] text-[var(--secondary-color)]"
                     style={{ fontFamily: "Cormorant Garamond" }}
                 >
                     Add Clinical Case
                 </h1>
 
                 <p
-                    className="text-[#2B2B2B] mt-2"
+                    className="text-[#2B2B2B] text-[14px] md:text-[14px] lg:text-[16px] mt-2"
                     style={{ fontFamily: "Inter" }}
                 >
                     Create and manage clinical cases.
@@ -164,8 +164,8 @@ export default function AddCase() {
             )}
 
             {/* Form */}
-            <div className="bg-white rounded-2xl shadow-lg border border-[#e7e2d7] p-8">
-                <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl shadow-lg border border-[#e7e2d7] p-3 md:p-6 lg:p-8">
+                <div className="grid md:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
                     <Input
                         placeholder="Enter Case title"
                         value={formData.title}
@@ -317,24 +317,42 @@ export default function AddCase() {
                     />
                 </div>
 
-              
-                {/* image */}
+
+                {/* Case Image */}
+
                 <div className="mt-6">
-                    <label className="block text-[14px] font-medium text-[var(--secondary-color)] mb-2">
+
+                    <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
                         Case Image
                     </label>
 
-                    <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl p-8 text-center bg-[var(--light-gold)]">
+
+                    <div
+                        className="
+      border-2
+      border-dashed
+      border-[var(--primary-color)]
+      rounded-xl
+      text-center
+      bg-[var(--light-gold)]
+      p-5
+      sm:p-6
+      lg:p-8
+    "
+                    >
+
                         <FaUpload
                             size={30}
                             className="mx-auto text-[var(--primary-color)] mb-3"
                         />
 
-                        <p className="text-[15px] text-[var(--secondary-color)]">
+
+                        <p className="text-[14px] sm:text-[15px] text-[var(--secondary-color)]">
                             Upload Case Profile Image
                         </p>
 
-                        <p className="text-[13px] text-gray-500 mt-1">
+
+                        <p className="text-xs sm:text-[13px] text-gray-500 mt-1">
                             PNG, JPG up to 5MB
                         </p>
 
@@ -349,10 +367,26 @@ export default function AddCase() {
                                     image: e.target.files[0],
                                 })
                             }
-                            className="mt-4 block mx-auto"
+                            className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
                         />
 
                     </div>
+
                 </div>
 
 

@@ -368,3 +368,21 @@ button[data-slot="trigger"] {
 button[data-slot="trigger"] label[data-slot="label"] {
     height: 30px !important;
 }
+
+.privacy-editor .ql-container {
+    height: 100px;
+    overflow-y: auto;
+}
+
+.privacy-editor .ql-editor {
+    min-height: 2000px;
+}
+
+.terms-editor .ql-container {
+    height: 100px;
+    overflow-y: auto;
+}
+
+.terms-editor .ql-editor {
+    min-height: 2000px;
+}
