@@ -13,7 +13,7 @@ export default function List() {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
-
+const [applicationTypeFilter, setApplicationTypeFilter] = useState("");
 
     const fetchEnrollment = async () => {
   try {
@@ -39,16 +39,22 @@ useEffect(() => {
 }, []);
 
 useEffect(() => {
-  let filtered = [...allEnrollment];
+let filtered = [...allEnrollment];
 
-  if (statusFilter !== "") {
-    filtered = filtered.filter(
-      (item) => item.status === statusFilter
-    );
-  }
+if (statusFilter !== "") {
+  filtered = filtered.filter(
+    (item) => item.status === statusFilter
+  );
+}
 
-  setEnrollmentData(filtered);
-}, [statusFilter, allEnrollment]);
+if (applicationTypeFilter !== "") {
+  filtered = filtered.filter(
+    (item) => item.application_type === applicationTypeFilter
+  );
+}
+
+setEnrollmentData(filtered);
+}, [statusFilter, applicationTypeFilter, allEnrollment]);
 
 
 const columns = useMemo(
@@ -83,6 +89,21 @@ const columns = useMemo(
       Header: "Gender",
       accessor: "gender",
     },
+    {
+  Header: "Application Type",
+  accessor: "application_type",
+  Cell: ({ value }) => (
+    <span
+      className={`px-3 py-2 rounded-full text-xs font-medium ${
+        value === "Waitlist"
+          ? "bg-blue-100 text-blue-700"
+          : "bg-green-100 text-green-700"
+      }`}
+    >
+      {value}
+    </span>
+  ),
+},
 
   {
   Header: "Status",

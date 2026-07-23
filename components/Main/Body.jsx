@@ -26,7 +26,7 @@ export default function Body() {
       <Faculty />
       <EnrollmentProcess/>
       <RegisterForm/>
-      <ChoosePlan />
+      {/* <ChoosePlan /> */}
       <VideoSection />
       <Testimonials/>
     </div>

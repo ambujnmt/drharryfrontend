@@ -87,19 +87,19 @@ export default function RegisterForm() {
             if (res.status) {
                 setSuccessMessage(res.message);
 
-               setFormData({
-    course_id: selectedCourse?.id || "",
-    full_name: user?.name || user?.full_name || "",
-    email: user?.email || "",
-    phone: "",
-    address: "",
-    dob: "",
-    gender: "",
-    qualification: "",
-    message: "",
-    photo: null,
-    document: null,
-});
+                setFormData({
+                    course_id: selectedCourse?.id || "",
+                    full_name: user?.name || user?.full_name || "",
+                    email: user?.email || "",
+                    phone: "",
+                    address: "",
+                    dob: "",
+                    gender: "",
+                    qualification: "",
+                    message: "",
+                    photo: null,
+                    document: null,
+                });
                 if (photoRef.current) {
                     photoRef.current.value = "";
                 }
@@ -121,14 +121,14 @@ export default function RegisterForm() {
     };
 
     useEffect(() => {
-    if (user) {
-        setFormData((prev) => ({
-            ...prev,
-            full_name: user.name || user.full_name || "",
-            email: user.email || "",
-        }));
-    }
-}, [user]);
+        if (user) {
+            setFormData((prev) => ({
+                ...prev,
+                full_name: user.name || user.full_name || "",
+                email: user.email || "",
+            }));
+        }
+    }, [user]);
 
     useEffect(() => {
         if (successMessage || errorMessage) {
@@ -291,33 +291,31 @@ export default function RegisterForm() {
 
                                         <div className="mt-4">
                                             <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-<input
-    required
-    type="text"
-    name="full_name"
-    value={formData.full_name}
-    readOnly={isLoggedIn}
-    disabled={disableForm}
-    onChange={handleChange}
-    placeholder="Your Name"
-    className={`w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 ${
-        isLoggedIn ? "bg-gray-100 cursor-not-allowed" : "bg-transparent"
-    }`}
-/>
+                                                <input
+                                                    required
+                                                    type="text"
+                                                    name="full_name"
+                                                    value={formData.full_name}
+                                                    readOnly={isLoggedIn}
+                                                    disabled={disableForm}
+                                                    onChange={handleChange}
+                                                    placeholder="Your Name"
+                                                    className={`w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 ${isLoggedIn ? "bg-gray-100 cursor-not-allowed" : "bg-transparent"
+                                                        }`}
+                                                />
 
-                                            <input
-    required
-    type="email"
-    name="email"
-    value={formData.email}
-    readOnly={isLoggedIn}
-    disabled={disableForm}
-    onChange={handleChange}
-    placeholder="Your E-mail"
-    className={`w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 ${
-        isLoggedIn ? "bg-gray-100 cursor-not-allowed" : "bg-transparent"
-    }`}
-/>
+                                                <input
+                                                    required
+                                                    type="email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    readOnly={isLoggedIn}
+                                                    disabled={disableForm}
+                                                    onChange={handleChange}
+                                                    placeholder="Your E-mail"
+                                                    className={`w-full h-[52px] border border-[#0a23429e] rounded-[10px] px-4 mb-3 ${isLoggedIn ? "bg-gray-100 cursor-not-allowed" : "bg-transparent"
+                                                        }`}
+                                                />
                                             </div>
 
 
@@ -413,7 +411,7 @@ export default function RegisterForm() {
                                                         onChange={handleChange}
                                                         className="w-full border border-[#0a23429e] rounded-[10px] p-3 mb-3 bg-transparent"
                                                     />
-                                          
+
                                                 </div>
                                                 <div>
 
@@ -428,7 +426,7 @@ export default function RegisterForm() {
                                                         onChange={handleChange}
                                                         className="w-full border border-[#0a23429e] rounded-[10px] p-3 mb-3 bg-transparent"
                                                     />
-                                            
+
                                                 </div>
 
                                             </div>
@@ -493,13 +491,13 @@ export default function RegisterForm() {
                                                 disabled={loading || seatsFull}
                                                 type="submit"
                                                 className={`w-full text-white text-[16px] rounded-[8px] py-[9px] mt-5 transition-all duration-500 ease-in-out ${seatsFull
-                                                        ? "bg-gray-400 cursor-not-allowed"
-                                                        : "bg-[var(--secondary-color)] hover:bg-[var(--primary-color)]"
+                                                    ? "bg-gray-400 cursor-not-allowed"
+                                                    : "bg-[var(--secondary-color)] hover:bg-[var(--primary-color)]"
                                                     }`}
                                             >
                                                 {loading ? (
                                                     <div className="flex justify-center items-center">
-                                                        <Spinner size="sm" color='white'/>
+                                                        <Spinner size="sm" color='white' />
                                                     </div>
                                                 ) : seatsFull ? (
                                                     "Join Waiting List"

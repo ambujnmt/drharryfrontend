@@ -8,7 +8,7 @@ import { FaUpload } from "react-icons/fa";
 export default function SubmitForm() {
 
     const router = useRouter();
-    const { id } = router.query;
+    const { id, type } = router.query;
     const { user } = useUser();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState("");
@@ -61,6 +61,7 @@ export default function SubmitForm() {
         const fd = new FormData();
 
         fd.append("course_id", id);
+        fd.append("application_type", type || "Enrollment");
 
         Object.keys(formData).forEach((key) => {
             if (formData[key] != null) {
@@ -109,12 +110,14 @@ if (documentRef.current) {
             <div className="container mx-auto max-w-6xl">
                 <div className="bg-white rounded-xl shadow-lg p-10">
                     <h1 className="text-5xl text-center text-[var(--secondary-color)] font-bold mb-3">
-                        Enrollment Form
-                    </h1>
+    {type === "waitlist" ? "Join Waitlist" : "Enrollment Form"}
+</h1>
 
-                    <p className="text-center text-[var(--text-color2)] mb-12">
-                        Complete your enrollment application.
-                    </p>
+                  <p className="text-center text-[var(--text-color2)] mb-12">
+    {type === "waitlist"
+        ? "Complete the form to join the waiting list."
+        : "Complete your enrollment application."}
+</p>
 
                     {success && (
                         <div className=" text-green-700 mb-8">
@@ -351,17 +354,19 @@ if (documentRef.current) {
                     </div>
 
                     <div className="mt-12 flex justify-center">
-                        <Button
-                            className="bg-[var(--primary-color)] text-white px-12 py-7 text-lg hover:bg-[var(--secondary-color)]"
-                            onPress={handleSubmit}
-                            isDisabled={loading}
-                        >
-                            {loading ? (
-                                <Spinner size="sm" color="white" />
-                            ) : (
-                                "Submit Enrollment"
-                            )}
-                        </Button>
+                       <Button
+    className="bg-[var(--primary-color)] text-white px-12 py-7 text-lg hover:bg-[var(--secondary-color)]"
+    onPress={handleSubmit}
+    isDisabled={loading}
+>
+    {loading ? (
+        <Spinner size="sm" color="white" />
+    ) : (
+        type === "waitlist"
+            ? "Join Waitlist"
+            : "Submit Enrollment"
+    )}
+</Button>
                     </div>
                 </div>
             </div>

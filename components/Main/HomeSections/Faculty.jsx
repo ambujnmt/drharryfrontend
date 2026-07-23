@@ -137,9 +137,7 @@ export default function Faculty() {
                     alt={member.name}
                     className="
                       w-full
-                      h-[300px]
-                      sm:h-[320px]
-                      lg:h-[330px]
+                    
                       object-cover
                       rounded-[15px]
                       grayscale-[2]

@@ -47,9 +47,9 @@ export default function Courses() {
     const router = useRouter();
     const { user } = useUser();
 
-    const handleEnroll = (course) => {
+    const handleEnroll = (course, type = "enrollment") => {
         if (user) {
-            router.push(`/web/enrollement/submitForm/${course.id}`);
+            router.push(`/web/enrollement/submitForm/${course.id}?type=${type}`);
         } else {
             router.push("/login");
         }
@@ -87,12 +87,12 @@ export default function Courses() {
     return (
         <>
             {/* == Courses Hero Section == */}
-   <BreadCrumb
-              title="Courses"
-              breadcrumb={[
-                "Home",
-                "Courses",
-              ]}
+            <BreadCrumb
+                title="Courses"
+                breadcrumb={[
+                    "Home",
+                    "Courses",
+                ]}
             />
             <section
                 className="
@@ -231,7 +231,7 @@ export default function Courses() {
                                 </div>
                             ) : (
                                 featuredCourses.map((course) => (
-                                    <div className="relative h-[580px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
+                                    <div className="relative h-[500px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
                                         <img
                                             src={course.image}
                                             alt={course.title}
@@ -275,7 +275,7 @@ export default function Courses() {
                                         </div>
 
                                         <div className="absolute bottom-0 left-0 w-full">
-                                            <div className="flex justify-between items-end px-5 pb-5">
+                                            {/* <div className="flex justify-between items-end px-5 pb-5">
                                                 <div>
                                                     <div className="text-[18px] text-[#505050]">Investment</div>
                                                     <div className="text-[28px] font-medium text-[var(--secondary-color)]">
@@ -299,24 +299,24 @@ export default function Courses() {
                                                         }
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                             <div className="flex gap-[10px] px-5 pb-5">
                                                 {
                                                     course.seats_left > 0 ? (
                                                         <button
-                                                            onClick={() => handleEnroll(course)}
+                                                            onClick={() => handleEnroll(course, "enrollment")}
                                                             className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
                                                         >
                                                             Enroll Now
                                                         </button>
                                                     ) : (
-                                                        <Link
-                                                            href="#"
+                                                        <button
+                                                             onClick={() => handleEnroll(course, "waitlist")}
                                                             className="flex justify-center items-center w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
                                                         >
                                                             Join Waitlist
-                                                        </Link>
+                                                        </button>
                                                     )
                                                 }
 
@@ -567,7 +567,7 @@ export default function Courses() {
 
 
             {/* == FAQ Section == */}
-         <Faqs/>
+            <Faqs />
             {/* == // FAQ Section == */}
         </>
     )

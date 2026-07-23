@@ -24,6 +24,7 @@ export default function Detail() {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
+    const [applicationTypeFilter, setApplicationTypeFilter] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [btnLoading, setBtnLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
@@ -66,13 +67,19 @@ export default function Detail() {
                 selectedStatus
             );
 
-            if (res.status) {
-                setEnquiry({
-                    ...enquiry,
-                    status: selectedStatus,
-                });
+       if (res.status) {
 
-                setSuccessMsg(res.message);
+    setEnquiry({
+        ...enquiry,
+        status: selectedStatus,
+        application_type:
+            selectedStatus === "Approved" &&
+            enquiry.application_type === "Waitlist"
+                ? "Enrollment"
+                : enquiry.application_type,
+    });
+
+    setSuccessMsg(res.message);
 
                 setTimeout(() => {
                     setSuccessMsg("");
@@ -178,7 +185,7 @@ export default function Detail() {
 
 
                 {/* Address Message */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
 
                     <div>
                         <h3 className="text-xl lg:text-2xl text-[var(--secondary-color)] mb-3">
@@ -200,7 +207,16 @@ export default function Detail() {
                             {enquiry.message}
                         </p>
                     </div>
+                     <div>
+                        <h3 className="text-xl lg:text-2xl text-[var(--secondary-color)] mb-3">
+                            Application type
+                        </h3>
 
+                        <p className="break-words">
+                            {enquiry.application_type}
+                        </p>
+                    </div> 
+  
                 </div>
 
 

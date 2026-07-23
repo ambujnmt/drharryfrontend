@@ -68,7 +68,7 @@ export default function Detail() {
                                 <img
                                     src={member.image}
                                     alt={member.name}
-                                    className="w-full h-[330px] object-cover rounded-[15px] grayscale-[2] group-hover:grayscale-0 transition-all duration-500"
+                                    className="w-full  object-cover rounded-[15px] grayscale-[2] group-hover:grayscale-0 transition-all duration-500"
                                 />
 
                                 <div className="py-[20px]">
