@@ -39,13 +39,13 @@ export default function CourseHero() {
     }
   }, [id]);
 
-  const handleEnroll = (course) => {
-    if (user) {
-      router.push(`/web/enrollement/submitForm/${course.id}`);
-    } else {
-      router.push("/login");
-    }
-  };
+    const handleEnroll = (course, type = "enrollment") => {
+        if (user) {
+            router.push(`/web/enrollement/submitForm/${course.id}?type=${type}`);
+        } else {
+            router.push("/login");
+        }
+    };
 
   const fetchCourse = async () => {
     try {
@@ -184,33 +184,33 @@ export default function CourseHero() {
             {/* BODY */}
             <div className="p-5">
 
-              <div className="mb-2">
+              {/* <div className="mb-2">
                 <span className="text-[30px] font-serif font-bold text-[#0d1b2e]">
                   ${course?.investment}
                 </span>
 
-              </div>
+              </div> */}
 
-              <p className="text-red-600 text-sm font-medium mb-4">
+              {/* <p className="text-red-600 text-sm font-medium mb-4">
                 ⚡  <strong>{course?.seats_left} seats left</strong>
-              </p>
+              </p> */}
 
 
               {
                 course.seats_left > 0 ? (
                   <button
-                    onClick={() => handleEnroll(course)}
+                    onClick={() => handleEnroll(course, "enrollment")}
                     className="flex justify-center items-center w-full text-center bg-[var(--secondary-color)] text-white rounded-[8px] py-[11px] hover:bg-[var(--primary-color)] transition-all duration-500"
                   >
                     Enroll Now
                   </button>
                 ) : (
-                  <Link
-                    href="#"
+                  <button
+                     onClick={() => handleEnroll(course, "waitlist")}
                     className="flex justify-center items-center w-full text-center border border-red-500 text-red-500 rounded-[8px] py-[11px] hover:bg-red-500 hover:text-white transition-all duration-500"
                   >
                     Join Waitlist
-                  </Link>
+                  </button>
                 )
               }
 

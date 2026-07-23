@@ -94,13 +94,13 @@ export default function Header() {
                     </Link>
                   </li>
 
-                  <li className="mx-[15px]">
+                  {/* <li className="mx-[15px]">
                     <Link
                       href="/web/membership/membership"
                       className="text-[18px] leading-[100%] font-normal hover:text-[var(--primary-color)] text-[#000]">
                       Membership
                     </Link>
-                  </li>
+                  </li> */}
 
                   {/* <li className="mx-[15px]">
                     <Link
