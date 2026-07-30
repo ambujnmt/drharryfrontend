@@ -197,9 +197,9 @@ export default function Header() {
               <li><Link href="/web/courses/courses" className="text-black">Courses</Link></li>
               <li><Link href="/web/faculty/faculty" className="text-black">Faculty</Link></li>
               <li><Link href="/web/program/program" className="text-black">Programs</Link></li>
-              <li><Link href="/web/membership/membership" className="text-black">Membership</Link></li>
+              {/* <li><Link href="/web/membership/membership" className="text-black">Membership</Link></li> */}
               {/* <li><Link href="#" className="text-black">Events</Link></li> */}
-              <li><Link href="#" className="text-black">Contact</Link></li>
+              <li><Link href="/web/cms/contactUs" className="text-black">Contact</Link></li>
 
               <li>
                 <Link

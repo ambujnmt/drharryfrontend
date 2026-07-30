@@ -126,9 +126,6 @@ export default function EducationalPrograms() {
                     alt={course.title}
                     className="
                       w-full
-                      h-[180px]
-                      sm:h-[200px]
-                      lg:h-[200px]
                       object-cover
                       rounded-t-[12px]
                     "
