@@ -190,10 +190,10 @@ export default function Footer() {
                     title: "Our Faculty",
                     link: "/web/faculty/faculty",
                   },
-                  {
-                    title: "Membership Plans",
-                    link: "/web/membership/membership",
-                  },
+                  // {
+                  //   title: "Membership Plans",
+                  //   link: "/web/membership/membership",
+                  // },
                   {
                     title: "Case Studies",
                     link: "/web/courses/courses",
