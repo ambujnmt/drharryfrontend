@@ -31,6 +31,8 @@ export default function UpdateCourse() {
     const [messageType, setMessageType] = useState("");
     const router = useRouter();
     const [preview, setPreview] = useState("");
+    const [videoPreview, setVideoPreview] = useState("");
+    const [video, setVideo] = useState(null);
     const [image, setImage] = useState(null);
     const { id } = router.query;
     const [formData, setFormData] = useState({
@@ -50,6 +52,8 @@ export default function UpdateCourse() {
         course_highlights: [""],
         course_order: "",
         image: null,
+        media_type: "image",
+        video: null,
     });
     const [facultyList, setFacultyList] = useState([]);
     const fileRef = useRef(null);
@@ -95,11 +99,13 @@ export default function UpdateCourse() {
                 ideal_for: course.ideal_for || "",
                 course_highlights: course.course_highlights || [""],
                 course_order: course.course_order?.toString() || "",
+                media_type: course.media_type || "image",
                 image: null,
+                video: null,
             });
 
             setFeatured(course.featured == 1);
-
+            setVideoPreview(course.video);
             setPreview(course.image);
         } catch (err) {
             console.log(err);
@@ -433,17 +439,41 @@ export default function UpdateCourse() {
                             </SelectItem>
                         ))}
                     </Select>
-
-
-
                 </div>
+
 
                 <div className="mt-6">
                     <label className="block text-[14px] md:text-[15px] font-medium mb-2">
-                        Course Image
+                        Media Type
                     </label>
 
-                    <div className="
+                    <Select
+                        selectedKeys={[formData.media_type]}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                media_type: e.target.value,
+                            })
+                        }
+                        variant="underlined"
+                    >
+                        <SelectItem key="image">
+                            Image
+                        </SelectItem>
+
+                        <SelectItem key="video">
+                            Video
+                        </SelectItem>
+                    </Select>
+                </div>
+
+                {formData.media_type === "image" && (
+                    <div className="mt-6">
+                        <label className="block text-[14px] md:text-[15px] font-medium mb-2">
+                            Video Thumbnail
+                        </label>
+
+                        <div className="
     border-2 
     border-dashed 
     border-[var(--primary-color)] 
@@ -455,25 +485,25 @@ export default function UpdateCourse() {
     md:p-8
   ">
 
-                        <FaUpload
-                            size={30}
-                            className="mx-auto text-[var(--primary-color)] mb-3"
-                        />
+                            <FaUpload
+                                size={30}
+                                className="mx-auto text-[var(--primary-color)] mb-3"
+                            />
 
-                        <p className="text-[14px] sm:text-[15px] md:text-base text-[var(--secondary-color)] font-medium">
-                            Upload Course Profile Image
-                        </p>
+                            <p className="text-[14px] sm:text-[15px] md:text-base text-[var(--secondary-color)] font-medium">
+                                Upload Course Profile Image
+                            </p>
 
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                            PNG, JPG up to 5MB
-                        </p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                                PNG, JPG up to 5MB
+                            </p>
 
 
-                        <input
-                            ref={fileRef}
-                            type="file"
-                            accept="image/*"
-                            className="
+                            <input
+                                ref={fileRef}
+                                type="file"
+                                accept="image/*"
+                                className="
         mt-4
         block
         w-full
@@ -489,27 +519,27 @@ export default function UpdateCourse() {
         file:text-white
         file:cursor-pointer
       "
-                            onChange={(e) => {
-                                const file = e.target.files[0];
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
 
-                                setImage(file);
+                                    setImage(file);
 
-                                setFormData({
-                                    ...formData,
-                                    image: file,
-                                });
+                                    setFormData({
+                                        ...formData,
+                                        image: file,
+                                    });
 
-                                if (file) {
-                                    setPreview(URL.createObjectURL(file));
-                                }
-                            }}
-                        />
+                                    if (file) {
+                                        setPreview(URL.createObjectURL(file));
+                                    }
+                                }}
+                            />
 
 
-                        {preview && (
-                            <img
-                                src={preview}
-                                className="
+                            {preview && (
+                                <img
+                                    src={preview}
+                                    className="
           w-32
           h-32
           sm:w-36
@@ -521,12 +551,183 @@ export default function UpdateCourse() {
           object-cover
           mt-4
         "
-                            />
-                        )}
+                                />
+                            )}
 
+                        </div>
                     </div>
-                </div>
+                )}
 
+                {formData.media_type === "video" && (
+                    <>
+                        {/* Thumbnail */}
+
+                        <div className="mt-6">
+                            <label className="block text-[14px] md:text-[15px] font-medium mb-2">
+                                Video Thumbnail
+                            </label>
+
+                            <div className="
+    border-2 
+    border-dashed 
+    border-[var(--primary-color)] 
+    rounded-xl 
+    text-center 
+    bg-[var(--light-gold)]
+    p-5
+    sm:p-6
+    md:p-8
+  ">
+
+                                <FaUpload
+                                    size={30}
+                                    className="mx-auto text-[var(--primary-color)] mb-3"
+                                />
+
+                                <p className="text-[14px] sm:text-[15px] md:text-base text-[var(--secondary-color)] font-medium">
+                                    Video Thumbnail
+                                </p>
+
+                                <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                                    PNG, JPG up to 10MB
+                                </p>
+
+
+                                <input
+                                    ref={fileRef}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+
+                                        setImage(file);
+
+                                        if (file) {
+                                            setPreview(URL.createObjectURL(file));
+                                        }
+                                    }}
+                                    className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
+
+                                />
+
+
+                                {preview && (
+                                    <img
+                                        src={preview}
+                                        className="
+          w-32
+          h-32
+          sm:w-36
+          sm:h-36
+          md:w-40
+          md:h-40
+          mx-auto
+          rounded-xl
+          object-cover
+          mt-4
+        "
+                                    />
+                                )}
+
+                            </div>
+                        </div>
+
+
+                        {/* Video */}
+                        <div className="mt-6">
+                            <label className="block text-[14px] md:text-[15px] font-medium mb-2">
+                             Update Video
+                            </label>
+
+                            <div className="
+    border-2 
+    border-dashed 
+    border-[var(--primary-color)] 
+    rounded-xl 
+    text-center 
+    bg-[var(--light-gold)]
+    p-5
+    sm:p-6
+    md:p-8
+  ">
+
+                                <FaUpload
+                                    size={30}
+                                    className="mx-auto text-[var(--primary-color)] mb-3"
+                                />
+
+                                <p className="text-[14px] sm:text-[15px] md:text-base text-[var(--secondary-color)] font-medium">
+                                    Update Video
+                                </p>
+
+                                <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                                    mp4,mov,avi,mkv,webm upto 100MB
+                                </p>
+
+
+                                <input
+                                    ref={fileRef}
+                               type="file"
+                                accept="video/*"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+
+                                    setVideo(file);
+
+                                    if (file) {
+                                        setVideoPreview(URL.createObjectURL(file));
+                                    }
+                                }}
+                                    className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+      "
+
+                                />
+
+
+            {videoPreview && (
+                <video
+                    controls
+                    className="w-full max-w-md mt-4 rounded-lg mx-auto"
+                >
+                    <source src={videoPreview} />
+                </video>
+            )}
+
+                            </div>
+                        </div>
+                    
+
+                    </>
+                )}
                 <div className="mt-4">
 
                     <Textarea
@@ -611,6 +812,7 @@ export default function UpdateCourse() {
                         + Add Highlight
                     </Button>
                 </div>
+
 
 
                 {/* Full Description */}
