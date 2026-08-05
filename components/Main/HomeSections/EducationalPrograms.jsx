@@ -1,10 +1,14 @@
 import { Link, Spinner } from "@heroui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getCourses } from "../../../utils/fetchApi";
+import Tmodal from "../../Tmodal/Tmodal"
 
 export default function EducationalPrograms() {
   const [courses, setCourses] = useState([]);
   const [loadingCourses, setLoadingCourses] = useState(true);
+  const [openVideo, setOpenVideo] = useState(false);
+const [selectedVideo, setSelectedVideo] = useState(null);
+  const videoRef = useRef(null);
 
   const fetchCourses = async () => {
     try {
@@ -24,6 +28,20 @@ export default function EducationalPrograms() {
       setLoadingCourses(false);
     }
   };
+
+  const handleCloseVideo = () => {
+
+    if (videoRef.current) {
+
+        videoRef.current.pause();
+
+        videoRef.current.currentTime = 0;
+
+    }
+
+    setOpenVideo(false);
+
+};
 
 
   useEffect(() => {
@@ -121,7 +139,7 @@ export default function EducationalPrograms() {
 
 
                   {/* Image */}
-                  <img
+                  {/* <img
                     src={course.image}
                     alt={course.title}
                     className="
@@ -129,7 +147,81 @@ export default function EducationalPrograms() {
                       object-cover
                       rounded-t-[12px]
                     "
-                  />
+                  /> */}
+                  
+                  {course.media_type === "image" ? (
+
+<img
+    src={course.image}
+    alt={course.title}
+    className="
+        w-full
+        object-cover
+        rounded-t-[12px]
+    "
+/>
+
+) : (
+
+<div
+    className="
+        relative
+        cursor-pointer
+        overflow-hidden
+        rounded-t-[12px]
+        group
+    "
+    onClick={() => {
+    setSelectedVideo(course.video);
+    setOpenVideo(true);
+}}
+>
+
+    <img
+        src={course.image}
+        alt={course.title}
+        className="
+            w-full
+            object-cover
+            transition
+            duration-300
+            group-hover:scale-105
+        "
+    />
+
+    <div
+        className="
+            absolute
+            inset-0
+            bg-black/35
+            flex
+            justify-center
+            items-center
+        "
+    >
+
+        <div
+            className="
+                w-16
+                h-16
+                rounded-full
+                bg-white
+                flex
+                justify-center
+                items-center
+                shadow-lg
+            "
+        >
+
+            ▶
+
+        </div>
+
+    </div>
+
+</div>
+
+)}
 
 
 
@@ -253,7 +345,22 @@ export default function EducationalPrograms() {
 
 
       </div>
-
+<Tmodal
+    isOpen={openVideo}
+    onClose={handleCloseVideo}
+>
+    <div className="p-2">
+        {selectedVideo && (
+            <video
+                ref={videoRef}
+                src={selectedVideo}
+                controls
+                autoPlay
+                className="w-full rounded-lg"
+            />
+        )}
+    </div>
+</Tmodal>
     </section>
   );
 }

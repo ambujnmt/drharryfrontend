@@ -39,7 +39,9 @@ export default function AddCourse() {
         ideal_for: "",
         course_highlights: [""],
         course_order: "",
+        media_type: "image",
         image: null,
+        video: null,
     };
 
     const [formData, setFormData] = useState(initialFormData);
@@ -78,6 +80,10 @@ export default function AddCourse() {
         data.append("status", formData.status);
         data.append("featured", formData.featured);
         data.append("faculty_id", formData.faculty_id);
+        data.append(
+            "media_type",
+            formData.media_type
+        );
         data.append("description", formData.description);
         data.append(
             "learning_objectives",
@@ -115,9 +121,27 @@ export default function AddCourse() {
                 return;
             }
         }
+
+        if (formData.video) {
+
+            const maxVideoSize = 100 * 1024 * 1024;
+
+            if (formData.video.size > maxVideoSize) {
+
+                setMessage("Please select video smaller than 100 MB.");
+                setMessageType("error");
+
+                return;
+
+            }
+
+        }
         if (formData.image) {
 
             data.append("image", formData.image);
+        }
+        if (formData.video) {
+            data.append("video", formData.video);
         }
 
         try {
@@ -598,38 +622,76 @@ export default function AddCourse() {
                         }
                     />
                 </div>
+                <div className="mt-6">
+
+
+                    <Select
+                        selectedKeys={[formData.media_type]}
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                media_type: e.target.value,
+                                image: null,
+                                video: null
+                            })
+                        }
+                        variant="underlined"
+                        label={
+                            <span className="text-[#000] ">
+                                Media Type
+                                <span className="text-red-500 ml-1">*</span>
+                            </span>
+                        }
+                        classNames={{
+                            label: "text-[var(--text-color2)] h-[50px]",
+                            input: "text-[var(--secondary-color)] font-medium",
+
+                        }}
+                    >
+                        <SelectItem key="image">
+                            Image
+                        </SelectItem>
+
+                        <SelectItem key="video">
+                            Video
+                        </SelectItem>
+
+                    </Select>
+
+                </div>
 
                 {/* Course Image */}
-                <div className="mt-6">
-                    <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
-                        Course Image
-                    </label>
+                {formData.media_type === "image" && (
+                    <div className="mt-6">
+                        <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
+                            Course Image
+                        </label>
 
-                    <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl bg-[var(--light-gold)] text-center p-5 sm:p-6 md:p-8">
-                        <FaUpload
-                            size={30}
-                            className="mx-auto text-[var(--primary-color)] mb-3"
-                        />
+                        <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl bg-[var(--light-gold)] text-center p-5 sm:p-6 md:p-8">
+                            <FaUpload
+                                size={30}
+                                className="mx-auto text-[var(--primary-color)] mb-3"
+                            />
 
-                        <p className="text-[14px] sm:text-[15px] md:text-[16px] font-medium text-[var(--secondary-color)]">
-                            Upload Course Profile Image
-                        </p>
+                            <p className="text-[14px] sm:text-[15px] md:text-[16px] font-medium text-[var(--secondary-color)]">
+                                Upload Course Profile Image
+                            </p>
 
-                        <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1">
-                            PNG, JPG up to 5MB
-                        </p>
+                            <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1">
+                                PNG, JPG up to 5MB
+                            </p>
 
-                        <input
-                            ref={fileRef}
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    image: e.target.files[0],
-                                })
-                            }
-                            className="
+                            <input
+                                ref={fileRef}
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        image: e.target.files[0],
+                                    })
+                                }
+                                className="
         mt-4
         block
         w-full
@@ -646,9 +708,131 @@ export default function AddCourse() {
         file:cursor-pointer
         hover:file:bg-[var(--secondary-color)]
       "
-                        />
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
+
+                {formData.media_type === "video" && (
+                    <>
+                    
+                    <div className="mt-6">
+
+                        <div className="mt-6">
+                            <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
+                                Course Video Thumbnail
+                            </label>
+
+                            <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl bg-[var(--light-gold)] text-center p-5 sm:p-6 md:p-8">
+                                <FaUpload
+                                    size={30}
+                                    className="mx-auto text-[var(--primary-color)] mb-3"
+                                />
+
+                                <p className="text-[14px] sm:text-[15px] md:text-[16px] font-medium text-[var(--secondary-color)]">
+                                    Upload Course Video Thumbnail
+                                </p>
+
+                                <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1">
+                                    jpg,jpeg,png,webp up to 10MB  
+                                </p>
+
+                                <input
+                                    ref={fileRef}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            image: e.target.files[0]
+                                        })
+                                    }
+                                    className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+        hover:file:bg-[var(--secondary-color)]
+      "
+                                />
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                         {/* Video */}
+
+                          <div className="mt-6">
+
+                        <div className="mt-6">
+                            <label className="block text-[14px] md:text-[15px] font-medium text-[var(--secondary-color)] mb-2">
+                              Upload Video
+                            </label>
+
+                            <div className="border-2 border-dashed border-[var(--primary-color)] rounded-xl bg-[var(--light-gold)] text-center p-5 sm:p-6 md:p-8">
+                                <FaUpload
+                                    size={30}
+                                    className="mx-auto text-[var(--primary-color)] mb-3"
+                                />
+
+                                <p className="text-[14px] sm:text-[15px] md:text-[16px] font-medium text-[var(--secondary-color)]">
+                                    Upload Course Video 
+                                </p>
+
+                                <p className="text-[12px] sm:text-[13px] text-gray-500 mt-1">
+                                    mp4,mov,avi,mkv,webm upto 100MB
+                                </p>
+
+                                <input
+                                    ref={fileRef}
+                                      type="file"
+                            accept="video/*"
+                            onChange={(e) =>
+                                setFormData({
+                                    ...formData,
+                                    video: e.target.files[0]
+                                })
+                            }
+                                    className="
+        mt-4
+        block
+        w-full
+        sm:w-auto
+        mx-auto
+        text-sm
+        file:mr-4
+        file:px-4
+        file:py-2
+        file:rounded-lg
+        file:border-0
+        file:bg-[var(--primary-color)]
+        file:text-white
+        file:cursor-pointer
+        hover:file:bg-[var(--secondary-color)]
+      "
+                                />
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    </>
+
+                )}
 
 
                 {/* Featured */}
