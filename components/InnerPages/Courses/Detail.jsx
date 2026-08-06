@@ -18,7 +18,8 @@ import { getSingleCourse, getSingleFaculty } from "../../../utils/fetchApi";
 import { Link, Spinner } from "@heroui/react";
 import { useUser } from "../../../context/UserContext";
 import BreadCrumb from "../../Breadcrumb/BreadCrumb";
-
+import Tmodal from "../../Tmodal/Tmodal";
+import { useRef } from "react";
 export default function CourseHero() {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,9 @@ export default function CourseHero() {
   const router = useRouter();
   const { id } = router.query;
   const { user } = useUser();
-
+const [openVideo, setOpenVideo] = useState(false);
+const [selectedVideo, setSelectedVideo] = useState(null);
+const videoRef = useRef(null);
   useEffect(() => {
     if (id) {
       fetchCourse();
@@ -85,6 +88,16 @@ export default function CourseHero() {
       [key]: !prev[key],
     }));
   };
+
+const handleCloseVideo = () => {
+
+  if(videoRef.current){
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+  }
+
+  setOpenVideo(false);
+};
 
   const switchTab = (tab) => setActiveTab(tab);
   if (loading) {
@@ -173,11 +186,75 @@ export default function CourseHero() {
             {/* THUMB */}
             <div className="relative aspect-video bg-gradient-to-br from-[#0d1b2e] to-[#243352] flex items-center justify-center cursor-pointer">
               <div className="absolute inset-0 "></div>
-              <img
-                src={course?.image}
-                alt={course?.title}
-                className="w-full h-full object-cover"
-              />
+             {course?.media_type === "image" ? (
+
+  <img
+    src={course?.image}
+    alt={course?.title}
+    className="w-full h-full object-cover"
+  />
+
+) : (
+
+  <div
+    className="
+      relative
+      w-full
+      h-full
+      cursor-pointer
+      overflow-hidden
+      group
+    "
+    onClick={() => {
+      setSelectedVideo(course?.video);
+      setOpenVideo(true);
+    }}
+  >
+
+    <img
+      src={course?.image}
+      alt={course?.title}
+      className="
+        w-full
+        h-full
+        object-cover
+        transition
+        duration-300
+        group-hover:scale-105
+      "
+    />
+
+    <div
+      className="
+        absolute
+        inset-0
+        bg-black/35
+        flex
+        justify-center
+        items-center
+      "
+    >
+
+      <div
+        className="
+          w-16
+          h-16
+          rounded-full
+          bg-white
+          flex
+          justify-center
+          items-center
+          shadow-lg
+        "
+      >
+        ▶
+      </div>
+
+    </div>
+
+  </div>
+
+)}
 
             </div>
 
@@ -375,6 +452,26 @@ export default function CourseHero() {
         )}
 
       </div>
+
+      <Tmodal
+  isOpen={openVideo}
+  onClose={handleCloseVideo}
+>
+  <div className="p-2">
+
+    {selectedVideo && (
+      <video
+        ref={videoRef}
+        src={selectedVideo}
+        controls
+        autoPlay
+        className="w-full rounded-lg"
+      />
+    )}
+
+  </div>
+
+</Tmodal>
     </section>
   );
 }
