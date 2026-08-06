@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef } from "react";
 import { Link, LinkIcon, Spinner, user } from '@heroui/react';
 import { FaSearch, FaFilter } from "react-icons/fa";
 import { Accordion, AccordionItem } from "@heroui/react";
@@ -10,7 +10,7 @@ import { useUser } from "../../../context/UserContext";
 import VideoSec from "../../Main/HomeSections/VideoSec"
 import Faqs from "../CMS/Faqs";
 import BreadCrumb from "../../Breadcrumb/BreadCrumb";
-
+import Tmodal from "../../Tmodal/Tmodal";
 // == This is for Accordian ==
 const items = [
     {
@@ -46,7 +46,9 @@ export default function Courses() {
     const [loadingCourses, setLoadingCourses] = useState(true);
     const router = useRouter();
     const { user } = useUser();
-
+const [openVideo, setOpenVideo] = useState(false);
+const [selectedVideo, setSelectedVideo] = useState(null);
+const videoRef = useRef(null);
     const handleEnroll = (course, type = "enrollment") => {
         if (user) {
             router.push(`/web/enrollement/submitForm/${course.id}?type=${type}`);
@@ -82,7 +84,16 @@ export default function Courses() {
         fetchCourses();
     }, []);
     const [activeTab, setActiveTab] = useState("fullarch");
+const handleCloseVideo = () => {
 
+    if (videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+    }
+
+    setOpenVideo(false);
+    setSelectedVideo(null);
+};
 
     return (
         <>
@@ -232,11 +243,73 @@ export default function Courses() {
                             ) : (
                                 featuredCourses.map((course) => (
                                     <div className="relative h-[500px] bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                                        <img
-                                            src={course.image}
-                                            alt={course.title}
-                                            className="w-full h-[203px] object-cover"
-                                        />
+                                       {course.media_type === "image" ? (
+
+    <img
+        src={course.image}
+        alt={course.title}
+        className="w-full h-[203px] object-cover"
+    />
+
+) : (
+
+    <div
+        className="
+            relative
+            cursor-pointer
+            overflow-hidden
+            group
+        "
+        onClick={() => {
+            setSelectedVideo(course.video);
+            setOpenVideo(true);
+        }}
+    >
+
+        <img
+            src={course.image}
+            alt={course.title}
+            className="
+                w-full
+                h-[203px]
+                object-cover
+                transition
+                duration-300
+                group-hover:scale-105
+            "
+        />
+
+        <div
+            className="
+                absolute
+                inset-0
+                bg-black/35
+                flex
+                justify-center
+                items-center
+            "
+        >
+
+            <div
+                className="
+                    w-16
+                    h-16
+                    rounded-full
+                    bg-white
+                    flex
+                    justify-center
+                    items-center
+                    shadow-lg
+                "
+            >
+                ▶
+            </div>
+
+        </div>
+
+    </div>
+
+)}
 
                                         <div className="p-5">
                                             <h2 className="text-[18px] text-[#000] font-semibold leading-[100%]">
@@ -360,11 +433,73 @@ export default function Courses() {
                         ) : (
                             courses.map((course) => (
                                 <div className="relative bg-white rounded-[10px] shadow-[rgba(0,0,0,0.20)_0px_2px_12px] overflow-hidden">
-                                    <img
-                                        src={course.image}
-                                        alt={course.title}
-                                        className="w-full h-[203px] object-cover"
-                                    />
+                                   {course.media_type === "image" ? (
+
+    <img
+        src={course.image}
+        alt={course.title}
+        className="w-full h-[203px] object-cover"
+    />
+
+) : (
+
+    <div
+        className="
+            relative
+            cursor-pointer
+            overflow-hidden
+            group
+        "
+        onClick={() => {
+            setSelectedVideo(course.video);
+            setOpenVideo(true);
+        }}
+    >
+
+        <img
+            src={course.image}
+            alt={course.title}
+            className="
+                w-full
+                h-[203px]
+                object-cover
+                transition
+                duration-300
+                group-hover:scale-105
+            "
+        />
+
+        <div
+            className="
+                absolute
+                inset-0
+                bg-black/35
+                flex
+                justify-center
+                items-center
+            "
+        >
+
+            <div
+                className="
+                    w-16
+                    h-16
+                    rounded-full
+                    bg-white
+                    flex
+                    justify-center
+                    items-center
+                    shadow-lg
+                "
+            >
+                ▶
+            </div>
+
+        </div>
+
+    </div>
+
+)}
 
                                     <div className="p-5">
                                         <h2 className="text-[18px] font-semibold leading-[100%]">
@@ -562,13 +697,33 @@ export default function Courses() {
 
 
             {/* == Learn Anytime, Anywhere Section == */}
-            <VideoSec />
+            {/* <VideoSec /> */}
             {/* == // Learn Anytime, Anywhere Section == */}
 
 
             {/* == FAQ Section == */}
             <Faqs />
             {/* == // FAQ Section == */}
+        <Tmodal
+    isOpen={openVideo}
+    onClose={handleCloseVideo}
+>
+    <div className="p-2">
+
+        {selectedVideo && (
+            <video
+                ref={videoRef}
+                src={selectedVideo}
+                controls
+                autoPlay
+                className="w-full rounded-lg"
+            />
+        )}
+
+    </div>
+
+</Tmodal>
         </>
+
     )
 }
