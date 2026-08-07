@@ -57,7 +57,7 @@ export default function Header() {
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden lg:flex items-center lg:ml-[210px]">
+           <div className="hidden lg:flex flex-1 justify-center items-center">
               <nav>
                 <ul className="flex items-center">
                   <li className="mx-[15px]">
