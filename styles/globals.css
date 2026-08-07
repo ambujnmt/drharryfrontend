@@ -386,3 +386,8 @@ button[data-slot="trigger"] label[data-slot="label"] {
 .terms-editor .ql-editor {
     min-height: 2000px;
 }
+
+html, body{
+  overflow-x: hidden;
+  overflow-y: auto;
+}

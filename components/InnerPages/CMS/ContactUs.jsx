@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../Breadcrumb/BreadCrumb";
-import { Link, Spinner } from "@heroui/react";
+import { Input, Link, Spinner } from "@heroui/react";
 import { fetchContact, submitContactEnquiry } from "../../../utils/fetchApi";
 
 import {
@@ -140,24 +140,27 @@ export default function ContactUs() {
                     <div >
                         <div className="grid md:grid-cols-3 gap-6">
 
-                            <input
-                                className="border rounded-xl p-4"
+                            <Input
+                                className="xs:w-fit md:w-full border rounded-xl"
                                 placeholder="Full Name"
                                 value={form.name}
+                                variant="primary"
                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                             />
 
-                            <input
-                                className="border rounded-xl p-4"
+                            <Input
+                                className="xs:w-fit md:w-full border rounded-xl"
                                 placeholder="Phone Number"
+                                variant="primary"
                                 value={form.phone}
                                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                             />
 
-                            <input
-                                className="border rounded-xl p-4"
+                            <Input
+                                className="xs:w-fit md:w-full border rounded-xl"
                                 placeholder="Email Address"
                                 value={form.email}
+                                variant="primary"
                                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                             />
                         </div>
